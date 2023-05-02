@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <FrameLayout
+        android:id="@+id/mainFrameLayout"
+        android:layout_width="569dp"
+        android:layout_height="275dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.609"
+        app:layout_constraintStart_toEndOf="@+id/downBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.129">
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/mainMenuBtn"
+        android:layout_width="170sp"
+        android:layout_height="60sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="3dp"
+        android:text="@string/mainMenuBtnCover"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/upBtn"
+        android:layout_width="170sp"
+        android:layout_height="60sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/upBtnCover"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainMenuBtn" />
+
+    <Button
+        android:id="@+id/downBtn"
+        android:layout_width="170sp"
+        android:layout_height="60sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/downBtnCover"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upBtn" />
+
+    <Button
+        android:id="@+id/confirmBtn"
+        android:layout_width="170sp"
+        android:layout_height="60sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/confirmBtnCover"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/downBtn" />
+
+    <Button
+        android:id="@+id/printBtn"
+        android:layout_width="170sp"
+        android:layout_height="60sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/printBtnCover"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirmBtn"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

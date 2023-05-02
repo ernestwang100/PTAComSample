@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">JAS208U 數位行車記錄器</string>
+    <string name="backBtnCover">回上一層</string>
+    <string name="homeBtnCover">回主畫面</string>
+    <string name="mainMenuBtnCover">主選單</string>
+    <string name="upBtnCover">▲</string>
+    <string name="downBtnCover">▼</string>
+    <string name="confirmBtnCover">確　定</string>
+    <string name="printBtnCover">列　印</string>
+    <string name="mainWelcomeTV">歡迎使用 JassLin\nJAS280U 數位行車記錄器\n祝您行車平安</string>
+    <string name="contentTV1">2023/03/01\n09:41:00\n速度 000.0 km/h\n駕駛FFFFFFF車停</string>
+    <string name="contentTV2">主駕駛\nFFFFFFFF 車停中\n共同駕駛\nFFFFFFFF 車停中</string>
+    <string name="contentTV3">警告資訊\n(超時駕駛警告)\n(印表機缺紙警告)\n(斷電警告)</string>
+    <string name="contentTV4">BUS-ID:------\nHW-ID: HW3.2D\nFW-ID: 1.003\n日期: 20210914</string>
+    <string name="contentTV5">GPS 狀態: A\n衛星數: 08\n日期: 2022/03/01\n時間:03:41:38</string>
+    <string name="contentTV6">里程 0001159.3 km\nVIN: XXXXXXXXXX\nXXXXXXXXXX</string>
+    <string name="contentTV7">GSM CSQ: 27\nAPN: internet\n伺服器 XX 連線\n(伺服器 2 連線)</string>
+    <string name="contentTV8">伺服器資訊\nIP Addr: 60.251.157.47\nPort: 8208</string>
+    <string name="contentTV9">伺服器資訊2\nIP Addr: 60.251.157.47\nPort: 8208</string>
+    <string name="contentMainMenuText1">駕駛設定</string>
+    <string name="contentMainMenuText2">列印功能</string>
+    <string name="contentMainMenuText3">資料下載</string>
+    <string name="contentMainMenuText4">系統參數</string>
+    <string name="dsText_Text1">駕駛活動輸入</string>
+    <string name="dsText_Text2">駕駛代碼輸入</string>
+    <string name="dsText_Text3">駕駛活動顯示</string>
+    <string name="dsText_Text4">駕駛人員輸入</string>
+</resources>
