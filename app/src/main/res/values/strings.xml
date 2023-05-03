@@ -25,4 +25,26 @@
     <string name="dsText_Text2">駕駛代碼輸入</string>
     <string name="dsText_Text3">駕駛活動顯示</string>
     <string name="dsText_Text4">駕駛人員輸入</string>
+
+    <string-array name="setting_full_txt">
+        <item>駕駛活動變更</item>
+        <item>駕駛代碼輸入</item>
+        <item>目前累計駕駛時間</item>
+        <item>駕駛累計代班時間</item>
+        <item>駕駛累計休息時間</item>
+        <item>駕駛活動列印</item>
+        <item>事件事故列印</item>
+        <item>技術資料列印</item>
+        <item>速度曲線圖列印</item>
+        <item>最近24小時下載</item>
+        <item>指令日期下載</item>
+        <item>今日記錄檔下載</item>
+        <item>系統時間設定</item>
+        <item>連續行駛門檻時間設定</item>
+        <item>累計休息門檻時間設定</item>
+        <item>車速GAIN值設定</item>
+        <item>轉速GAIN值設定</item>
+        <item>顯示平背光設定</item>
+        <item>車機廠商資料</item>
+    </string-array>
 </resources>
