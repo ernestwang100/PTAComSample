@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         mainMenuBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.setClass(MainActivity.this, MainMenuActivity.class);
+            intent.setClass(MainActivity.this, SettingActivity.class);
             startActivity(intent);
         });
 
