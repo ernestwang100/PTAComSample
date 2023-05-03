@@ -67,6 +67,8 @@
         android:layout_width="478dp"
         android:layout_height="717dp"
         app:layout_constraintStart_toEndOf="@+id/homeBtn"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteY="1dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
