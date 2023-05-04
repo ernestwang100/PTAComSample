@@ -1,4 +1,4 @@
-package com.asuka.ptacomsample;
+package com.asuka.ptacomsample.main;
 
 import static java.lang.Thread.sleep;
 
@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.asuka.ptacomsample.R;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -1,4 +1,4 @@
-package com.asuka.ptacomsample;
+package com.asuka.ptacomsample.main;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.asuka.comm.ComPort;
+import com.asuka.ptacomsample.R;
 
 import java.awt.font.TextAttribute;
 import java.util.concurrent.ExecutorService;

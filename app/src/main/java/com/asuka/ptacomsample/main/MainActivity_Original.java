@@ -1,4 +1,4 @@
-package com.asuka.ptacomsample;
+package com.asuka.ptacomsample.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.asuka.comm.ComPort;
+import com.asuka.ptacomsample.R;
 
 public class MainActivity_Original extends AppCompatActivity implements View.OnClickListener {
 

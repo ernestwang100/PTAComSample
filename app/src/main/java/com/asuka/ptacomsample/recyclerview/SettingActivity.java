@@ -1,4 +1,4 @@
-package com.asuka.ptacomsample;
+package com.asuka.ptacomsample.recyclerview;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.asuka.ptacomsample.main.MainActivity;
+import com.asuka.ptacomsample.R;
+import com.asuka.ptacomsample.third.DrivingTimeActivity;
+
 import java.util.ArrayList;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends AppCompatActivity implements RecyclerViewInterface {
     ArrayList<SettingModel> settingModels = new ArrayList<>();
     RecyclerView recyclerView;
     Button homeBtn, upBtn, downBtn;
@@ -29,7 +33,7 @@ public class SettingActivity extends AppCompatActivity {
 
         setSettingModels();
 
-        SettingAdapter settingAdapter = new SettingAdapter(this, settingModels);
+        SettingAdapter settingAdapter = new SettingAdapter(this, settingModels, this);
         recyclerView.setAdapter(settingAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -64,4 +68,13 @@ public class SettingActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onItemClick(int position) {
+        if(position == 2){
+            Intent intent = new Intent();
+            intent.setClass(SettingActivity.this, DrivingTimeActivity.class);
+            startActivity(intent);
+        }
+
+    }
 }

@@ -12,7 +12,10 @@
         android:theme="@style/Theme.PTAComSample"
         tools:targetApi="31">
         <activity
-            android:name=".SettingActivity"
+            android:name=".third.DrivingTimeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".recyclerview.SettingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,8 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenuActivity"></activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".main.MainMenuActivity" />
+        <activity android:name=".main.MainActivity" />
+        <activity android:name=".main.DrivingTimeActivity" />
     </application>
 
 </manifest>

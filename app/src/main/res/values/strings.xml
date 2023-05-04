@@ -25,6 +25,7 @@
     <string name="dsText_Text2">駕駛代碼輸入</string>
     <string name="dsText_Text3">駕駛活動顯示</string>
     <string name="dsText_Text4">駕駛人員輸入</string>
+    <string name="sText_Text5">主駕駛\n 00:00\n共同駕駛\n00:00</string>
 
     <string-array name="setting_full_txt">
         <item>駕駛活動變更</item>

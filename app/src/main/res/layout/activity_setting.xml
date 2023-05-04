@@ -14,7 +14,8 @@
         android:text="@string/homeBtnCover"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/upBtn"/>
 
     <Button
         android:id="@+id/upBtn"
@@ -25,7 +26,8 @@
         android:text="@string/upBtnCover"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/homeBtn"
+        app:layout_constraintBottom_toTopOf="@id/downBtn"/>
 
     <Button
         android:id="@+id/downBtn"
@@ -36,31 +38,20 @@
         android:text="@string/downBtnCover"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/upBtn"
+        app:layout_constraintBottom_toTopOf="@id/confirmBtn"/>
 
     <Button
         android:id="@+id/confirmBtn"
         android:layout_width="170sp"
         android:layout_height="60sp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="0dp"
         android:text="@string/confirmBtnCover"
-        android:textSize="30sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/downBtn" />
-
-    <Button
-        android:id="@+id/printBtn"
-        android:layout_width="170sp"
-        android:layout_height="60sp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="0dp"
-        android:text="@string/printBtnCover"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmBtn"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/downBtn" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/settingrecycle"

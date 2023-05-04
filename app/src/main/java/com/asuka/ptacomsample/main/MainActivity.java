@@ -1,4 +1,4 @@
-package com.asuka.ptacomsample;
+package com.asuka.ptacomsample.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.asuka.ptacomsample.R;
+import com.asuka.ptacomsample.recyclerview.SettingActivity;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
     private Button mainMenuBtn;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainMenuBtn = findViewById(R.id.mainMenuBtn);
+        mainMenuBtn = findViewById(R.id.homeBtn);
         upBtn = findViewById(R.id.upBtn);
         downBtn = findViewById(R.id.downBtn);
 

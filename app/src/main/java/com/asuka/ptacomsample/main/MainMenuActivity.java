@@ -1,11 +1,12 @@
-package com.asuka.ptacomsample;
+package com.asuka.ptacomsample.main;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.asuka.ptacomsample.R;
 
 public class MainMenuActivity extends AppCompatActivity {
     private Button homeBtn;
