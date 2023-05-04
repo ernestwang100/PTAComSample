@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.asuka.ptacomsample.R;
-import com.asuka.ptacomsample.recyclerview.SettingActivity;
+import com.asuka.ptacomsample.second.SettingActivity;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

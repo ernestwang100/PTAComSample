@@ -1,17 +1,13 @@
 package com.asuka.ptacomsample.third;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import com.asuka.ptacomsample.R;
-import com.asuka.ptacomsample.main.MainActivity;
-import com.asuka.ptacomsample.main.MainMenuActivity;
-import com.asuka.ptacomsample.recyclerview.SettingActivity;
+import com.asuka.ptacomsample.second.SettingActivity;
 
 public class DrivingTimeActivity extends AppCompatActivity {
     Button homeBtn, upBtn, downBtn;

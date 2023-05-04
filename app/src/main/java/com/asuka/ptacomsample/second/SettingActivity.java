@@ -1,4 +1,4 @@
-package com.asuka.ptacomsample.recyclerview;
+package com.asuka.ptacomsample.second;
 
 import android.content.Intent;
 import android.os.Bundle;

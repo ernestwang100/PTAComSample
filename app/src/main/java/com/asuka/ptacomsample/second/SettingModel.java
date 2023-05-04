@@ -1,4 +1,4 @@
-package com.asuka.ptacomsample.recyclerview;
+package com.asuka.ptacomsample.second;
 
 public class SettingModel {
     String settingName;
