@@ -24,6 +24,7 @@
         <activity android:name=".main.MainMenuActivity" />
         <activity android:name=".second.SettingActivity" />
         <activity android:name=".third.DrivingTimeActivity" />
+        <activity android:name=".third.SubstituteTimeActivity" />
     </application>
 
 </manifest>
