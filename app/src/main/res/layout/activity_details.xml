@@ -56,11 +56,12 @@
 
 
     <TextView
+        android:id="@+id/titleTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="目前累計駕駛時間"
         android:textSize="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/detailsTV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/homeBtn"
         app:layout_constraintTop_toTopOf="parent" />
@@ -69,7 +70,7 @@
 
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/detailsTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sText_Text5"

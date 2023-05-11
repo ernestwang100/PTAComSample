@@ -11,9 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PTAComSample"
         tools:targetApi="31">
-
         <activity
-            android:name=".main.MainActivity"
+            android:name=".second.SettingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,9 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".main.MainMenuActivity" />
-        <activity android:name=".second.SettingActivity" />
-        <activity android:name=".third.DrivingTimeActivity" />
-        <activity android:name=".third.SubstituteTimeActivity" />
+        <activity android:name=".main.MainActivity" />
+        <activity android:name=".third.DetailsActivity" />
     </application>
 
 </manifest>

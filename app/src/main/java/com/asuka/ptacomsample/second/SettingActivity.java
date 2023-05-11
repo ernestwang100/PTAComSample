@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.asuka.ptacomsample.main.MainActivity;
 import com.asuka.ptacomsample.R;
-import com.asuka.ptacomsample.third.DrivingTimeActivity;
+import com.asuka.ptacomsample.third.DetailsActivity;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class SettingActivity extends AppCompatActivity implements RecyclerViewInterface {
     ArrayList<SettingModel> settingModels = new ArrayList<>();
@@ -61,20 +62,23 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewIn
 
     private void setSettingModels() {
         String[] settingNames = getResources().getStringArray(R.array.setting_full_txt);
+        String[] settingDetails = getResources().getStringArray(R.array.setting_details_txt);
 
         Log.d("settingNames", String.valueOf(settingNames.length));
         for (int i = 0; i < settingNames.length; i++) {
-            settingModels.add(new SettingModel(settingNames[i]));
+            settingModels.add(new SettingModel(settingNames[i], settingDetails[i]));
         }
     }
 
     @Override
     public void onItemClick(int position) {
-        if(position == 2){
-            Intent intent = new Intent();
-            intent.setClass(SettingActivity.this, DrivingTimeActivity.class);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(SettingActivity.this, DetailsActivity.class);
+//        intent.putExtra("TITLE", settingModels.get(position).getSettingName());
+//        intent.putExtra("DETAILS", settingModels.get(position).getSettingDetails());
 
+        intent.putExtra("TITLES", getResources().getStringArray(R.array.setting_full_txt));
+        intent.putExtra("DETAILS", getResources().getStringArray(R.array.setting_details_txt));
+        intent.putExtra("INDEX", position);
+        startActivity(intent);
     }
 }

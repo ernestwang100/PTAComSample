@@ -1,11 +1,12 @@
 package com.asuka.ptacomsample.second;
 
 public class SettingModel {
-    String settingName;
+    String settingName, settingDetails;
     int image;
 
-    public SettingModel(String settingName) {
+    public SettingModel(String settingName, String details) {
         this.settingName = settingName;
+        this.settingDetails = details;
     }
 
     public SettingModel(String settingName, int image) {
@@ -15,6 +16,10 @@ public class SettingModel {
 
     public String getSettingName() {
         return settingName;
+    }
+
+    public String getSettingDetails() {
+        return settingDetails;
     }
 
     public int getImage() {
