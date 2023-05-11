@@ -2,6 +2,8 @@ package com.asuka.ptacomsample.main;
 
 import static java.lang.Thread.sleep;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -49,9 +51,31 @@ public class MainFragmentTV8 extends Fragment {
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
+                if (messageText.equals("5")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Alert")
+                            .setIcon(R.drawable.baseline_info_24)
+                            .setCancelable(false)
+                            .setMessage("Number count is 5. Reset the number?")
+                            .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    round = 0;
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create()
+                            .show();
+                }
                 tv8.setText("目前數值：" + messageText);
             }
         };
+
 
         executorService.execute(() -> {
             while (true) {
