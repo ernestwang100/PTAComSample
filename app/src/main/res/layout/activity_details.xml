@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".third.DrivingTimeActivity">
+    tools:context=".third.DetailsActivity">
 
 
     <Button
@@ -13,7 +13,7 @@
         android:layout_height="60sp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="3dp"
-        android:text="@string/mainMenuBtnCover"
+        android:text="@string/backBtnCover"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -59,7 +59,7 @@
         android:id="@+id/titleTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="目前累計駕駛時間"
+        android:text="@string/sText_Text1"
         android:textSize="40dp"
         app:layout_constraintBottom_toTopOf="@+id/detailsTV"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,8 +73,8 @@
         android:id="@+id/detailsTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sText_Text5"
-        android:textSize="30sp"
+        android:text="@string/sText_Text2"
+        android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/homeBtn"
