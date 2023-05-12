@@ -2,21 +2,37 @@ package com.asuka.ptacomsample.third;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.NumberPicker;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.second.SettingActivity;
 
+import java.util.Calendar;
+
 public class DetailsActivity extends AppCompatActivity {
-    private Button homeBtn, upBtn, downBtn;
+    private Button homeBtn, upBtn, downBtn, confirmBtn;
     private TextView titleTV, detailsTV;
     private String[] titles;
     private String[] details;
     private int currentIndex;
+    private Switch lightSwitch;
+    private EditText editText_input;
+    private Dialog mDlgPilotCode, mDlgLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +52,9 @@ public class DetailsActivity extends AppCompatActivity {
         downBtn = findViewById(R.id.downBtn);
         titleTV = findViewById(R.id.titleTV);
         detailsTV = findViewById(R.id.detailsTV);
+        lightSwitch = findViewById(R.id.lightSwitch);
+        editText_input = findViewById(R.id.editText_input);
+        confirmBtn = findViewById(R.id.confirmBtn);
 
         updateViews();
 
@@ -58,10 +77,173 @@ public class DetailsActivity extends AppCompatActivity {
                 updateViews();
             }
         });
+
+        detailsTV.setOnClickListener(v -> {
+            if (currentIndex == 1) {
+                showPilotCodeDialog();
+            } else if (currentIndex == 10) {
+                showDatePickerDialog();
+            } else if (currentIndex == 13 || currentIndex == 14) {
+                showTimePickerDialog();
+            } else if (currentIndex == 15 || currentIndex == 16) {
+                showNumberPickerDialog();
+
+            }
+        });
+
+        confirmBtn.setOnClickListener(v -> {
+            if (currentIndex == 13 || currentIndex == 14 || currentIndex == 15 || currentIndex == 16) {
+                showLoginDialog();
+
+                updateViews();
+            }
+        });
+
+
+
     }
 
+    private void showLoginDialog(){
+        mDlgLogin = new Dialog(this);
+        mDlgLogin.setCancelable(false);
+        mDlgLogin.setContentView(R.layout.dlg_login);
+        Button btnOK = (Button) mDlgLogin.findViewById(R.id.lbtnOK);
+        Button btnCancel = (Button) mDlgLogin.findViewById(R.id.lbtnCancel);
+        btnOK.setOnClickListener(lDlgBtnOKOnClick);
+        btnCancel.setOnClickListener(lDlgBtnCancelOnClick);
+        mDlgLogin.show();
+
+    }
+
+    private View.OnClickListener lDlgBtnOKOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            EditText edtName = (EditText) mDlgLogin.findViewById(R.id.edtName);
+            EditText edtPassword = (EditText) mDlgLogin.findViewById(R.id.edtPassword);
+//            it.putExtra("DETAILS",)
+            updateViews();
+            mDlgLogin.dismiss();
+        }
+    };
+
+    private View.OnClickListener lDlgBtnCancelOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mDlgLogin.dismiss();
+        }
+    };
+
+    private void showPilotCodeDialog() {
+        mDlgPilotCode = new Dialog(this);
+        mDlgPilotCode.setCancelable(false);
+        mDlgPilotCode.setContentView(R.layout.dlg_code_pilot);
+        Button btnOK = (Button) mDlgPilotCode.findViewById(R.id.pbtnOK);
+        Button btnCancel = (Button) mDlgPilotCode.findViewById(R.id.pbtnCancel);
+        btnOK.setOnClickListener(pDlgBtnOKOnClick);
+        btnCancel.setOnClickListener(pDlgBtnCancelOnClick);
+        mDlgPilotCode.show();
+
+    }
+
+    private View.OnClickListener pDlgBtnOKOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            EditText edtCodePilot = (EditText) mDlgPilotCode.findViewById(R.id.edtCodePilot);
+            EditText edtCodeCopilot = (EditText) mDlgPilotCode.findViewById(R.id.edtCodeCopilot);
+            details[currentIndex] = edtCodePilot.getText().toString() + "/" + edtCodeCopilot.getText().toString();
+            updateViews();
+            mDlgPilotCode.dismiss();
+        }
+    };
+
+    private View.OnClickListener pDlgBtnCancelOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mDlgPilotCode.dismiss();
+        }
+    };
+
+
+
+    private void showNumberPickerDialog() {
+        final NumberPicker numberPicker = new NumberPicker(this);
+        numberPicker.setMaxValue(100);
+        numberPicker.setMinValue(1);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a number:");
+        builder.setView(numberPicker);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                details[currentIndex] = String.valueOf(numberPicker.getValue());
+                updateViews();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // do nothing
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+    private void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(DetailsActivity.this, (view, year, month, dayOfMonth) -> {
+            String date = year + "/" + (month + 1) + "/" + dayOfMonth;
+            details[currentIndex] = date;
+            updateViews();
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
+    private void showTimePickerDialog(){
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog timePickerDialog = new TimePickerDialog(DetailsActivity.this, (view, hourOfDay, minute) -> {
+            String time = hourOfDay + ":" + minute;
+            details[currentIndex] = time;
+            updateViews();
+        }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+        timePickerDialog.setTitle("Select Time");
+        timePickerDialog.setMessage("Select Proper Time");
+        timePickerDialog.setIcon(R.drawable.baseline_access_time_24);
+        timePickerDialog.setCancelable(false);
+        timePickerDialog.show();
+    }
+
+
+
+
+
     private void updateViews() {
+//        if (currentIndex == 0 || currentIndex == 1 || currentIndex == 9 || (currentIndex >= 13 && currentIndex <= 16)) {
+//            editText_input.setVisibility(View.VISIBLE);
+//            detailsTV.setVisibility(View.GONE);
+//            lightSwitch.setVisibility(View.GONE);
+//        } else {
+            editText_input.setVisibility(View.GONE);
+            detailsTV.setVisibility(View.VISIBLE);
+            if (currentIndex == 17) {
+                lightSwitch.setVisibility(View.VISIBLE);
+            } else {
+                lightSwitch.setVisibility(View.GONE);
+            }
+//        }
+
+
+
+
         titleTV.setText(titles[currentIndex]);
         detailsTV.setText(details[currentIndex]);
+
+
     }
 }
