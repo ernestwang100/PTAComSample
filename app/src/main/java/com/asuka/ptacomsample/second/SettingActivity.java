@@ -76,6 +76,9 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewIn
 //        intent.putExtra("TITLE", settingModels.get(position).getSettingName());
 //        intent.putExtra("DETAILS", settingModels.get(position).getSettingDetails());
 
+//        Bundle bundle = new Bundle();
+//        bundle.putStringArrayList("TITLES", getResources().getStringArray(R.array.setting_full_txt));
+
         intent.putExtra("TITLES", getResources().getStringArray(R.array.setting_full_txt));
         intent.putExtra("DETAILS", getResources().getStringArray(R.array.setting_details_txt));
         intent.putExtra("INDEX", position);

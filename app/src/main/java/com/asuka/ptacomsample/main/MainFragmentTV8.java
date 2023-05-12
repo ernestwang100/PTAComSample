@@ -52,6 +52,8 @@ public class MainFragmentTV8 extends Fragment {
             @Override
             public void handleMessage(Message msg) {
                 if (messageText.equals("5")) {
+                    if(getActivity() == null)
+                        return;
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Alert")
                             .setIcon(R.drawable.baseline_info_24)

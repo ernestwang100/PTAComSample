@@ -33,8 +33,7 @@ public class MainFragmentTV1 extends Fragment {
         super();
         this.executorService = executorService;
         mPort = new ComPort();
-        if(mPort != null)
-            mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
     }
 
     @Nullable
