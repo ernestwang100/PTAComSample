@@ -9,6 +9,8 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,10 +20,13 @@ import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
+import com.asuka.ptacomsample.main.MainFragmentTV1;
 import com.asuka.ptacomsample.second.SettingActivity;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutorService;
 
 public class DetailsActivity extends AppCompatActivity {
     private Button homeBtn, upBtn, downBtn, confirmBtn;
@@ -32,7 +37,19 @@ public class DetailsActivity extends AppCompatActivity {
     private Switch lightSwitch;
     private EditText editText_input;
     private Dialog mDlgPilotCode, mDlgLogin;
+    private ExecutorService executorService;
+    private byte[] writeData;
+    private ComPort mPort;
 
+    private Thread thread;
+    private Handler handler;
+    private static final String TAG = "DetailsActivity";
+    private volatile boolean stopThread = false;
+
+    public DetailsActivity() {
+        mPort = new ComPort();
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +74,13 @@ public class DetailsActivity extends AppCompatActivity {
         confirmBtn = findViewById(R.id.confirmBtn);
 
         updateViews();
+
+//        TODO
+        mPort.write(writeData, writeData.length);
+
+
+
+
 
         homeBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
@@ -91,6 +115,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+
         confirmBtn.setOnClickListener(v -> {
             if (currentIndex == 13 || currentIndex == 14 || currentIndex == 15 || currentIndex == 16) {
                 showLoginDialog();
@@ -103,15 +128,123 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-    private void showLoginDialog(){
-        mDlgLogin = new Dialog(this);
-        mDlgLogin.setCancelable(false);
-        mDlgLogin.setContentView(R.layout.dlg_login);
-        Button btnOK = (Button) mDlgLogin.findViewById(R.id.lbtnOK);
-        Button btnCancel = (Button) mDlgLogin.findViewById(R.id.lbtnCancel);
-        btnOK.setOnClickListener(lDlgBtnOKOnClick);
-        btnCancel.setOnClickListener(lDlgBtnCancelOnClick);
-        mDlgLogin.show();
+
+    public void startThread() {
+        stopThread = false;
+        RunnableRead runnable = new RunnableRead();
+        thread = new Thread(runnable);
+        thread.start();
+    }
+
+
+    public void stopThread() {
+        stopThread = true;
+    }
+
+//    TODO
+    class RunnableRead implements Runnable {
+        @Override
+        public void run() {
+            byte[] readData = new byte[1024];
+            if(stopThread)  return;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Log.i(TAG, "run: "+e.getMessage());
+                e.printStackTrace();
+            }
+            int readLen = mPort.read(readData, readData.length);
+            if (readLen > 0) {
+                String received = "";
+                for (int i = 0; i < readLen; i++) {
+                    received += String.format("%02X ", readData[i]);
+                }
+                Log.d(TAG, String.valueOf(readData));
+            }
+        }
+    }
+
+    private void updateViews() {
+//        if (currentIndex == 0 || currentIndex == 1 || currentIndex == 9 || (currentIndex >= 13 && currentIndex <= 16)) {
+//            editText_input.setVisibility(View.VISIBLE);
+//            detailsTV.setVisibility(View.GONE);
+//            lightSwitch.setVisibility(View.GONE);
+//        } else {
+        editText_input.setVisibility(View.GONE);
+        detailsTV.setVisibility(View.VISIBLE);
+        if (currentIndex == 17) {
+            lightSwitch.setVisibility(View.VISIBLE);
+        } else {
+            lightSwitch.setVisibility(View.GONE);
+        }
+//        }
+
+
+        switch(currentIndex){
+            case 0:
+                writeData = "$LCD+DRIVER STATUS=ID,STATUS".getBytes();
+                break;
+            case 1:
+                writeData = "$LCD+DRIVER IN=ID,NUMBER".getBytes();
+                break;
+            case 2:
+                writeData = "$LCD+DRIVER TIME=?".getBytes();
+                break;
+            case 3:
+                writeData = "$LCD+STANDBY TIME=?".getBytes();
+                break;
+            case 4:
+                writeData = "$LCD+REST TIME=?".getBytes();
+                break;
+            case 5:
+                writeData = "$LCD+PRINT=1".getBytes();
+                break;
+            case 6:
+                writeData = "$LCD+PRINT=2".getBytes();
+                break;
+            case 7:
+                writeData = "$LCD+PRINT=3".getBytes();
+                break;
+            case 8:
+                writeData = "$LCD+PRINT=4".getBytes();
+                break;
+            case 9:
+                writeData = "$LCD+DOWNLOAD=24".getBytes();
+                break;
+            case 10:
+                writeData = "$LCD+DOWNLOAD=YYYYMMDD".getBytes();
+                break;
+            case 11:
+                writeData = "$LCD+DOWNLOAD=NOW".getBytes();
+                break;
+            case 12:
+                writeData = "$LCD+TIME ADJ=YYYYDDMMhhmmss".getBytes();
+                break;
+            case 13:
+                writeData = "$LCD+SET DRIVE TIME=hh,mm".getBytes();
+                break;
+            case 14:
+                writeData = "$LCD+SET REST TIME=hh,mm".getBytes();
+                break;
+            case 15:
+                writeData = "$LCD+SPEED GAIN=".getBytes();
+                break;
+            case 16:
+                writeData = "$LCD+RPM DIV=".getBytes();
+                break;
+            case 18:
+                writeData = "$LCD+INFO=".getBytes();
+                break;
+            default:
+                break;
+
+
+        }
+
+
+        titleTV.setText(titles[currentIndex]);
+        detailsTV.setText(details[currentIndex]);
+
 
     }
 
@@ -133,18 +266,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
     };
 
-    private void showPilotCodeDialog() {
-        mDlgPilotCode = new Dialog(this);
-        mDlgPilotCode.setCancelable(false);
-        mDlgPilotCode.setContentView(R.layout.dlg_code_pilot);
-        Button btnOK = (Button) mDlgPilotCode.findViewById(R.id.pbtnOK);
-        Button btnCancel = (Button) mDlgPilotCode.findViewById(R.id.pbtnCancel);
-        btnOK.setOnClickListener(pDlgBtnOKOnClick);
-        btnCancel.setOnClickListener(pDlgBtnCancelOnClick);
-        mDlgPilotCode.show();
-
-    }
-
     private View.OnClickListener pDlgBtnOKOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -163,7 +284,29 @@ public class DetailsActivity extends AppCompatActivity {
         }
     };
 
+    private void showPilotCodeDialog() {
+        mDlgPilotCode = new Dialog(this);
+        mDlgPilotCode.setCancelable(false);
+        mDlgPilotCode.setContentView(R.layout.dlg_code_pilot);
+        Button btnOK = (Button) mDlgPilotCode.findViewById(R.id.pbtnOK);
+        Button btnCancel = (Button) mDlgPilotCode.findViewById(R.id.pbtnCancel);
+        btnOK.setOnClickListener(pDlgBtnOKOnClick);
+        btnCancel.setOnClickListener(pDlgBtnCancelOnClick);
+        mDlgPilotCode.show();
 
+    }
+
+    private void showLoginDialog(){
+        mDlgLogin = new Dialog(this);
+        mDlgLogin.setCancelable(false);
+        mDlgLogin.setContentView(R.layout.dlg_login);
+        Button btnOK = (Button) mDlgLogin.findViewById(R.id.lbtnOK);
+        Button btnCancel = (Button) mDlgLogin.findViewById(R.id.lbtnCancel);
+        btnOK.setOnClickListener(lDlgBtnOKOnClick);
+        btnCancel.setOnClickListener(lDlgBtnCancelOnClick);
+        mDlgLogin.show();
+
+    }
 
     private void showNumberPickerDialog() {
         final NumberPicker numberPicker = new NumberPicker(this);
@@ -193,7 +336,6 @@ public class DetailsActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
     private void showDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(DetailsActivity.this, (view, year, month, dayOfMonth) -> {
@@ -221,29 +363,4 @@ public class DetailsActivity extends AppCompatActivity {
 
 
 
-
-
-    private void updateViews() {
-//        if (currentIndex == 0 || currentIndex == 1 || currentIndex == 9 || (currentIndex >= 13 && currentIndex <= 16)) {
-//            editText_input.setVisibility(View.VISIBLE);
-//            detailsTV.setVisibility(View.GONE);
-//            lightSwitch.setVisibility(View.GONE);
-//        } else {
-            editText_input.setVisibility(View.GONE);
-            detailsTV.setVisibility(View.VISIBLE);
-            if (currentIndex == 17) {
-                lightSwitch.setVisibility(View.VISIBLE);
-            } else {
-                lightSwitch.setVisibility(View.GONE);
-            }
-//        }
-
-
-
-
-        titleTV.setText(titles[currentIndex]);
-        detailsTV.setText(details[currentIndex]);
-
-
-    }
 }
