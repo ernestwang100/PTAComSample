@@ -1,9 +1,11 @@
 package com.asuka.ptacomsample.main;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import com.asuka.ptacomsample.R;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private MainFragmentTV7 mainFragmentTV7;
     private MainFragmentTV8 mainFragmentTV8;
     private ExecutorService executorService = Executors.newCachedThreadPool();
+    private static final String TAG = "MainActivity";
 //    ComPort mPort;
 //
 //    Button mWriteBtn;
@@ -44,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(getIntent().hasExtra("FragmentIndex")){
+            round = getIntent().getIntExtra("FragmentIndex", 0);
+            Log.d(TAG, "onCreate: round = " + round);
+        }else {
+            round = 0;
+        }
+
+        fragmentSwitcher(round);
+
         mainMenuBtn = findViewById(R.id.homeBtn);
         upBtn = findViewById(R.id.upBtn);
         downBtn = findViewById(R.id.downBtn);
@@ -55,21 +67,25 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        mainFragmentWelcomeTV = new MainFragmentWelcomeTV();
-        getSupportFragmentManager().beginTransaction().add(R.id.mainFrameLayout, mainFragmentWelcomeTV, "WelcomeTV").commit();
+//        mainFragmentWelcomeTV = new MainFragmentWelcomeTV();
+//        getSupportFragmentManager().beginTransaction().add(R.id.mainFrameLayout, mainFragmentWelcomeTV, "WelcomeTV").commit();
 
         upBtn.setOnClickListener(v -> {
-            round--;
-            fragmentSwitcher();
+            fragmentSwitcher(--round);
+            Log.d(TAG, "onCreate upBtn: round = " + round);
         });
         downBtn.setOnClickListener(v -> {
-            round++;
-            fragmentSwitcher();
+            fragmentSwitcher(++round);
+            Log.d(TAG, "onCreate downBtn: round = " + round);
         });
 
     }
 
-    private void fragmentSwitcher() {
+    private void fragmentSwitcher(int round) {
+        Fragment selectedFragment = null;
+
+        Log.d(TAG, "fragmentSwitcher: round = " + round);
+
         if (round > 8)
             round = 0;
         if (round < 0)
@@ -82,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
                     mainFragmentTV8 = null;
                 if (mainFragmentTV1 != null)
                     mainFragmentTV1 = null;
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentWelcomeTV, "WelcomeTV").commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentWelcomeTV, "WelcomeTV").commit();
+                selectedFragment = mainFragmentWelcomeTV;
                 break;
             case 1:
                 if (mainFragmentTV1 == null)
@@ -91,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
                     mainFragmentTV2 = null;
                 if (mainFragmentWelcomeTV != null)
                     mainFragmentWelcomeTV = null;
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV1, "TV1").commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV1, "TV1").commit();
+                selectedFragment = mainFragmentTV1;
                 break;
             case 2:
                 if (mainFragmentTV2 == null)
@@ -100,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
                     mainFragmentTV3 = null;
                 if (mainFragmentTV1 != null)
                     mainFragmentTV1 = null;
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV2, "TV2").commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV2, "TV2").commit();
+                selectedFragment = mainFragmentTV2;
                 break;
             case 3:
                 if (mainFragmentTV3 == null)
@@ -109,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
                     mainFragmentTV4 = null;
                 if (mainFragmentTV2 != null)
                     mainFragmentTV2 = null;
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV3, "TV3").commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV3, "TV3").commit();
+                selectedFragment = mainFragmentTV3;
                 break;
             case 4:
                 if (mainFragmentTV4 == null)
@@ -118,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
                     mainFragmentTV5 = null;
                 if (mainFragmentTV3 != null)
                     mainFragmentTV3 = null;
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV4, "TV4").commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV4, "TV4").commit();
+                selectedFragment = mainFragmentTV4;
                 break;
             case 5:
                 if (mainFragmentTV5 == null)
@@ -127,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
                     mainFragmentTV6 = null;
                 if (mainFragmentTV4 != null)
                     mainFragmentTV4 = null;
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV5, "TV5").commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV5, "TV5").commit();
+                selectedFragment = mainFragmentTV5;
                 break;
             case 6:
                 if (mainFragmentTV6 == null)
@@ -136,7 +158,8 @@ public class MainActivity extends AppCompatActivity {
                     mainFragmentTV7 = null;
                 if (mainFragmentTV5 != null)
                     mainFragmentTV5 = null;
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV6, "TV6").commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV6, "TV6").commit();
+                selectedFragment = mainFragmentTV6;
                 break;
             case 7:
                 if (mainFragmentTV7 == null)
@@ -145,7 +168,8 @@ public class MainActivity extends AppCompatActivity {
                     mainFragmentTV8 = null;
                 if (mainFragmentTV6 != null)
                     mainFragmentTV6 = null;
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV7, "TV7").commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV7, "TV7").commit();
+                selectedFragment = mainFragmentTV7;
                 break;
             case 8:
                 if (mainFragmentTV8 == null)
@@ -154,8 +178,13 @@ public class MainActivity extends AppCompatActivity {
                     mainFragmentWelcomeTV = null;
                 if (mainFragmentTV7 != null)
                     mainFragmentTV7 = null;
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV8, "TV8").commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, mainFragmentTV8, "TV8").commit();
+                selectedFragment = mainFragmentTV8;
                 break;
+        }
+
+        if(selectedFragment != null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, selectedFragment).commit();
         }
     }
 }

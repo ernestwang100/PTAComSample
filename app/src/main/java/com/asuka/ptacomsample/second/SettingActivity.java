@@ -42,6 +42,7 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewIn
         homeBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.setClass(SettingActivity.this, MainActivity.class);
+            intent.putExtra("FragmentIndex", 1);
             startActivity(intent);
         });
         upBtn.setOnClickListener(new View.OnClickListener(){
