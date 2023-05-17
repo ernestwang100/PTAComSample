@@ -48,10 +48,10 @@ public class RecvThread extends Thread {
                 for (int i = 0; i < count; i++) {
                     received += String.format("%c", readBuf[i]);
                 }
-                Log.d(TAG, "received: " + received);
+                Log.i(TAG, "received: " + received);
 
                 String[] temp = received.split(",");
-                Log.d(TAG, "temp[0]: " + temp[0]);
+                Log.i(TAG, "temp[0]: " + temp[0]);
 
                 if(new String(writeData).split("=")[1].equals(temp[0].split("=")[1].trim())) {
                     switch (temp[0]) {
@@ -126,7 +126,7 @@ public class RecvThread extends Thread {
 
                 }
             }
-        Log.d(TAG, "Received = RecvThread ended~~~");
+        Log.i(TAG, "Received = RecvThread ended~~~");
         }
     }
 
