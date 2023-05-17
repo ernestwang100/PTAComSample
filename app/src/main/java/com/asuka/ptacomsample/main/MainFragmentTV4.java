@@ -53,7 +53,7 @@ public class MainFragmentTV4 extends Fragment {
                 tv4.setText(msg.obj.toString());
             }
         };
-        mRecvThread = new RecvThread(handler, mPort);
+        mRecvThread = new RecvThread(handler, mPort,writeData);
         mRecvThread.start();
     }
 
@@ -64,6 +64,11 @@ public class MainFragmentTV4 extends Fragment {
         mRecvThread.interrupt();
         Log.d(TAG, "Received = current thread: " + Thread.currentThread());
         Log.d(TAG, "Received = thread 數量: " + Thread.getAllStackTraces().size());
+    }
+
+    public void onResume() {
+        super.onResume();
+        tv4.setText("資料讀取中...");
     }
 
 
