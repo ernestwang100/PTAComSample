@@ -42,11 +42,11 @@
 
                 />
 
-            <EditText
-                android:id="@+id/driverEdt"
+            <TextView
+                android:id="@+id/drivertimeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="48sp"
-                android:hint="@string/inputcode"></EditText>
+                android:hint="@string/inputtime"></TextView>
 
 
         </TableRow>
@@ -63,11 +63,11 @@
                 android:text="@string/coDriver"
                 android:textSize="30sp" />
 
-            <EditText
-                android:id="@+id/codriverEdt"
+            <TextView
+                android:id="@+id/codrivertimeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="48sp"
-                android:hint="@string/inputcode"></EditText>
+                android:hint="@string/inputtime"></TextView>
 
         </TableRow>
 

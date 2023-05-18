@@ -30,9 +30,15 @@
     <string name="driver">主駕駛</string>
     <string name="coDriver">共同駕駛</string>
     <string name="inputcode">請輸入代碼</string>
+    <string name="inputtime">請輸入時間</string>
     <string name="HH">小時</string>
     <string name="value">值</string>
     <string name="manufacturer">捷世林科技\n地址\n車機訊息\n公告\n</string>
+    <string name="print1">駕駛活動列印</string>
+    <string name="print2">事件事故列印</string>
+    <string name="print3">技術資料列印</string>
+    <string name="print4">速度曲線圖列印</string>
+
 
     <string-array name="setting_full_txt">
         <item>駕駛活動變更</item>

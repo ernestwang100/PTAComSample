@@ -1,6 +1,7 @@
 package com.asuka.ptacomsample.third;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.asuka.ptacomsample.R;
 public class DriverStatusFragment extends Fragment {
     private Spinner driverSpn, codriverSpn;
     private Integer driverStatus, codriverStatus;
+    private String cmd;
+    private static final String TAG = "DriverStatusFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,6 +28,8 @@ public class DriverStatusFragment extends Fragment {
         driverSpn.setOnItemSelectedListener(driverSpnListener);
         codriverSpn.setOnItemSelectedListener(codriverSpnListener);
 
+
+
         return view;
     }
 
@@ -32,6 +37,8 @@ public class DriverStatusFragment extends Fragment {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             driverStatus = position;
+            cmd = "$LCD+DRIVER STATUS=0," + driverStatus;
+            Log.d(TAG, "onCreateView: cmd = " + cmd);
         }
 
         @Override
@@ -51,4 +58,8 @@ public class DriverStatusFragment extends Fragment {
 
         }
     };
+
+    public String getCmd() {
+        return cmd;
+    }
 }

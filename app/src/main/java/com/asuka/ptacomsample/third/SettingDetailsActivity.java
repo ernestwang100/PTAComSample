@@ -8,21 +8,31 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 
 public class SettingDetailsActivity extends AppCompatActivity {
     private Button homeBtn, upBtn, downBtn, confirmBtn;
     private TextView titleTV;
     private int round = 0;
+    private String cmd;
+    private ComPort mPort;
+    private byte[] writeData;
     private DriverStatusFragment driverStatusFragment;
     private DriverCodeFragment driverCodeFragment;
     private DrivingTimeFragment drivingTimeFragment;
     private Data24hFragment data24hFragment;
     private GainFragment gainFragment;
     private ManufacturerFragment manufacturerFragment;
+    private PrintFragment printFragment;
 
 
     private static final String TAG = "SettingDetailsActivity";
+
+    public SettingDetailsActivity() {
+        mPort = new ComPort();
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,22 @@ public class SettingDetailsActivity extends AppCompatActivity {
         downBtn.setOnClickListener(v -> {
             fragmentSwitcher(++round);
         });
+
+        confirmBtn.setOnClickListener(v -> {
+            Log.d(TAG, "onCreate: cmd = " + cmd);
+            if (driverStatusFragment != null) {
+                cmd = driverStatusFragment.getCmd();
+                Log.d(TAG, "onCreate: cmd = " + cmd);
+            }
+
+            if (cmd != null) {
+                writeData = cmd.getBytes();
+                Log.d(TAG, "onCreate: writeData = " + writeData);
+                mPort.write(writeData, writeData.length);
+            }
+        });
+
+
     }
 
     private void fragmentSwitcher(int round){
@@ -79,6 +105,13 @@ public class SettingDetailsActivity extends AppCompatActivity {
             case 4:
                 drivingTimeFragment = new DrivingTimeFragment();
                 selectedFragment = drivingTimeFragment;
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                printFragment = new PrintFragment();
+                selectedFragment = printFragment;
                 break;
             case 9:
                 data24hFragment = new Data24hFragment();
