@@ -86,10 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "fragmentSwitcher: round = " + round);
 
-        if (round > 8)
-            round = 0;
-        if (round < 0)
-            round = 8;
+        round = round % 8 < 0 ? round % 8 + 8 : round % 8;
+        Log.d(TAG, "fragmentSwitcher: round%8 = " + round);
         switch (round) {
             case 0:
                 if (mainFragmentWelcomeTV == null)

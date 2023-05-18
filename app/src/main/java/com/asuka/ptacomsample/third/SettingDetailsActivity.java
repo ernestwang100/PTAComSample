@@ -67,27 +67,31 @@ public class SettingDetailsActivity extends AppCompatActivity {
 
         switch (round){
             case 0:
-                selectedFragment = new DriverStatusFragment();
+                driverStatusFragment = new DriverStatusFragment();
+                selectedFragment = driverStatusFragment;
                 break;
             case 1:
-                selectedFragment = new DriverCodeFragment();
+                driverCodeFragment = new DriverCodeFragment();
+                selectedFragment = driverCodeFragment;
                 break;
             case 2:
             case 3:
             case 4:
-                selectedFragment = new DrivingTimeFragment();
+                drivingTimeFragment = new DrivingTimeFragment();
+                selectedFragment = drivingTimeFragment;
                 break;
             case 9:
-                selectedFragment = new Data24hFragment();
+                data24hFragment = new Data24hFragment();
+                selectedFragment = data24hFragment;
                 break;
             case 15:
             case 16:
-                selectedFragment = new GainFragment();
+                gainFragment = new GainFragment();
+                selectedFragment = gainFragment;
                 break;
             case 18:
-                selectedFragment = new ManufacturerFragment();
-                break;
-
+                manufacturerFragment = new ManufacturerFragment();
+                selectedFragment = manufacturerFragment;
             default:
                 break;
         }
