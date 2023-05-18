@@ -12,6 +12,18 @@
         android:theme="@style/Theme.PTAComSample"
         tools:targetApi="31">
         <activity
+            android:name=".third.SettingDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".third.DriverCodeFragment"
+            android:exported="false" />
+        <activity
+            android:name=".third.DriverStatusFragment"
+            android:exported="false" />
+        <activity
+            android:name=".third.DrivingTimeFragment"
+            android:exported="false" />
+        <activity
             android:name=".main.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -20,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".second.SettingActivity" />
+        <activity android:name=".second.SettingListActivity" />
         <activity android:name=".third.DetailsActivity" />
     </application>
 

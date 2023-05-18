@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import com.asuka.ptacomsample.R;
-import com.asuka.ptacomsample.second.SettingActivity;
+import com.asuka.ptacomsample.second.SettingListActivity;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         mainMenuBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.setClass(MainActivity.this, SettingActivity.class);
+            intent.setClass(MainActivity.this, SettingListActivity.class);
             startActivity(intent);
         });
 

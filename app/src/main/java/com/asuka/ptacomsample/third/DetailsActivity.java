@@ -10,11 +10,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Switch;
@@ -22,8 +20,7 @@ import android.widget.TextView;
 
 import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
-import com.asuka.ptacomsample.main.MainFragmentTV1;
-import com.asuka.ptacomsample.second.SettingActivity;
+import com.asuka.ptacomsample.second.SettingListActivity;
 
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
@@ -84,7 +81,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         homeBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.setClass(DetailsActivity.this, SettingActivity.class);
+            intent.setClass(DetailsActivity.this, SettingListActivity.class);
             startActivity(intent);
         });
 
