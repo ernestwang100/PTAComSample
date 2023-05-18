@@ -14,33 +14,33 @@ import com.asuka.ptacomsample.R;
 
 import java.util.List;
 
-public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.MyHolder> {
+public class SettingListAdapter extends RecyclerView.Adapter<SettingListAdapter.MyHolder> {
     private final RecyclerViewInterface recyclerViewInterface;
     Context context;
-    List<SettingModel> settingModels;
+    List<SettingListModel> settingListModels;
 
-    public SettingAdapter(Context context, List<SettingModel> settingModels, RecyclerViewInterface recyclerViewInterface) {
+    public SettingListAdapter(Context context, List<SettingListModel> settingListModels, RecyclerViewInterface recyclerViewInterface) {
         this.context = context;
-        this.settingModels = settingModels;
+        this.settingListModels = settingListModels;
         this.recyclerViewInterface = recyclerViewInterface;
     }
 
     @NonNull
     @Override
-    public SettingAdapter.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SettingListAdapter.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.setting_row, parent, false);
         return new MyHolder(view, recyclerViewInterface);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SettingAdapter.MyHolder holder, int position) {
-        holder.settingName.setText(settingModels.get(position).getSettingName());
+    public void onBindViewHolder(@NonNull SettingListAdapter.MyHolder holder, int position) {
+        holder.settingName.setText(settingListModels.get(position).getSettingName());
     }
 
     @Override
     public int getItemCount() {
-        return settingModels.size();
+        return settingListModels.size();
     }
 
     public static class MyHolder extends RecyclerView.ViewHolder {

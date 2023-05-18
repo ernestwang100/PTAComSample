@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.asuka.ptacomsample.main.MainActivity;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.third.DetailsActivity;
+import com.asuka.ptacomsample.third.SettingDetailsActivity;
 
 import java.util.ArrayList;
-import java.util.Set;
 
-public class SettingActivity extends AppCompatActivity implements RecyclerViewInterface {
-    ArrayList<SettingModel> settingModels = new ArrayList<>();
+public class SettingListActivity extends AppCompatActivity implements RecyclerViewInterface {
+    ArrayList<SettingListModel> settingListModels = new ArrayList<>();
     RecyclerView recyclerView;
     Button homeBtn, upBtn, downBtn;
 
@@ -34,14 +34,14 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewIn
 
         setSettingModels();
 
-        SettingAdapter settingAdapter = new SettingAdapter(this, settingModels, this);
-        recyclerView.setAdapter(settingAdapter);
+        SettingListAdapter settingListAdapter = new SettingListAdapter(this, settingListModels, this);
+        recyclerView.setAdapter(settingListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
         homeBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.setClass(SettingActivity.this, MainActivity.class);
+            intent.setClass(SettingListActivity.this, MainActivity.class);
             intent.putExtra("FragmentIndex", 1);
             startActivity(intent);
         });
@@ -67,13 +67,13 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewIn
 
         Log.d("settingNames", String.valueOf(settingNames.length));
         for (int i = 0; i < settingNames.length; i++) {
-            settingModels.add(new SettingModel(settingNames[i], settingDetails[i]));
+            settingListModels.add(new SettingListModel(settingNames[i], settingDetails[i]));
         }
     }
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(SettingActivity.this, DetailsActivity.class);
+        Intent intent = new Intent(SettingListActivity.this, SettingDetailsActivity.class);
 //        intent.putExtra("TITLE", settingModels.get(position).getSettingName());
 //        intent.putExtra("DETAILS", settingModels.get(position).getSettingDetails());
 
