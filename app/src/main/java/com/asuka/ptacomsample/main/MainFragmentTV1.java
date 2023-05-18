@@ -138,6 +138,7 @@ public class MainFragmentTV1 extends Fragment {
                 if (count > 0) {
                     String received = "";
                     for (int i = 0; i < count; i++) {
+//                        TODO: 這裡有問題，如果收到的資料不是完整的一筆，會有問題
                         received += String.format("%c", readBuf[i]);
                     }
 
