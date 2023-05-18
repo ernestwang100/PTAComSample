@@ -27,6 +27,12 @@
     <string name="dsText_Text4">駕駛人員輸入</string>
     <string name="sText_Text1">目前累計駕駛時間</string>
     <string name="sText_Text2">主駕駛\n 00:00\n共同駕駛\n00:00</string>
+    <string name="driver">主駕駛</string>
+    <string name="coDriver">共同駕駛</string>
+    <string name="inputcode">請輸入代碼</string>
+    <string name="HH">小時</string>
+    <string name="value">值</string>
+    <string name="manufacturer">捷世林科技\n地址\n車機訊息\n公告\n</string>
 
     <string-array name="setting_full_txt">
         <item>駕駛活動變更</item>
@@ -72,6 +78,14 @@
         <item>捷世林科技地址車機訊息公告</item>
 
     </string-array>
+
+    <string-array name="driver_status">
+        <item>車停</item>
+        <item>行駛</item>
+        <item>待班</item>
+        <item>休息</item>
+    </string-array>
+
     <string name="title_activity_display">DisplayActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -115,4 +129,7 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="title_activity_driving_time">DrivingTimeActivity</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
