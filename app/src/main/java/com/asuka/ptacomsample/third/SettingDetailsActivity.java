@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 
-public class SettingDetailsActivity extends AppCompatActivity {
+public class SettingDetailsActivity extends AppCompatActivity implements LoginDialogListener {
     private Button homeBtn, upBtn, downBtn, confirmBtn;
     private TextView titleTV;
     private int round = 0;
@@ -25,6 +26,7 @@ public class SettingDetailsActivity extends AppCompatActivity {
     private ManufacturerFragment manufacturerFragment;
     private PrintFragment printFragment;
     private DownloadFragment downloadFragment;
+    private ThresholdTimeFragment thresholdTimeFragment;
     private Fragment selectedFragment = null;
 
     private static final String TAG = "SettingDetailsActivity";
@@ -66,22 +68,25 @@ public class SettingDetailsActivity extends AppCompatActivity {
         });
 
         confirmBtn.setOnClickListener(v -> {
-            Log.d(TAG, "onCreate: cmd = " + cmd);
 
             if(selectedFragment instanceof DriverStatusFragment){
                 cmd = ((DriverStatusFragment) selectedFragment).getCmd();
-            }else if(selectedFragment instanceof DriverCodeFragment){
+            } else if(selectedFragment instanceof DriverCodeFragment){
                 cmd = ((DriverCodeFragment) selectedFragment).getCmd();
-            }else if(selectedFragment instanceof DrivingTimeFragment) {
+            } else if(selectedFragment instanceof DrivingTimeFragment) {
                 cmd = ((DrivingTimeFragment) selectedFragment).getCmd();
-            }else if(selectedFragment instanceof GainFragment) {
-                cmd = ((GainFragment) selectedFragment).getCmd();
-            }else if(selectedFragment instanceof ManufacturerFragment) {
+            } else if(selectedFragment instanceof GainFragment) {
+                if(showLoginDialog()) {
+                    cmd = ((GainFragment) selectedFragment).getCmd();
+                }
+            } else if(selectedFragment instanceof ManufacturerFragment) {
                 cmd = ((ManufacturerFragment) selectedFragment).getCmd();
-            }else if(selectedFragment instanceof PrintFragment) {
+            } else if(selectedFragment instanceof PrintFragment) {
                 cmd = ((PrintFragment) selectedFragment).getCmd();
-            }else if(selectedFragment instanceof DownloadFragment) {
+            } else if(selectedFragment instanceof DownloadFragment) {
                 cmd = ((DownloadFragment) selectedFragment).getCmd();
+            } else if(selectedFragment instanceof ThresholdTimeFragment) {
+                cmd = ((ThresholdTimeFragment) selectedFragment).getCmd();
             }
 
             Log.d(TAG, "onCreate: cmd = " + cmd);
@@ -128,6 +133,11 @@ public class SettingDetailsActivity extends AppCompatActivity {
                 downloadFragment = new DownloadFragment();
                 selectedFragment = downloadFragment;
                 break;
+            case 7:
+            case 8:
+                thresholdTimeFragment = new ThresholdTimeFragment();
+                selectedFragment = thresholdTimeFragment;
+                break;
             case 9:
             case 10:
                 gainFragment = new GainFragment();
@@ -143,6 +153,24 @@ public class SettingDetailsActivity extends AppCompatActivity {
         if(selectedFragment != null){
             getSupportFragmentManager().beginTransaction().replace(R.id.settingDetailsFragmentContainer, selectedFragment).commit();
         }
+    }
+
+    private boolean showLoginDialog() {
+        LoginFragment loginFragment = new LoginFragment();
+        loginFragment.show(getSupportFragmentManager(), "login_dialog");
+        Log.d(TAG, "showLoginDialog: isLoginSuccessful = " + loginFragment.getIsLoginSuccessful() );
+        return loginFragment.getIsLoginSuccessful();
+    }
+
+    @Override
+    public void onLoginSuccess(String username) {
+        Toast.makeText(this, "Login successful for user: " + username, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onCancel() {
+        Toast.makeText(this, "Login cancelled", Toast.LENGTH_SHORT).show();
     }
 }
 

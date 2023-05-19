@@ -41,6 +41,21 @@
     <string name="download1">最近24小時下載</string>
     <string name="download2">指令日期下載</string>
     <string name="download3">今日記錄檔下載</string>
+    <string name="login_username_hint">請輸入姓名</string>
+    <string name="login_password_hint">請輸入密碼</string>
+    <string name="login_username_label">姓名: </string>
+    <string name="login_password_label">密碼: </string>
+    <string name="login_btn">登入</string>
+    <string name="canceL_btn">取消</string>
+    <string name="login_title">Login</string>
+    <string name="confirmButton">Confirm</string>
+    <string name="cancelButton">Cancel</string>
+    <string name="invalidCredentials">invalid Credentials</string>
+    <string name="login_successful">Login successful</string>
+    <string name="login_failed">Login failed</string>
+    <string name="login_cancelled">login cancelled</string>
+    <string name="login_hint">hint</string>
+
 
 
     <string-array name="setting_full_txt">
@@ -50,7 +65,7 @@
         <item>駕駛累計代班時間</item>
         <item>駕駛累計休息時間</item>
         <item>列印功能</item>
-        <item>下載功能</item>
+        <item>資料下載</item>
         <item>連續行駛門檻時間設定</item>
         <item>累計休息門檻時間設定</item>
         <item>車速GAIN值設定</item>
