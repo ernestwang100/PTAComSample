@@ -12,6 +12,7 @@ import com.asuka.ptacomsample.R;
 
 public class GainFragment extends Fragment {
     private NumberPicker numberPicker;
+    private String cmd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,5 +26,16 @@ public class GainFragment extends Fragment {
 
 
         return view;
+    }
+//    TODO: add this to the main activity
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    public String getCmd() {
+        cmd = "$LCD+GAIN=" + numberPicker.getValue();
+        return cmd;
     }
 }

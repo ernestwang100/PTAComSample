@@ -21,11 +21,11 @@ public class SettingDetailsActivity extends AppCompatActivity {
     private DriverStatusFragment driverStatusFragment;
     private DriverCodeFragment driverCodeFragment;
     private DrivingTimeFragment drivingTimeFragment;
-    private Data24hFragment data24hFragment;
     private GainFragment gainFragment;
     private ManufacturerFragment manufacturerFragment;
     private PrintFragment printFragment;
-
+    private DownloadFragment downloadFragment;
+    private Fragment selectedFragment = null;
 
     private static final String TAG = "SettingDetailsActivity";
 
@@ -67,10 +67,26 @@ public class SettingDetailsActivity extends AppCompatActivity {
 
         confirmBtn.setOnClickListener(v -> {
             Log.d(TAG, "onCreate: cmd = " + cmd);
-            if (driverStatusFragment != null) {
-                cmd = driverStatusFragment.getCmd();
-                Log.d(TAG, "onCreate: cmd = " + cmd);
+
+            if(selectedFragment instanceof DriverStatusFragment){
+                cmd = ((DriverStatusFragment) selectedFragment).getCmd();
+            }else if(selectedFragment instanceof DriverCodeFragment){
+                cmd = ((DriverCodeFragment) selectedFragment).getCmd();
+            }else if(selectedFragment instanceof DrivingTimeFragment) {
+                cmd = ((DrivingTimeFragment) selectedFragment).getCmd();
+            }else if(selectedFragment instanceof GainFragment) {
+                cmd = ((GainFragment) selectedFragment).getCmd();
+            }else if(selectedFragment instanceof ManufacturerFragment) {
+                cmd = ((ManufacturerFragment) selectedFragment).getCmd();
+            }else if(selectedFragment instanceof PrintFragment) {
+                cmd = ((PrintFragment) selectedFragment).getCmd();
+            }else if(selectedFragment instanceof DownloadFragment) {
+                cmd = ((DownloadFragment) selectedFragment).getCmd();
             }
+
+            Log.d(TAG, "onCreate: cmd = " + cmd);
+
+
 
             if (cmd != null) {
                 writeData = cmd.getBytes();
@@ -89,8 +105,6 @@ public class SettingDetailsActivity extends AppCompatActivity {
 
         titleTV.setText(title[round]);
 
-        Fragment selectedFragment = null;
-
         switch (round){
             case 0:
                 driverStatusFragment = new DriverStatusFragment();
@@ -107,24 +121,22 @@ public class SettingDetailsActivity extends AppCompatActivity {
                 selectedFragment = drivingTimeFragment;
                 break;
             case 5:
-            case 6:
-            case 7:
-            case 8:
                 printFragment = new PrintFragment();
                 selectedFragment = printFragment;
                 break;
-            case 9:
-                data24hFragment = new Data24hFragment();
-                selectedFragment = data24hFragment;
+            case 6:
+                downloadFragment = new DownloadFragment();
+                selectedFragment = downloadFragment;
                 break;
-            case 15:
-            case 16:
+            case 9:
+            case 10:
                 gainFragment = new GainFragment();
                 selectedFragment = gainFragment;
                 break;
-            case 18:
+            case 13:
                 manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
+                break;
             default:
                 break;
         }

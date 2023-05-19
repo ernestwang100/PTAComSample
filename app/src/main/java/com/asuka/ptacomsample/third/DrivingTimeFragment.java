@@ -17,6 +17,7 @@ import java.util.Locale;
 
 public class DrivingTimeFragment extends Fragment {
     private TextView drivertimeTV, codrivertimeTV;
+    private String cmd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,5 +55,11 @@ public class DrivingTimeFragment extends Fragment {
     private void onTimeSelected(TextView tv, int hourOfDay, int minute) {
         String time = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
         tv.setText(time);
+    }
+
+    public String getCmd() {
+        String cmd = "$LCD+DRIVING TIME=0," + drivertimeTV.getText().toString() + "\n" +
+                "$LCD+DRIVING TIME=1," + codrivertimeTV.getText().toString();
+        return cmd;
     }
 }

@@ -22,4 +22,11 @@ public class DriverCodeFragment extends Fragment {
 
         return view;
     }
+
+    public String getCmd() {
+        String cmd = "$LCD+DRIVER IN=0," + driverCodeEdt.getText().toString() + "\n" +
+                "$LCD+DRIVER IN=1," + codriverCodeEdt.getText().toString();
+        return cmd;
+
+    }
 }
