@@ -54,5 +54,12 @@ public class DownloadFragment extends Fragment {
     public String getCmd() {
         return cmd;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        TODO
+//        tv1.setText("資料讀取中...");
+    }
 }
 
