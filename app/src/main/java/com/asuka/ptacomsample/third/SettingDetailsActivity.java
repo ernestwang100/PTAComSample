@@ -75,39 +75,24 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
         confirmBtn.setOnClickListener(v -> {
 
-            if(selectedFragment instanceof DriverStatusFragment){
-                cmd = ((DriverStatusFragment) selectedFragment).getCmd();
-            } else if(selectedFragment instanceof DriverCodeFragment){
-                cmd = ((DriverCodeFragment) selectedFragment).getCmd();
-            } else if(selectedFragment instanceof DrivingTimeFragment) {
-                cmd = ((DrivingTimeFragment) selectedFragment).getCmd();
-            } else if(selectedFragment instanceof GainFragment) {
-
-                if(showLoginDialog()) {
-                    cmd = ((GainFragment) selectedFragment).getCmd();
-                }
-            } else if(selectedFragment instanceof ManufacturerFragment) {
-                cmd = ((ManufacturerFragment) selectedFragment).getCmd();
-            } else if(selectedFragment instanceof PrintFragment) {
-                cmd = ((PrintFragment) selectedFragment).getCmd();
-            } else if(selectedFragment instanceof DownloadFragment) {
-                cmd = ((DownloadFragment) selectedFragment).getCmd();
-            } else if(selectedFragment instanceof ThresholdTimeFragment) {
-                cmd = ((ThresholdTimeFragment) selectedFragment).getCmd();
-            }
-
-            Log.d(TAG, "onCreate: cmd = " + cmd);
-
-
-
-            if (cmd != null) {
-                writeData = cmd.getBytes();
-                Log.d(TAG, "onCreate: writeData = " + writeData);
-                mPort.write(writeData, writeData.length);
+            if (needLoginDialog()) {
+                showLoginDialog();
+            } else {
+                String cmd = getCmdFromSelectedFragment();
+                Log.d(TAG, "onCreate: cmd = " + cmd);
+                writeDataToPort(cmd);
             }
         });
 
 
+    }
+
+    private boolean needLoginDialog() {
+
+        if (selectedFragment instanceof GainFragment) {
+            return true;
+        }
+        return false;
     }
 
     private void fragmentSwitcher(int round){
@@ -162,37 +147,65 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         }
     }
 
-    private boolean showLoginDialog() {
+    private String getCmdFromSelectedFragment() {
+        String cmd = null;
+
+        if (selectedFragment instanceof DriverStatusFragment) {
+            cmd = ((DriverStatusFragment) selectedFragment).getCmd();
+        } else if (selectedFragment instanceof DriverCodeFragment) {
+            cmd = ((DriverCodeFragment) selectedFragment).getCmd();
+        } else if (selectedFragment instanceof DrivingTimeFragment) {
+            cmd = ((DrivingTimeFragment) selectedFragment).getCmd();
+        } else if (selectedFragment instanceof GainFragment) {
+            cmd = ((GainFragment) selectedFragment).getCmd();
+        } else if (selectedFragment instanceof ManufacturerFragment) {
+            cmd = ((ManufacturerFragment) selectedFragment).getCmd();
+        } else if (selectedFragment instanceof PrintFragment) {
+            cmd = ((PrintFragment) selectedFragment).getCmd();
+        } else if (selectedFragment instanceof DownloadFragment) {
+            cmd = ((DownloadFragment) selectedFragment).getCmd();
+        } else if (selectedFragment instanceof ThresholdTimeFragment) {
+            cmd = ((ThresholdTimeFragment) selectedFragment).getCmd();
+        }
+
+        return cmd;
+    }
+
+
+    private void writeDataToPort(String cmd) {
+        if (cmd != null) {
+            byte[] writeData = cmd.getBytes();
+            Log.d(TAG, "writeDataToPort: writeData = " + writeData);
+            mPort.write(writeData, writeData.length);
+        }
+    }
+
+
+
+    private void showLoginDialog() {
         LoginFragment loginFragment = new LoginFragment();
         loginFragment.show(getSupportFragmentManager(), "login_dialog");
 
-
-
-        Log.d(TAG, "showLoginDialog: isLoginSuccessful = " + isLoginSuccessful);
-        return isLoginSuccessful;
-
     }
 
     @Override
-    public void showisLoginSucess(String username, boolean isLoginSuccessful) {
-        if(isLoginSuccessful){
+    public void onLoginResult(String username, boolean isLoginSuccessful) {
+        this.isLoginSuccessful = isLoginSuccessful;
+        if (isLoginSuccessful) {
+            // Login successful
             Toast.makeText(this, "Login successful for user: " + username, Toast.LENGTH_SHORT).show();
+            String cmd = getCmdFromSelectedFragment();
+            Log.d(TAG, "onCreate: cmd = " + cmd);
+            writeDataToPort(cmd);
         } else {
+            // Login failed
             Toast.makeText(this, "Login failed for user: " + username, Toast.LENGTH_SHORT).show();
         }
-
-        this.isLoginSuccessful= isLoginSuccessful;
-
     }
 
     @Override
-    public void onCancel() {
+    public void onLoginCancelled() {
         Toast.makeText(this, "Login cancelled", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public boolean isLoginSuccessful(){
-        return isLoginSuccessful;
     }
 
 
