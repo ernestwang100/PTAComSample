@@ -1,6 +1,8 @@
 package com.asuka.ptacomsample.third;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +18,13 @@ import androidx.fragment.app.DialogFragment;
 import com.asuka.ptacomsample.R;
 
 public class LoginFragment extends DialogFragment {
+
     private LoginDialogListener dialogListener;
     private EditText usernameEditText;
     private EditText passwordEditText;
-    private TextView hintTV;
-    private Button loginButton, cancelButton;
-    private static final String TAG = "LoginFragment";
 
     @Override
-    public void onAttach(@NonNull android.content.Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             dialogListener = (LoginDialogListener) context;
@@ -32,7 +32,6 @@ public class LoginFragment extends DialogFragment {
             throw new ClassCastException(context.toString() + " must implement LoginDialogListener");
         }
     }
-
 
     @NonNull
     @Override
@@ -43,44 +42,28 @@ public class LoginFragment extends DialogFragment {
 
         usernameEditText = view.findViewById(R.id.usernameEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
-        hintTV = view.findViewById(R.id.hintTV);
 
-        loginButton = view.findViewById(R.id.confirmButton);
-        cancelButton = view.findViewById(R.id.cancelButton);
-        loginButton.setOnClickListener(confirmButtonListener);
-        cancelButton.setOnClickListener(cancelButtonListener);
+        builder.setView(view)
+                .setTitle("Login")
+                .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String username = usernameEditText.getText().toString();
+                        String password = passwordEditText.getText().toString();
+                        // Perform login validation
+                        boolean isLoginSuccessful = validateCredentials(username, password);
+                        dialogListener.onLoginResult(username, isLoginSuccessful);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialogListener.onLoginCancelled();
+                    }
+                });
 
-
-        return builder.setView(view).create();
-
+        return builder.create();
     }
-
-    private View.OnClickListener confirmButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // Handle login confirmation
-            String username = usernameEditText.getText().toString();
-            String password = passwordEditText.getText().toString();
-            if (validateCredentials(username, password)) {
-                // Login successful
-                dialogListener.showisLoginSucess(username, true);
-                dismiss();
-            } else {
-                // Login failed
-                dialogListener.showisLoginSucess(username, false);
-            };
-        }
-    };
-
-    private View.OnClickListener cancelButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // Handle login cancellation
-            dialogListener.onCancel();
-            dismiss();
-        }
-    };
-
 
     private boolean validateCredentials(String username, String password) {
         // Implement your own logic for validating credentials
@@ -89,6 +72,6 @@ public class LoginFragment extends DialogFragment {
     }
 
 
-
 }
+
 
