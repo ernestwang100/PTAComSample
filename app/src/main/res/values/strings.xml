@@ -39,7 +39,7 @@
     <string name="print3">技術資料列印</string>
     <string name="print4">速度曲線圖列印</string>
     <string name="download1">最近24小時下載</string>
-    <string name="download2">指令日期下載</string>
+    <string name="download2">指定日期下載</string>
     <string name="download3">今日記錄檔下載</string>
     <string name="login_username_hint">請輸入姓名</string>
     <string name="login_password_hint">請輸入密碼</string>

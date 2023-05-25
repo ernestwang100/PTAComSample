@@ -3,6 +3,7 @@ package com.asuka.ptacomsample.third;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
+import com.asuka.ptacomsample.second.SettingListActivity;
 
 public class SettingDetailsActivity extends AppCompatActivity implements LoginDialogListener {
     private Button homeBtn, upBtn, downBtn, confirmBtn;
@@ -62,7 +64,12 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         fragmentSwitcher(round);
 
         homeBtn.setOnClickListener(v -> {
-            finish();
+//            finish();
+//            onBackPressed();
+
+            Intent intent = new Intent();
+            intent.setClass(SettingDetailsActivity.this, SettingListActivity.class);
+            startActivity(intent);
         });
 
         upBtn.setOnClickListener(v -> {
@@ -75,8 +82,8 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
         confirmBtn.setOnClickListener(v -> {
 
-            if (needLoginDialog()) {
-                showLoginDialog();
+            if (needLoginCredentials()) {
+                showLoginFragment();
             } else {
                 String cmd = getCmdFromSelectedFragment();
                 Log.d(TAG, "onCreate: cmd = " + cmd);
@@ -85,9 +92,10 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         });
 
 
+
     }
 
-    private boolean needLoginDialog() {
+    private boolean needLoginCredentials() {
 
         if (selectedFragment instanceof GainFragment) {
             return true;
@@ -182,10 +190,9 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
 
 
-    private void showLoginDialog() {
+    private void showLoginFragment() {
         LoginFragment loginFragment = new LoginFragment();
-        loginFragment.show(getSupportFragmentManager(), "login_dialog");
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.settingDetailsFragmentContainer, loginFragment).commit();
     }
 
     @Override
@@ -207,6 +214,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     public void onLoginCancelled() {
         Toast.makeText(this, "Login cancelled", Toast.LENGTH_SHORT).show();
     }
+
 
 
 }
