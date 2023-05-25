@@ -19,6 +19,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private String cmd;
     private ComPort mPort;
     private byte[] writeData;
+    private Boolean isLoginSuccessful = null;
     private DriverStatusFragment driverStatusFragment;
     private DriverCodeFragment driverCodeFragment;
     private DrivingTimeFragment drivingTimeFragment;
@@ -31,10 +32,15 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
     private static final String TAG = "SettingDetailsActivity";
 
+
+
+
     public SettingDetailsActivity() {
         mPort = new ComPort();
         mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +82,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             } else if(selectedFragment instanceof DrivingTimeFragment) {
                 cmd = ((DrivingTimeFragment) selectedFragment).getCmd();
             } else if(selectedFragment instanceof GainFragment) {
+
                 if(showLoginDialog()) {
                     cmd = ((GainFragment) selectedFragment).getCmd();
                 }
@@ -158,13 +165,23 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private boolean showLoginDialog() {
         LoginFragment loginFragment = new LoginFragment();
         loginFragment.show(getSupportFragmentManager(), "login_dialog");
-        Log.d(TAG, "showLoginDialog: isLoginSuccessful = " + loginFragment.getIsLoginSuccessful() );
-        return loginFragment.getIsLoginSuccessful();
+
+
+
+        Log.d(TAG, "showLoginDialog: isLoginSuccessful = " + isLoginSuccessful);
+        return isLoginSuccessful;
+
     }
 
     @Override
-    public void onLoginSuccess(String username) {
-        Toast.makeText(this, "Login successful for user: " + username, Toast.LENGTH_SHORT).show();
+    public void showisLoginSucess(String username, boolean isLoginSuccessful) {
+        if(isLoginSuccessful){
+            Toast.makeText(this, "Login successful for user: " + username, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Login failed for user: " + username, Toast.LENGTH_SHORT).show();
+        }
+
+        this.isLoginSuccessful= isLoginSuccessful;
 
     }
 
@@ -172,6 +189,13 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     public void onCancel() {
         Toast.makeText(this, "Login cancelled", Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public boolean isLoginSuccessful(){
+        return isLoginSuccessful;
+    }
+
+
 }
 
 

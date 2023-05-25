@@ -57,7 +57,7 @@ public class SettingListAdapter extends RecyclerView.Adapter<SettingListAdapter.
                     if (recyclerViewInterface != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            recyclerViewInterface.onItemClick(position);
+                            recyclerViewInterface. onItemClick(position);
                         }
                     }
                 }

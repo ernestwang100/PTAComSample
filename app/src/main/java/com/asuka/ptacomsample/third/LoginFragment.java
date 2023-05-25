@@ -1,12 +1,9 @@
 package com.asuka.ptacomsample.third;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,15 +14,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.asuka.ptacomsample.R;
-import com.google.android.material.snackbar.Snackbar;
 
 public class LoginFragment extends DialogFragment {
     private LoginDialogListener dialogListener;
     private EditText usernameEditText;
     private EditText passwordEditText;
     private TextView hintTV;
-    private boolean isLoginSuccessful = false;
-    private Button confirmButton, cancelButton;
+    private Button loginButton, cancelButton;
     private static final String TAG = "LoginFragment";
 
     @Override
@@ -50,13 +45,10 @@ public class LoginFragment extends DialogFragment {
         passwordEditText = view.findViewById(R.id.passwordEditText);
         hintTV = view.findViewById(R.id.hintTV);
 
-        confirmButton = view.findViewById(R.id.confirmButton);
+        loginButton = view.findViewById(R.id.confirmButton);
         cancelButton = view.findViewById(R.id.cancelButton);
-        confirmButton.setOnClickListener(confirmButtonListener);
+        loginButton.setOnClickListener(confirmButtonListener);
         cancelButton.setOnClickListener(cancelButtonListener);
-
-
-        Log.d(TAG, "onCreateDialog: isLoginSuccessful = " + isLoginSuccessful);
 
 
         return builder.setView(view).create();
@@ -71,12 +63,12 @@ public class LoginFragment extends DialogFragment {
             String password = passwordEditText.getText().toString();
             if (validateCredentials(username, password)) {
                 // Login successful
-                dialogListener.onLoginSuccess(username);
+                dialogListener.showisLoginSucess(username, true);
                 dismiss();
             } else {
                 // Login failed
-                dialogListener.onCancel();
-            }
+                dialogListener.showisLoginSucess(username, false);
+            };
         }
     };
 
@@ -96,9 +88,6 @@ public class LoginFragment extends DialogFragment {
         return username.equals("a") && password.equals("a");
     }
 
-    public boolean getIsLoginSuccessful() {
-        return isLoginSuccessful;
-    }
 
 
 }

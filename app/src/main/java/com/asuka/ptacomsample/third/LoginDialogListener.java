@@ -1,6 +1,8 @@
 package com.asuka.ptacomsample.third;
 
 public interface LoginDialogListener {
-    void onLoginSuccess(String username);
+    void showisLoginSucess(String username, boolean isLoginSuccessful);
     void onCancel();
+    boolean isLoginSuccessful();
+
 }
