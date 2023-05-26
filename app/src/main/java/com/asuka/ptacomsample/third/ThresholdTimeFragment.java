@@ -16,7 +16,12 @@ import java.util.Locale;
 
 public class ThresholdTimeFragment extends Fragment {
     private TextView drivertimeTV, codrivertimeTV;
-    private String cmd;
+    private String cmd, cmdStart;
+    private int thresholdType;
+
+    public ThresholdTimeFragment(int thresholdType) {
+        this.thresholdType = thresholdType;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,8 +62,14 @@ public class ThresholdTimeFragment extends Fragment {
     }
 
     public String getCmd() {
-        String cmd = "$LCD+SET DRIVE TIME=0," + drivertimeTV.getText().toString() + "\n" +
-                "$LCD+SET DRIVE TIME=1," + codrivertimeTV.getText().toString();
+
+        if (thresholdType == 0){
+            cmdStart = "$LCD+SET DRIVE TIME=";
+        } else {
+            cmdStart = "$LCD+SET REST TIME=";
+        }
+        cmd = cmdStart + "0," + drivertimeTV.getText().toString() + "\n" +
+                cmdStart +"1," + codrivertimeTV.getText().toString();
         return cmd;
     }
 }

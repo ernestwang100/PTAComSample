@@ -12,7 +12,12 @@ import com.asuka.ptacomsample.R;
 
 public class GainFragment extends Fragment {
     private NumberPicker numberPicker;
-    private String cmd;
+    private String cmd, cmdStart;
+    private int gainType;
+
+    public GainFragment(int gainType) {
+        this.gainType = gainType;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,7 +40,13 @@ public class GainFragment extends Fragment {
     }
 
     public String getCmd() {
-        cmd = "$LCD+GAIN=" + numberPicker.getValue();
+        if (gainType == 0) {
+            cmdStart = "$LCD+SPEED GAIN=";
+        } else {
+                cmdStart = "$LCD+RPM DIV=";
+        }
+
+        cmd = cmdStart + numberPicker.getValue();
         return cmd;
     }
 }

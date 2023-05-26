@@ -99,7 +99,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
     private boolean needLoginCredentials() {
 
-        if (selectedFragment instanceof GainFragment) {
+        if (selectedFragment instanceof GainFragment || selectedFragment instanceof ThresholdTimeFragment) {
             return true;
         }
         return false;
@@ -136,13 +136,19 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 selectedFragment = downloadFragment;
                 break;
             case 7:
+                thresholdTimeFragment = new ThresholdTimeFragment(0);
+                selectedFragment = thresholdTimeFragment;
+                break;
             case 8:
-                thresholdTimeFragment = new ThresholdTimeFragment();
+                thresholdTimeFragment = new ThresholdTimeFragment(1);
                 selectedFragment = thresholdTimeFragment;
                 break;
             case 9:
+                gainFragment = new GainFragment(0);
+                selectedFragment = gainFragment;
+                break;
             case 10:
-                gainFragment = new GainFragment();
+                gainFragment = new GainFragment(1);
                 selectedFragment = gainFragment;
                 break;
             case 13:
