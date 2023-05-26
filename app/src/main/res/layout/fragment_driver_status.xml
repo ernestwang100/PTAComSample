@@ -12,25 +12,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="40sp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/titleTV"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- First Column -->
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="40sp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/driverTV"
@@ -38,22 +36,52 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="203dp"
                 android:text="@string/driver"
-                android:textSize="30sp"
-
-                />
-
-            <Spinner
-                android:id="@+id/driverSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="48sp"
-                android:entries="@array/driver_status"></Spinner>
-
-
+                android:textSize="30sp" />
         </TableRow>
 
+        <TableRow>
+
+            <RadioGroup
+                android:id="@+id/DRBtnGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/DRBtn0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100sp"
+                    android:hint="@string/inputcode"
+                    android:text="@string/driverstatus0" />
+
+                <RadioButton
+                    android:id="@+id/DRBtn1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100sp"
+                    android:hint="@string/inputcode"
+                    android:text="@string/driverstatus1" />
+
+                <RadioButton
+                    android:id="@+id/DRBtn2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100sp"
+                    android:hint="@string/inputcode"
+                    android:text="@string/driverstatus2" />
+
+                <RadioButton
+                    android:id="@+id/DRBtn3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100sp"
+                    android:hint="@string/inputcode"
+                    android:text="@string/driverstatus3" />
+            </RadioGroup>
+        </TableRow>
+
+        <!-- Second Column -->
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/codriverTV"
@@ -63,14 +91,45 @@
                 android:text="@string/coDriver"
                 android:textSize="30sp" />
 
-            <Spinner
-                android:id="@+id/codriverSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="48sp"
-                android:entries="@array/driver_status"></Spinner>
-
         </TableRow>
 
+        <TableRow>
+
+            <RadioGroup
+                android:id="@+id/CRBtnGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/CRBtn0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100sp"
+                    android:hint="@string/inputcode"
+                    android:text="@string/driverstatus0" />
+
+                <RadioButton
+                    android:id="@+id/CRBtn1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100sp"
+                    android:hint="@string/inputcode"
+                    android:text="@string/driverstatus1" />
+
+                <RadioButton
+                    android:id="@+id/CRBtn2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100sp"
+                    android:hint="@string/inputcode"
+                    android:text="@string/driverstatus2" />
+
+                <RadioButton
+                    android:id="@+id/CRBtn3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100sp"
+                    android:hint="@string/inputcode"
+                    android:text="@string/driverstatus3" />
+            </RadioGroup>
+        </TableRow>
     </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
