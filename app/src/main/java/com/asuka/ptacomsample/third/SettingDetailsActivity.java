@@ -23,7 +23,6 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private String cmd;
     private ComPort mPort;
     private byte[] writeData;
-    private Boolean isLoginSuccessful = null;
     private DriverStatusFragment driverStatusFragment;
     private DriverCodeFragment driverCodeFragment;
     private DrivingTimeFragment drivingTimeFragment;
@@ -83,11 +82,14 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         });
 
         confirmBtn.setOnClickListener(v -> {
-
+            String cmd = getCmdFromSelectedFragment();
             if (needLoginCredentials()) {
                 showLoginFragment();
+            } else if (needWaiting()) {
+                Log.d(TAG, "onCreate: cmd = " + cmd);
+                writeDataToPort(cmd);
+                showWaitingFragment();
             } else {
-                String cmd = getCmdFromSelectedFragment();
                 Log.d(TAG, "onCreate: cmd = " + cmd);
                 writeDataToPort(cmd);
             }
@@ -97,13 +99,6 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
     }
 
-    private boolean needLoginCredentials() {
-
-        if (selectedFragment instanceof GainFragment || selectedFragment instanceof ThresholdTimeFragment) {
-            return true;
-        }
-        return false;
-    }
 
     private void fragmentSwitcher(int round){
         Log.d(TAG, "fragmentSwitcher: round = " + round);
@@ -194,9 +189,34 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     }
 
 
+
+
+    private boolean needWaiting() {
+        if (selectedFragment instanceof PrintFragment || selectedFragment instanceof DownloadFragment) {
+            return true;
+        }
+        return false;
+    }
+    private void showWaitingFragment() {
+        WaitingFragment waitingFragment = new WaitingFragment();
+        waitingFragment.show(getSupportFragmentManager(), "waiting");
+    }
+    private boolean needLoginCredentials() {
+
+        if (selectedFragment instanceof GainFragment || selectedFragment instanceof ThresholdTimeFragment) {
+            return true;
+        }
+        return false;
+    }
+    private void showLoginFragment() {
+        LoginFragment loginFragment = new LoginFragment();
+        loginFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog); // Set the custom dialog style
+        loginFragment.show(getSupportFragmentManager(), "LoginFragment");
+    }
+
     private void writeDataToPort(String cmd) {
         if (cmd != null) {
-            byte[] writeData = cmd.getBytes();
+            writeData = cmd.getBytes();
             Log.d(TAG, "writeDataToPort: writeData = " + writeData);
             mPort.write(writeData, writeData.length);
         }
@@ -204,15 +224,10 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
 
 
-    private void showLoginFragment() {
-        LoginFragment loginFragment = new LoginFragment();
-        loginFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog); // Set the custom dialog style
-        loginFragment.show(getSupportFragmentManager(), "LoginFragment");
-    }
+
 
     @Override
     public void onLoginResult(String username, boolean isLoginSuccessful) {
-        this.isLoginSuccessful = isLoginSuccessful;
         if (isLoginSuccessful) {
             // Login successful
             Toast.makeText(this, "Login successful for user: " + username, Toast.LENGTH_SHORT).show();

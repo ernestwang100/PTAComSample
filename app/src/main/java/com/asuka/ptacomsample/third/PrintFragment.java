@@ -41,20 +41,7 @@ public class PrintFragment extends Fragment {
             }
         });
 
-//        switch (radioGroupPrint.getCheckedRadioButtonId()){
-//            case R.id.print1RB:
-//                cmd = "$LCD+PRINT=1";
-//                break;
-//            case R.id.print2RB:
-//                cmd = "$LCD+PRINT=2";
-//                break;
-//            case R.id.print3RB:
-//                cmd = "$LCD+PRINT=3";
-//                break;
-//            case R.id.print4RB:
-//                cmd = "$LCD+PRINT=4";
-//                break;
-//        }
+
         return view;
     }
 

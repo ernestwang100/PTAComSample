@@ -15,13 +15,11 @@ public class RecvThread extends Thread {
     private Handler handler;
     private static final String TAG = "RecvThread";
 
+
     public RecvThread(Handler handler, ComPort mPort, byte[] writeData) {
         this.mPort = mPort;
         this.handler = handler;
         this.writeData = writeData;
-
-
-
     }
 
 
