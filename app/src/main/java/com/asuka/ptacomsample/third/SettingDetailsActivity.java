@@ -1,6 +1,7 @@
 package com.asuka.ptacomsample.third;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
@@ -192,7 +193,8 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
     private void showLoginFragment() {
         LoginFragment loginFragment = new LoginFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.settingDetailsFragmentContainer, loginFragment).commit();
+        loginFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog); // Set the custom dialog style
+        loginFragment.show(getSupportFragmentManager(), "LoginFragment");
     }
 
     @Override

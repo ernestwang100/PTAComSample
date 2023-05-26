@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,43 +19,34 @@ import androidx.fragment.app.DialogFragment;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
-import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
-public class LoginFragment extends Fragment implements View.OnClickListener {
+public class LoginFragment extends DialogFragment implements View.OnClickListener {
+    private LoginDialogListener dialogListener;
     private EditText loginEditText;
     private StringBuilder loginStringBuilder;
-    private  Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn0, btnClear, btnEnter;
+    private Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn0, btnClear, btnEnter;
     private boolean isLoginSuccessful = false;
 
-
-    public LoginFragment() {
-        // Required empty public constructor
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            dialogListener = (LoginDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement LoginDialogListener");
+        }
     }
 
+    @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
-    }
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.fragment_login, null);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         // Initialize views and set click listeners
         loginEditText = view.findViewById(R.id.loginEditText);
         loginStringBuilder = new StringBuilder();
 
-// Remove the class declaration "Button"
         btn1 = view.findViewById(R.id.button1);
         btn2 = view.findViewById(R.id.button2);
         btn3 = view.findViewById(R.id.button3);
@@ -69,7 +60,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         btnClear = view.findViewById(R.id.buttonClear);
         btnEnter = view.findViewById(R.id.buttonEnter);
 
-
         btn1.setOnClickListener(this);
         btn2.setOnClickListener(this);
         btn3.setOnClickListener(this);
@@ -82,6 +72,23 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         btn0.setOnClickListener(this);
         btnClear.setOnClickListener(this);
         btnEnter.setOnClickListener(this);
+
+        builder.setView(view)
+                .setTitle("Login");
+//                .setPositiveButton("Login", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // Handled in onClick method for btnEnter
+//                    }
+//                })
+//                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+
+        return builder.create();
     }
 
     @Override
@@ -127,10 +134,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 // Perform login validation
                 if (validateLogin(loginInput)) {
                     // Login successful
-                    onLoginResult(loginInput, true);
+                    dialogListener.onLoginResult(loginInput, true);
+                    dismiss();
                 } else {
                     // Login failed
-                    onLoginResult(loginInput, false);
+                    dialogListener.onLoginResult(loginInput, false);
                 }
                 break;
         }
@@ -143,30 +151,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         return loginInput.equals("1234");
     }
 
-    private void onLoginResult(String loginInput, boolean success) {
-        if (success) {
-            Toast.makeText(getActivity(), "Login successful!", Toast.LENGTH_SHORT).show();
-            // Navigate back to SettingDetailsActivity
-            Intent intent = new Intent(getActivity(), SettingListActivity.class);
-            startActivity(intent);
-            getActivity().finish(); // Optional: finish the current activity if needed
-            isLoginSuccessful = true;
-        } else {
-            Toast.makeText(getActivity(), "Login failed!", Toast.LENGTH_SHORT).show();
-            // TODO: Handle failed login, e.g., display an error message
-            isLoginSuccessful = false;
-        }
-        loginStringBuilder.setLength(0);
-        loginEditText.setText("");
-    }
-
-    public boolean getLoginResult() {
-        return isLoginSuccessful;
-    }
 
 
 
 }
-
-
-
