@@ -55,6 +55,11 @@
     <string name="login_failed">Login failed</string>
     <string name="login_cancelled">login cancelled</string>
     <string name="login_hint">hint</string>
+    <string name="driverstatus0">車停</string>
+    <string name="driverstatus1">行駛</string>
+    <string name="driverstatus2">待班</string>
+    <string name="driverstatus3">休息</string>
+
 
 
 

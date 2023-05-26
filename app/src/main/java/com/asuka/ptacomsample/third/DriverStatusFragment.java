@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
@@ -13,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.asuka.ptacomsample.R;
 
 public class DriverStatusFragment extends Fragment {
-    private Spinner driverSpn, codriverSpn;
+    private RadioGroup radioGroupDriverStatus, radioGroupCodriverStatus;
     private Integer driverStatus, codriverStatus;
     private String cmd;
     private static final String TAG = "DriverStatusFragment";
@@ -22,42 +23,35 @@ public class DriverStatusFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_status, container, false);
 
-        driverSpn = view.findViewById(R.id.driverSpinner);
-        codriverSpn = view.findViewById(R.id.codriverSpinner);
+        radioGroupDriverStatus = view.findViewById(R.id.DRBtnGroup);
+        radioGroupCodriverStatus = view.findViewById(R.id.CRBtnGroup);
 
-        driverSpn.setOnItemSelectedListener(driverSpnListener);
-        codriverSpn.setOnItemSelectedListener(codriverSpnListener);
+        radioGroupDriverStatus.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                driverStatus = radioGroupDriverStatus.indexOfChild(view.findViewById(i));
+                Log.d(TAG, "onCheckedChanged: driverStatus: " + driverStatus);
+
+                cmd = "$LCD+DRIVERSTATUS=0," + driverStatus;
+            }
+        });
+
+        radioGroupCodriverStatus.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                codriverStatus = radioGroupCodriverStatus.indexOfChild(view.findViewById(i));
+                Log.d(TAG, "onCheckedChanged: codriverStatus: " + codriverStatus);
+
+                cmd = "$LCD+DRIVERSTATUS=1," + codriverStatus;
+            }
+        });
 
 
 
         return view;
     }
 
-    private AdapterView.OnItemSelectedListener driverSpnListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            driverStatus = position;
-            cmd = "$LCD+DRIVER STATUS=0," + driverStatus;
-            Log.d(TAG, "onCreateView: cmd = " + cmd);
-        }
 
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
-        }
-    };
-
-    private AdapterView.OnItemSelectedListener codriverSpnListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            codriverStatus = position;
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
-        }
-    };
 
     public String getCmd() {
         return cmd;
