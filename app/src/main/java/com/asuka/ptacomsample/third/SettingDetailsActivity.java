@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -152,6 +153,12 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
         }
         if(selectedFragment != null){
+            // Get the reference to the fragment container
+            FrameLayout fragmentContainer = findViewById(R.id.settingDetailsFragmentContainer);
+
+            // Clear the fragment container by removing all views
+            fragmentContainer.removeAllViews();
+
             getSupportFragmentManager().beginTransaction().replace(R.id.settingDetailsFragmentContainer, selectedFragment).commit();
         }
     }
