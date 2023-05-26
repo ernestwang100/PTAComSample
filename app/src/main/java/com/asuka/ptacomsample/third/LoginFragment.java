@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +27,10 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     private StringBuilder loginStringBuilder;
     private Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn0, btnClear, btnEnter;
     private boolean isLoginSuccessful = false;
+    private static final long LONG_PRESS_TIMEOUT = 1000; // Set the long press timeout (in milliseconds)
+    private boolean isLongClick = false;
+    private Handler longPressHandler;
+    private Runnable longPressRunnable;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -88,6 +94,46 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
 //                    }
 //                });
 
+
+        btnClear.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                isLongClick = true;
+                loginStringBuilder.setLength(0); // Clear all strings
+                loginEditText.setText("");
+                return true;
+            }
+        });
+
+// Initialize the long press handler and runnable
+        longPressHandler = new Handler();
+        longPressRunnable = new Runnable() {
+            @Override
+            public void run() {
+                isLongClick = true;
+                loginStringBuilder.setLength(0); // Clear all strings
+                loginEditText.setText("");
+            }
+        };
+
+// Set the touch listener for the clear button to detect long presses
+        btnClear.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // Start the long press handler when the button is pressed
+                    longPressHandler.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT);
+                } else if (event.getAction() == MotionEvent.ACTION_UP ||
+                        event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    // Cancel the long press handler when the button is released or the touch event is canceled
+                    longPressHandler.removeCallbacks(longPressRunnable);
+                    isLongClick = false;
+                }
+                return false;
+            }
+        });
+
+
         return builder.create();
     }
 
@@ -126,7 +172,13 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                 break;
             case R.id.buttonClear:
                 if (loginStringBuilder.length() > 0) {
-                    loginStringBuilder.deleteCharAt(loginStringBuilder.length() - 1);
+                    if (isLongClick) {
+                        // Clear all strings if long-pressed
+                        loginStringBuilder.setLength(0);
+                    } else {
+                        // Remove the last character if short-pressed
+                        loginStringBuilder.deleteCharAt(loginStringBuilder.length() - 1);
+                    }
                 }
                 break;
             case R.id.buttonEnter:
