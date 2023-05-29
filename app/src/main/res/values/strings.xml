@@ -60,6 +60,7 @@
     <string name="driverstatus1">行駛</string>
     <string name="driverstatus2">代班</string>
     <string name="driverstatus3">休息</string>
+    <string name="screenbrightness">亮度調整</string>
 
 
     <string-array name="setting_full_txt">
@@ -75,7 +76,7 @@
         <item>車速GAIN值設定</item>
         <item>轉速GAIN值設定</item>
         <item>系統時間設定</item>
-        <item>顯示平背光設定</item>
+        <item>螢幕亮度設定</item>
         <item>車機廠商資料</item>
     </string-array>
 
@@ -97,7 +98,7 @@
         <item>累計休息門檻時間設定00:00</item>
         <item>車速GAIN值設定000</item>
         <item>轉速GAIN值設定000</item>
-        <item>顯示屏背光設定ON / OFF</item>
+        <item>螢幕亮度設定ON / OFF</item>
         <item>捷世林科技地址車機訊息公告</item>
 
     </string-array>

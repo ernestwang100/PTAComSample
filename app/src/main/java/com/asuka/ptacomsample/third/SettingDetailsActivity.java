@@ -33,6 +33,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private DownloadFragment downloadFragment;
     private ThresholdTimeFragment thresholdTimeFragment;
     private SystemTimeFragment systemTimeFragment;
+    private BrightnessFragment brightnessFragment;
     private Fragment selectedFragment = null;
 
     private static final String TAG = "SettingDetailsActivity";
@@ -151,6 +152,10 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             case 11:
                 systemTimeFragment = new SystemTimeFragment();
                 selectedFragment = systemTimeFragment;
+                break;
+            case 12:
+                brightnessFragment = new BrightnessFragment();
+                selectedFragment = brightnessFragment;
                 break;
             case 13:
                 manufacturerFragment = new ManufacturerFragment();
