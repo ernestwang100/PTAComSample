@@ -21,6 +21,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private TextView titleTV;
     private int round = 0;
     private String cmd;
+    private String[] title;
     private ComPort mPort;
     private byte[] writeData;
     private DriverStatusFragment driverStatusFragment;
@@ -31,6 +32,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private PrintFragment printFragment;
     private DownloadFragment downloadFragment;
     private ThresholdTimeFragment thresholdTimeFragment;
+    private SystemTimeFragment systemTimeFragment;
     private Fragment selectedFragment = null;
 
     private static final String TAG = "SettingDetailsActivity";
@@ -62,6 +64,8 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         downBtn = findViewById(R.id.downBtn);
         confirmBtn = findViewById(R.id.confirmBtn);
 
+        title = getResources().getStringArray(R.array.setting_full_txt);
+        round = round % title.length < 0 ? round % title.length + title.length : round % title.length;
         fragmentSwitcher(round);
 
         homeBtn.setOnClickListener(v -> {
@@ -82,7 +86,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         });
 
         confirmBtn.setOnClickListener(v -> {
-            String cmd = getCmdFromSelectedFragment();
+            cmd = getCmdFromSelectedFragment();
             if (needLoginCredentials()) {
                 showLoginFragment();
             } else if (needWaiting()) {
@@ -102,8 +106,6 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
     private void fragmentSwitcher(int round){
         Log.d(TAG, "fragmentSwitcher: round = " + round);
-        String[] title = getResources().getStringArray(R.array.setting_full_txt);
-        round = round % title.length < 0 ? round % title.length + title.length : round % title.length;
 
         titleTV.setText(title[round]);
 
@@ -146,6 +148,10 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 gainFragment = new GainFragment(1);
                 selectedFragment = gainFragment;
                 break;
+            case 11:
+                systemTimeFragment = new SystemTimeFragment();
+                selectedFragment = systemTimeFragment;
+                break;
             case 13:
                 manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
@@ -183,6 +189,8 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             cmd = ((DownloadFragment) selectedFragment).getCmd();
         } else if (selectedFragment instanceof ThresholdTimeFragment) {
             cmd = ((ThresholdTimeFragment) selectedFragment).getCmd();
+        } else if (selectedFragment instanceof SystemTimeFragment) {
+            cmd = ((SystemTimeFragment) selectedFragment).getCmd();
         }
 
         return cmd;
@@ -203,7 +211,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     }
     private boolean needLoginCredentials() {
 
-        if (selectedFragment instanceof GainFragment || selectedFragment instanceof ThresholdTimeFragment) {
+        if (selectedFragment instanceof GainFragment || selectedFragment instanceof ThresholdTimeFragment || selectedFragment instanceof SystemTimeFragment) {
             return true;
         }
         return false;

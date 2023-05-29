@@ -31,6 +31,7 @@
     <string name="coDriver">共同駕駛</string>
     <string name="inputcode">請輸入代碼</string>
     <string name="inputtime">請輸入時間</string>
+    <string name="inputdate">請輸入日期</string>
     <string name="HH">小時</string>
     <string name="value">值</string>
     <string name="manufacturer">捷世林科技\n地址\n車機訊息\n公告\n</string>
@@ -57,10 +58,8 @@
     <string name="login_hint">hint</string>
     <string name="driverstatus0">車停</string>
     <string name="driverstatus1">行駛</string>
-    <string name="driverstatus2">待班</string>
+    <string name="driverstatus2">代班</string>
     <string name="driverstatus3">休息</string>
-
-
 
 
     <string-array name="setting_full_txt">
@@ -154,6 +153,6 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="title_activity_driving_time">DrivingTimeActivity</string>
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -39,7 +39,7 @@ public class DownloadFragment extends Fragment {
     }
 
     private void showDatePickerDialog() {
-        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment = new DatePickerFragment();
         datePickerFragment.setOnDateSelectedListener((year, month, day) -> {
             // Handle the selected date
             String selectedDate = String.format("%04d%02d%02d", year, month + 1, day);
