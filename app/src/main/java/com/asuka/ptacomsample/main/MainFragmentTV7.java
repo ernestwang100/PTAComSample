@@ -1,5 +1,8 @@
 package com.asuka.ptacomsample.main;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -7,7 +10,9 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,11 +22,8 @@ import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 
 public class MainFragmentTV7 extends Fragment {
-    private TextView tv7;
-    private Handler handler;
-    private String messageText = "";
-    private ComPort mPort;
-    private RecvThread mRecvThread;
+    private TextView tv1, tv2, tv3;
+    private ImageButton ib1, ib2, ib3;
 
     @Nullable
     @Override
@@ -33,16 +35,73 @@ public class MainFragmentTV7 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tv7 = (TextView) view.findViewById(R.id.mainTV_7);
-//        byte[] writeData = "$LCD+PAGE=6".getBytes();
-//        mPort.write(writeData, writeData.length);
-//        handler = new Handler(Looper.getMainLooper()) {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                tv7.setText(msg.obj.toString());
-//            }
-//        };
-//        mRecvThread = new RecvThread(handler, mPort);
-//        mRecvThread.start();
+
+        tv1 = view.findViewById(R.id.tv1);
+        tv2 = view.findViewById(R.id.tv2);
+        tv3 = view.findViewById(R.id.tv3);
+        ib1 = view.findViewById(R.id.ib1);
+        ib2 = view.findViewById(R.id.ib2);
+        ib3 = view.findViewById(R.id.ib3);
+
+        tv1.setText("Youtube");
+        tv2.setText("Phone Call");
+        tv3.setText("Settings");
+        ib1.setImageResource(R.drawable.youtube);
+        ib2.setImageResource(R.drawable.phone);
+        ib3.setImageResource(R.drawable.gear);
+
+        ib1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setPackage("com.google.android.youtube");
+
+                PackageManager packageManager = requireActivity().getPackageManager();
+                ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                if (resolveInfo != null) {
+                    startActivity(intent);
+                } else {
+                    // YouTube app is not installed
+                    Toast.makeText(requireContext(), "YouTube app is not installed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        ib2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setPackage("com.android.phone");
+
+                PackageManager packageManager = requireActivity().getPackageManager();
+                ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                if (resolveInfo != null) {
+                    startActivity(intent);
+                } else {
+                    // Phone app is not installed
+                    Toast.makeText(requireContext(), "Phone app is not installed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        ib3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                intent.setPackage("com.android.settings");
+
+                PackageManager packageManager = requireActivity().getPackageManager();
+                ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                if (resolveInfo != null) {
+                    startActivity(intent);
+                } else {
+                    // Settings app is not installed
+                    Toast.makeText(requireContext(), "Settings app is not installed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
     }
 }
