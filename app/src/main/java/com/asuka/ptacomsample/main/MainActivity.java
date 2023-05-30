@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private MainFragmentTV8 mainFragmentTV8;
     private ExecutorService executorService = Executors.newCachedThreadPool();
     private static final String TAG = "MainActivity";
+    public static final int FRAGMENTNUM = 8;
 //    ComPort mPort;
 //
 //    Button mWriteBtn;
@@ -73,10 +74,12 @@ public class MainActivity extends AppCompatActivity {
         upBtn.setOnClickListener(v -> {
             fragmentSwitcher(--round);
             Log.d(TAG, "onCreate upBtn: round = " + round);
+            round =getValidRoundIndex(round);
         });
         downBtn.setOnClickListener(v -> {
             fragmentSwitcher(++round);
             Log.d(TAG, "onCreate downBtn: round = " + round);
+            round =getValidRoundIndex(round);
         });
 
     }
@@ -86,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "fragmentSwitcher: round = " + round);
 
-        round = round % 8 < 0 ? round % 8 + 8 : round % 8;
-        Log.d(TAG, "fragmentSwitcher: round%8 = " + round);
+        round =getValidRoundIndex(round);
+        Log.d(TAG, "fragmentSwitcher: round%FRAGMENTNUM = " + round);
         switch (round) {
             case 0:
                 if (mainFragmentWelcomeTV == null)
@@ -184,5 +187,8 @@ public class MainActivity extends AppCompatActivity {
         if(selectedFragment != null){
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, selectedFragment).commit();
         }
+    }
+    private int getValidRoundIndex(int round) {
+        return round % FRAGMENTNUM < 0 ? round % FRAGMENTNUM + FRAGMENTNUM : round % FRAGMENTNUM;
     }
 }

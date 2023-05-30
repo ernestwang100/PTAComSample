@@ -66,7 +66,6 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         confirmBtn = findViewById(R.id.confirmBtn);
 
         title = getResources().getStringArray(R.array.setting_full_txt);
-        round = round % title.length < 0 ? round % title.length + title.length : round % title.length;
         fragmentSwitcher(round);
 
         homeBtn.setOnClickListener(v -> {
@@ -80,10 +79,12 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
         upBtn.setOnClickListener(v -> {
             fragmentSwitcher(--round);
+            round = getValidRoundIndex(round, title.length);
         });
 
         downBtn.setOnClickListener(v -> {
             fragmentSwitcher(++round);
+            round = getValidRoundIndex(round, title.length);
         });
 
         confirmBtn.setOnClickListener(v -> {
@@ -108,7 +109,9 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private void fragmentSwitcher(int round){
         Log.d(TAG, "fragmentSwitcher: round = " + round);
 
+        round = getValidRoundIndex(round, title.length);
         titleTV.setText(title[round]);
+
 
         switch (round){
             case 0:
@@ -173,6 +176,10 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
             getSupportFragmentManager().beginTransaction().replace(R.id.settingDetailsFragmentContainer, selectedFragment).commit();
         }
+    }
+
+    private int getValidRoundIndex(int round, int titleLength) {
+        return round % titleLength < 0 ? round % titleLength + titleLength : round % titleLength;
     }
 
     private String getCmdFromSelectedFragment() {
