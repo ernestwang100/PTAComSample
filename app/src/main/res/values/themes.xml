@@ -32,4 +32,7 @@
         <item name="android:windowIsFloating">true</item>
     </style>
 
+    <style name="OpenerTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name = "android:windowBackground">@drawable/jasslin_opener</item>
+    </style>
 </resources>
