@@ -55,8 +55,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/settingrecycle"
-        android:layout_width="500dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="180sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/linearLayout" />
 

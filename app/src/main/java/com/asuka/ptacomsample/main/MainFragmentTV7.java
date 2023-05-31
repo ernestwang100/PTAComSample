@@ -70,8 +70,8 @@ public class MainFragmentTV7 extends Fragment {
         ib2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setPackage("com.android.launcher");
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setPackage("com.android.phone");
 
                 PackageManager packageManager = requireActivity().getPackageManager();
                 ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -79,7 +79,7 @@ public class MainFragmentTV7 extends Fragment {
                     startActivity(intent);
                 } else {
                     // Phone app is not installed
-                    Toast.makeText(requireContext(), "launcher is not installed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Phone app is not installed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -87,8 +87,8 @@ public class MainFragmentTV7 extends Fragment {
         ib3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(android.provider.Settings.ACTION_SETTINGS);
-                intent.setPackage("com.android.settings");
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setPackage("com.android.launcher");
 
                 PackageManager packageManager = requireActivity().getPackageManager();
                 ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);

@@ -59,7 +59,7 @@
         android:id="@+id/linearLayout_cxt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="170sp"
+        android:layout_marginStart="180sp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -116,16 +116,15 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         round = getValidRoundIndex(round, title.length);
         titleTV.setText(title[round]);
 
-
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         switch (round){
             case 0:
                 driverStatusFragment = new DriverStatusFragment();
                 selectedFragment = driverStatusFragment;
 
-                LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, getResources().getDisplayMetrics()), 0, 0);
-
 //               Set the top margin to 30sp
+
+                layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, getResources().getDisplayMetrics()), 0, 0);
                 settingDetailsFragmentContainer.setLayoutParams(layoutParams);
 
                 break;
@@ -142,6 +141,10 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             case 5:
                 printFragment = new PrintFragment();
                 selectedFragment = printFragment;
+
+
+                layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 30, getResources().getDisplayMetrics()), 0, 0);
+                settingDetailsFragmentContainer.setLayoutParams(layoutParams);
                 break;
             case 6:
                 downloadFragment = new DownloadFragment();
