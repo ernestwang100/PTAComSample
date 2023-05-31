@@ -70,8 +70,8 @@ public class MainFragmentTV7 extends Fragment {
         ib2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setPackage("com.android.phone");
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setPackage("com.android.launcher");
 
                 PackageManager packageManager = requireActivity().getPackageManager();
                 ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -79,7 +79,7 @@ public class MainFragmentTV7 extends Fragment {
                     startActivity(intent);
                 } else {
                     // Phone app is not installed
-                    Toast.makeText(requireContext(), "Phone app is not installed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "launcher is not installed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -102,6 +102,33 @@ public class MainFragmentTV7 extends Fragment {
         });
 
 
+//        Intent intent=null;
+//        final PackageManager packageManager=requireActivity().getPackageManager();
+//        for(final ResolveInfo resolveInfo:packageManager.queryIntentActivities(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME), PackageManager.MATCH_DEFAULT_ONLY))
+//        {
+//            if(!requireActivity().getPackageName().equals(resolveInfo.activityInfo.packageName))  //if this activity is not in our activity (in other words, it's another default home screen)
+//            {
+//                intent=packageManager.getLaunchIntentForPackage(resolveInfo.activityInfo.packageName));
+//                break;
+//            }
+//        }
 
+
+
+    }
+
+
+
+    private boolean appInstalled(String uri){
+        PackageManager pm = requireActivity().getPackageManager();
+        boolean app_installed = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed ;
     }
 }
