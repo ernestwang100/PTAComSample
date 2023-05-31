@@ -8,29 +8,30 @@
     tools:context=".third.SettingDetailsActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayout_btn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent
-"       app:layout_constraintTop_toTopOf="parent"
-        android:paddingLeft="10sp">
+        android:paddingStart="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/homeBtn"
             android:layout_width="170sp"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="10sp"
+            android:layout_weight="1"
             android:text="@string/backBtnCover"
-            android:textSize="30sp"/>
+            android:textSize="30sp" />
 
         <Button
             android:id="@+id/upBtn"
             android:layout_width="170sp"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="10sp"
+            android:layout_weight="1"
             android:text="@string/upBtnCover"
             android:textSize="30sp" />
 
@@ -38,8 +39,8 @@
             android:id="@+id/downBtn"
             android:layout_width="170sp"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="10sp"
+            android:layout_weight="1"
             android:text="@string/downBtnCover"
             android:textSize="30sp" />
 
@@ -47,28 +48,30 @@
             android:id="@+id/confirmBtn"
             android:layout_width="170sp"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="10sp"
             android:layout_marginBottom="10sp"
+            android:layout_weight="1"
             android:text="@string/confirmBtnCover"
             android:textSize="30sp" />
     </LinearLayout>
-
+<!--TODO adjust the width of linearlayout-->
     <LinearLayout
+        android:id="@+id/linearLayout_cxt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="170sp"
+        android:layout_marginStart="170sp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/linearLayout"
+        app:layout_constraintStart_toEndOf="@id/linearLayout_btn"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/titleTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="40sp"
             android:textAlignment="center"
+            android:textSize="40sp"
             app:layout_constraintBottom_toTopOf="@id/settingDetailsFragmentContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/linearLayout"
@@ -80,13 +83,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5sp"
+            android:layout_marginTop="50sp"
             android:layout_marginRight="5sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/linearLayout"
-            app:layout_constraintTop_toBottomOf="@id/titleTV"
-            app:layout_constraintVertical_bias="0.6"
-            ></FrameLayout>
+            app:layout_constraintTop_toBottomOf="@id/titleTV"></FrameLayout>
 
     </LinearLayout>
 

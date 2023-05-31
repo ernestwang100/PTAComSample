@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.widget.FrameLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import com.asuka.ptacomsample.second.SettingListActivity;
 
 public class SettingDetailsActivity extends AppCompatActivity implements LoginDialogListener {
     private Button homeBtn, upBtn, downBtn, confirmBtn;
+    private FrameLayout settingDetailsFragmentContainer;
     private TextView titleTV;
     private int round = 0;
     private String cmd;
@@ -64,6 +67,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         upBtn = findViewById(R.id.upBtn);
         downBtn = findViewById(R.id.downBtn);
         confirmBtn = findViewById(R.id.confirmBtn);
+        settingDetailsFragmentContainer = findViewById(R.id.settingDetailsFragmentContainer);
 
         title = getResources().getStringArray(R.array.setting_full_txt);
         fragmentSwitcher(round);
@@ -117,6 +121,13 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             case 0:
                 driverStatusFragment = new DriverStatusFragment();
                 selectedFragment = driverStatusFragment;
+
+                LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, getResources().getDisplayMetrics()), 0, 0);
+
+//               Set the top margin to 30sp
+                settingDetailsFragmentContainer.setLayoutParams(layoutParams);
+
                 break;
             case 1:
                 driverCodeFragment = new DriverCodeFragment();
