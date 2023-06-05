@@ -143,7 +143,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 selectedFragment = printFragment;
 
 
-                layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 30, getResources().getDisplayMetrics()), 0, 0);
+                layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()), 0, 0);
                 settingDetailsFragmentContainer.setLayoutParams(layoutParams);
                 break;
             case 6:

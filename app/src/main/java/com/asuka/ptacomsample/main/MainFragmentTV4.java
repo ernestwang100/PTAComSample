@@ -26,11 +26,9 @@ public class MainFragmentTV4 extends Fragment {
     private ComPort mPort;
     private RecvThread mRecvThread;
     private static final String TAG = "MainFragmentTV4";
-    private ExecutorService executorService;
 
-    public MainFragmentTV4(ExecutorService executorService) {
+    public MainFragmentTV4() {
         super();
-        this.executorService = executorService;
         this.mPort = new ComPort();
         this.mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
     }

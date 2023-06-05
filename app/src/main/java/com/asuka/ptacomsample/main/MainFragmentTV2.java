@@ -23,14 +23,12 @@ public class MainFragmentTV2 extends Fragment {
     private TextView tv2;
     private Handler handler;
     private String messageText = "";
-    private ExecutorService executorService;
     ComPort mPort;
     RecvThread mRecvThread;
     static final String LOG_TAG = "ComSampleApp";
 
-    public MainFragmentTV2(ExecutorService executorService) {
+    public MainFragmentTV2() {
         super();
-        this.executorService = executorService;
         mPort = new ComPort();
         mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
     }
@@ -54,7 +52,7 @@ public class MainFragmentTV2 extends Fragment {
                 tv2.setText(msg.obj.toString());
             }
         };
-        mRecvThread = new RecvThread();
+        mRecvThread = new RecvThread(handler, mPort,writeData);
         mRecvThread.start();
     }
 
@@ -74,6 +72,7 @@ public class MainFragmentTV2 extends Fragment {
         Log.d(LOG_TAG, "Received = thread 數量: " + Thread.getAllStackTraces().size());
     }
 
+    /*
     class RecvThread extends Thread {
         @Override
         public void run() {
@@ -136,4 +135,6 @@ public class MainFragmentTV2 extends Fragment {
             Log.d(LOG_TAG, "Received = RecvThread ended~~~");
         }
     }
+     */
+
 }

@@ -40,8 +40,10 @@ public class RecvThread extends Thread {
                     break;
             }
 
-            int count = readBuf == null ? 0 : mPort.read(readBuf, readBuf.length);
+//            int count = readBuf == null ? 0 : mPort.read(readBuf, readBuf.length);
+            int count = mPort.read(readBuf, readBuf.length);
             if (count > 0) {
+//                Log.d(TAG, "run: readbuf: " + new String(readBuf));
                 String received = "";
                 for (int i = 0; i < count; i++) {
                     received += String.format("%c", readBuf[i]);
@@ -51,9 +53,31 @@ public class RecvThread extends Thread {
                 String[] temp = received.split(",");
                 Log.i(TAG, "temp[0]: " + temp[0]);
 
-                if(new String(writeData).split("=")[1].equals(temp[0].split("=")[1].trim())) {
+                // if received data is the same as the data sent
+                if (temp[0].contains("$VDR+SHOW DATA") && temp.length>2 && new String(writeData).split("=")[1].equals(temp[0].split("=")[1].trim())) {
                     switch (temp[0]) {
                         case "$VDR+SHOW DATA=0":
+                            if (temp.length == 6) {
+                                messageText = temp[1] + "\n" + temp[2] + "\n" +
+                                        "速度 " + temp[3] + " km/h\n" +
+                                        "駕駛 " + temp[4];
+                                switch (temp[5].trim()) {
+                                    case "0#":
+                                        messageText += " 車停";
+                                        break;
+                                    case "1#":
+                                        messageText += " 行駛";
+                                        break;
+                                    case "2#":
+                                        messageText += " 待班";
+                                        break;
+                                    case "3#":
+                                        messageText += " 休息";
+                                        break;
+                                }
+                            } else {
+                                messageText = "資料讀取中...";
+                            } break;
 
                         case "$VDR+SHOW DATA=1":
                             messageText = "主駕駛\n" + temp[1];

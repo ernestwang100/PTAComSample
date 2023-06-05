@@ -30,9 +30,8 @@ public class MainFragmentTV8 extends Fragment {
     private ExecutorService executorService;
     private int round = 0;
 
-    public MainFragmentTV8(ExecutorService executorService) {
+    public MainFragmentTV8() {
         super();
-        this.executorService = executorService;
     }
 
     @Nullable

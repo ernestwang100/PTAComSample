@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 1:
                 if (mainFragmentTV1 == null)
-                    mainFragmentTV1 = new MainFragmentTV1(executorService);
+                    mainFragmentTV1 = new MainFragmentTV1();
                 if (mainFragmentTV2 != null)
                     mainFragmentTV2 = null;
                 if (mainFragmentWelcomeTV != null)
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 2:
                 if (mainFragmentTV2 == null)
-                    mainFragmentTV2 = new MainFragmentTV2(executorService);
+                    mainFragmentTV2 = new MainFragmentTV2();
                 if (mainFragmentTV3 != null)
                     mainFragmentTV3 = null;
                 if (mainFragmentTV1 != null)
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 3:
                 if (mainFragmentTV3 == null)
-                    mainFragmentTV3 = new MainFragmentTV3(executorService);
+                    mainFragmentTV3 = new MainFragmentTV3();
                 if (mainFragmentTV4 != null)
                     mainFragmentTV4 = null;
                 if (mainFragmentTV2 != null)
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 4:
                 if (mainFragmentTV4 == null)
-                    mainFragmentTV4 = new MainFragmentTV4(executorService);
+                    mainFragmentTV4 = new MainFragmentTV4();
                 if (mainFragmentTV5 != null)
                     mainFragmentTV5 = null;
                 if (mainFragmentTV3 != null)
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 5:
                 if (mainFragmentTV5 == null)
-                    mainFragmentTV5 = new MainFragmentTV5(executorService);
+                    mainFragmentTV5 = new MainFragmentTV5();
                 if (mainFragmentTV6 != null)
                     mainFragmentTV6 = null;
                 if (mainFragmentTV4 != null)
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 8:
                 if (mainFragmentTV8 == null)
-                    mainFragmentTV8 = new MainFragmentTV8(executorService);
+                    mainFragmentTV8 = new MainFragmentTV8();
                 if (mainFragmentWelcomeTV != null)
                     mainFragmentWelcomeTV = null;
                 if (mainFragmentTV7 != null)
