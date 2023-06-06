@@ -61,14 +61,13 @@
     <string name="driverstatus2">代班</string>
     <string name="driverstatus3">休息</string>
     <string name="screenbrightness">亮度調整</string>
+    <string name="drivingtime">00:00</string>
 
 
     <string-array name="setting_full_txt">
         <item>駕駛活動變更</item>
         <item>駕駛代碼輸入</item>
-        <item>目前累計駕駛時間</item>
-        <item>駕駛累計代班時間</item>
-        <item>駕駛累計休息時間</item>
+        <item>駕駛活動時間顯示</item>
         <item>列印功能</item>
         <item>資料下載</item>
         <item>連續行駛門檻時間設定</item>

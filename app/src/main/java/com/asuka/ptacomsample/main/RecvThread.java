@@ -13,6 +13,7 @@ public class RecvThread extends Thread {
     private byte[] readBuf, writeData;
     private ComPort mPort;
     private Handler handler;
+    private String[] temp;
     private static final String TAG = "RecvThread";
 
 
@@ -50,7 +51,7 @@ public class RecvThread extends Thread {
                 }
                 Log.i(TAG, "received: " + received);
 
-                String[] temp = received.split(",");
+                temp = received.split(",");
                 Log.i(TAG, "temp[0]: " + temp[0]);
 
                 // if received data is the same as the data sent
@@ -150,7 +151,11 @@ public class RecvThread extends Thread {
             }
         Log.i(TAG, "Received = RecvThread ended~~~");
         }
+
+    public String[] getTemp() {
+        return temp;
     }
+}
 
 
 

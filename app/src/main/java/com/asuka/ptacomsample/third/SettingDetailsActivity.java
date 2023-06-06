@@ -122,8 +122,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 driverStatusFragment = new DriverStatusFragment();
                 selectedFragment = driverStatusFragment;
 
-//               Set the top margin to 30sp
-
+//               Set the top margin of the fragment container
                 layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, getResources().getDisplayMetrics()), 0, 0);
                 settingDetailsFragmentContainer.setLayoutParams(layoutParams);
 
@@ -133,48 +132,50 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 selectedFragment = driverCodeFragment;
                 break;
             case 2:
-            case 3:
-            case 4:
                 drivingTimeFragment = new DrivingTimeFragment();
                 selectedFragment = drivingTimeFragment;
+
+                //               Set the top margin of the fragment container
+                layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, getResources().getDisplayMetrics()), 0, 0);
+                settingDetailsFragmentContainer.setLayoutParams(layoutParams);
                 break;
-            case 5:
+
+            case 3:
                 printFragment = new PrintFragment();
                 selectedFragment = printFragment;
-
 
                 layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()), 0, 0);
                 settingDetailsFragmentContainer.setLayoutParams(layoutParams);
                 break;
-            case 6:
+            case 4:
                 downloadFragment = new DownloadFragment();
                 selectedFragment = downloadFragment;
                 break;
-            case 7:
+            case 5:
                 thresholdTimeFragment = new ThresholdTimeFragment(0);
                 selectedFragment = thresholdTimeFragment;
                 break;
-            case 8:
+            case 6:
                 thresholdTimeFragment = new ThresholdTimeFragment(1);
                 selectedFragment = thresholdTimeFragment;
                 break;
-            case 9:
+            case 7:
                 gainFragment = new GainFragment(0);
                 selectedFragment = gainFragment;
                 break;
-            case 10:
+            case 8:
                 gainFragment = new GainFragment(1);
                 selectedFragment = gainFragment;
                 break;
-            case 11:
+            case 9:
                 systemTimeFragment = new SystemTimeFragment();
                 selectedFragment = systemTimeFragment;
                 break;
-            case 12:
+            case 10:
                 brightnessFragment = new BrightnessFragment();
                 selectedFragment = brightnessFragment;
                 break;
-            case 13:
+            case 11:
                 manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
                 break;
