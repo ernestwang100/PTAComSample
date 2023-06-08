@@ -18,11 +18,13 @@ public class DriverCodeFragment extends Fragment {
     private EditText driverCodeEdt, codriverCodeEdt;
     private byte[] writeData;
     private ComPort mPort;
-    private String cmd, temp[];
+    private String cmd, temp[], cmdStart;
     private RecvThread mRecvThread;
     private Handler handler;
     public static final int DRIVER_STATUS = 0;
     public static final int CODRIVER_STATUS = 2;
+    private boolean isDefaultsSet = false;
+
     private static final String TAG = "DriverCodeFragment";
 
     public DriverCodeFragment() {
@@ -35,6 +37,7 @@ public class DriverCodeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_code, container, false);
 
+        cmdStart = "$LCD+DRIVER IN=";
         writeData = "$LCD+PAGE=1".getBytes();
         mPort.write(writeData, writeData.length);
         handler = new Handler(Looper.getMainLooper()) {
@@ -45,18 +48,16 @@ public class DriverCodeFragment extends Fragment {
                     temp[i] = temp[i].trim();
                 }
 
-                if (temp != null && temp.length > 1) {
+                if (!isDefaultsSet && temp != null && temp.length > 1) {
                     driverCodeEdt.setText(temp[DRIVER_STATUS]);
                     codriverCodeEdt.setText(temp[CODRIVER_STATUS]);
+                    isDefaultsSet = true;
                 }
             }
         };
 
         mRecvThread = new RecvThread(handler, mPort, writeData, 1);
         mRecvThread.start();
-
-
-
 
         driverCodeEdt = view.findViewById(R.id.driverCodeEdt);
         codriverCodeEdt = view.findViewById(R.id.codriverCodeEdt);
@@ -69,9 +70,9 @@ public class DriverCodeFragment extends Fragment {
         mRecvThread.interrupt();
     }
 
+
     public String getCmd() {
-        String cmd = "$LCD+DRIVER IN=0," + driverCodeEdt.getText().toString() + "\n" +
-                "$LCD+DRIVER IN=1," + codriverCodeEdt.getText().toString();
+        cmd = cmdStart + driverCodeEdt.getText().toString() + "," + codriverCodeEdt.getText().toString();
         return cmd;
 
     }

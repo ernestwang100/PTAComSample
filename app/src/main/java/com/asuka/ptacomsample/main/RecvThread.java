@@ -55,11 +55,17 @@ public class RecvThread extends Thread {
 //                Log.d(TAG, "run: readbuf: " + new String(readBuf));
                 String received = "";
                 for (int i = 0; i < count; i++) {
-                    received += String.format("%c", readBuf[i]);
+                    try {
+                        received += String.format("%c", readBuf[i]);
+                    } catch (Exception e) {
+                        Log.i(TAG, "Exception: " + e.toString() + " occurs");
+                        if (e instanceof InterruptedException)
+                            break;
+                    }
                 }
                 Log.i(TAG, "received: " + received);
 
-                temp = received.split(",");
+                temp = received.replace("#", "").split(",");
                 Log.i(TAG, "temp[0]: " + temp[0]);
 
                 // if received data is the same as the data sent
@@ -71,16 +77,16 @@ public class RecvThread extends Thread {
                                         "速度 " + temp[3] + " km/h\n" +
                                         "駕駛 " + temp[4];
                                 switch (temp[5].trim()) {
-                                    case "0#":
+                                    case "0":
                                         messageText += " 車停";
                                         break;
-                                    case "1#":
+                                    case "1":
                                         messageText += " 行駛";
                                         break;
-                                    case "2#":
+                                    case "2":
                                         messageText += " 待班";
                                         break;
-                                    case "3#":
+                                    case "3":
                                         messageText += " 休息";
                                         break;
                                 }
@@ -108,25 +114,23 @@ public class RecvThread extends Thread {
                             }
                             messageText += "共同駕駛\n" + temp[3];
                             switch (temp[4].trim()) {
-                                case "0#":
+                                case "0":
                                     messageText += " 車停\n";
                                     break;
-                                case "1#":
+                                case "1":
                                     messageText += " 行駛\n";
                                     break;
-                                case "2#":
+                                case "2":
                                     messageText += " 待班\n";
                                     break;
-                                case "3#":
+                                case "3":
                                     messageText += " 休息\n";
                                     break;
                             }
                             break;
 
                         case "$VDR+SHOW DATA=2":
-                            tempMsg = temp[1] + ',' + temp[2];
-                            messageText = "主駕駛\n" + temp[1] + "\n";
-                            messageText += "共同駕駛\n" + temp[2];
+
                             break;
 
 
@@ -144,14 +148,29 @@ public class RecvThread extends Thread {
                             messageText += "日期: " + temp[3] + "\n";
                             messageText += "時間: " + temp[4] + "\n";
                             break;
+
                         case "$VDR+SHOW DATA=5":
+                            tempMsg = temp[1] + ',' + temp[2];
+                            messageText = "里程" + temp[1] + " km\n";
+                            messageText += "VIN" + temp[2] + "\n";
+                            break;
                         case "$VDR+SHOW DATA=6":
                         case "$VDR+SHOW DATA=7":
+                        case "$VDR+SHOW DATA=8":
+                            tempMsg = temp[1] + ',' + temp[2];
+                            messageText = "主駕駛\n" + temp[1] + "\n";
+                            messageText += "共同駕駛\n" + temp[2];
+                            break;
+
+                        default:
+                            messageText = "資料讀取中...";
+                            break;
 
 
                     }
+                    Log.d(TAG, "tempMsg: " + tempMsg);
+                    Log.d(TAG, "messageText: " + messageText);
 
-//                Log.d(TAG, "messageText: " + messageText);
                     msg = Message.obtain();
                     msg.obj = messageText;
                     //msg.obj = received;
@@ -166,10 +185,6 @@ public class RecvThread extends Thread {
             }
         }
         Log.i(TAG, "Received = RecvThread ended~~~");
-    }
-
-    public String[] getTemp() {
-        return temp;
     }
 }
 
