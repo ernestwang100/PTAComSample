@@ -17,11 +17,13 @@ import androidx.fragment.app.Fragment;
 import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 
-public class MainFragmentTV1 extends Fragment {
+import java.lang.ref.WeakReference;
+
+public class MainFragmentTV1 extends Fragment implements Handler.Callback {
     private TextView tv1;
-    private Handler handler;
+    private WeakReference<Handler> handlerRef;
     private ComPort mPort;
-    RecvThread mRecvThread;
+    private RecvThread mRecvThread;
     static final String TAG = "MainFragmentTV1";
 
     public MainFragmentTV1() {
@@ -40,17 +42,10 @@ public class MainFragmentTV1 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tv1 = (TextView) view.findViewById(R.id.mainTV_1);
+        tv1 = view.findViewById(R.id.mainTV_1);
         byte[] writeData = "$LCD+PAGE=0".getBytes();
-        mPort.write(writeData, writeData.length);
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                tv1.setText(msg.obj.toString());
-                Log.d(TAG, "handleMessage: " + msg.obj.toString());
-            }
-        };
-        mRecvThread = new RecvThread(handler, mPort,writeData);;
+        handlerRef = new WeakReference<>(new Handler(Looper.getMainLooper(), this));
+        mRecvThread = new RecvThread(handlerRef.get(), mPort, writeData);
         mRecvThread.start();
     }
 
@@ -63,10 +58,39 @@ public class MainFragmentTV1 extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "Received = run TV1 onPause()");
-        Log.d(TAG, "Received = current thread: " + Thread.currentThread().toString());
-        mRecvThread.interrupt();
-        Log.d(TAG, "Received = current thread: " + Thread.currentThread());
-        Log.d(TAG, "Received = thread 數量: " + Thread.getAllStackTraces().size());
+        if (mRecvThread != null) {
+            mRecvThread.interrupt();
+            mRecvThread = null;
+        }
+        if (handlerRef != null) {
+            handlerRef.clear();
+            handlerRef = null;
+        }
+        mPort.close();
+    }
+
+    @Override
+    public boolean handleMessage(@NonNull Message msg) {
+        if (tv1 != null) {
+            tv1.setText(msg.obj.toString());
+            Log.d(TAG, "handleMessage: " + msg.obj.toString());
+        }
+        return true;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (handlerRef != null) {
+            handlerRef.clear();
+            handlerRef = null;
+        }
+        if (mRecvThread != null) {
+            mRecvThread.interrupt();
+            mRecvThread = null;
+        }
+
+        mPort.close();
+
     }
 }
