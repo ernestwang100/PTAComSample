@@ -7,12 +7,11 @@ import android.util.Log;
 import com.asuka.comm.ComPort;
 
 public class RecvThread extends Thread {
-    private String messageText = "NULL", tempMsg = "NULL";
+    private String messageText = "NULL";
     private byte[] readBuf, writeData;
     private ComPort mPort;
     private Handler handler;
     private String[] temp;
-    private int recvType;
     private static final String TAG = "RecvThread";
 
 
@@ -21,14 +20,6 @@ public class RecvThread extends Thread {
         this.handler = handler;
         this.writeData = writeData;
     }
-
-    public RecvThread(Handler handler, ComPort mPort, byte[] writeData, int recvType) {
-        this.mPort = mPort;
-        this.handler = handler;
-        this.writeData = writeData;
-        this.recvType = recvType;
-    }
-
 
     public void run() {
 
@@ -43,8 +34,7 @@ public class RecvThread extends Thread {
                 sleep(1000);
             } catch (InterruptedException e) {
                 Log.i(TAG, "Exception: " + e.toString() + " occurs");
-                if (e instanceof InterruptedException)
-                    break;
+                if (e instanceof InterruptedException) break;
             }
 
             mPort.write(writeData, writeData.length);
@@ -52,31 +42,32 @@ public class RecvThread extends Thread {
 //            int count = readBuf == null ? 0 : mPort.read(readBuf, readBuf.length);
             int count = mPort.read(readBuf, readBuf.length);
             if (count > 0) {
-//                Log.d(TAG, "run: readbuf: " + new String(readBuf));
+                Log.d(TAG, "run: readbuf: " + new String(readBuf));
                 String received = "";
                 for (int i = 0; i < count; i++) {
                     try {
                         received += String.format("%c", readBuf[i]);
                     } catch (Exception e) {
                         Log.i(TAG, "Exception: " + e.toString() + " occurs");
-                        if (e instanceof InterruptedException)
-                            break;
+                        if (e instanceof InterruptedException) break;
                     }
                 }
                 Log.i(TAG, "received: " + received);
 
-                temp = received.replace("#", "").split(",");
+//                default messageText
+                messageText = received.replace("#", "").split("=")[1].trim();
+
+                temp = received.replace("#", "").replace("=", ",").split(",");
                 Log.i(TAG, "temp[0]: " + temp[0]);
 
                 // if received data is the same as the data sent
-                if (temp[0].contains("$VDR+SHOW DATA") && temp.length > 2 && new String(writeData).split("=")[1].equals(temp[0].split("=")[1].trim())) {
-                    switch (temp[0]) {
-                        case "$VDR+SHOW DATA=0":
-                            if (temp.length == 6) {
-                                messageText = temp[1] + "\n" + temp[2] + "\n" +
-                                        "速度 " + temp[3] + " km/h\n" +
-                                        "駕駛 " + temp[4];
-                                switch (temp[5].trim()) {
+                if (temp[0].contains("$VDR+SHOW DATA") && temp.length > 2 && new String(writeData).split("=")[1].equals(temp[1].trim())) {
+                    switch (temp[1]) {
+                        case "0":
+
+                            if (temp.length == 7) {
+                                messageText = temp[2] + "\n" + temp[3] + "\n" + "速度 " + temp[4] + " km/h\n" + "駕駛 " + temp[5];
+                                switch (temp[6].trim()) {
                                     case "0":
                                         messageText += " 車停";
                                         break;
@@ -95,10 +86,9 @@ public class RecvThread extends Thread {
                             }
                             break;
 
-                        case "$VDR+SHOW DATA=1":
-                            tempMsg = temp[1] + ',' + temp[2] + ',' + temp[3] + ',' + temp[4];
-                            messageText = "主駕駛\n" + temp[1];
-                            switch (temp[2].trim()) {
+                        case "1":
+                            messageText = "主駕駛\n" + temp[2];
+                            switch (temp[3].trim()) {
                                 case "0":
                                     messageText += " 車停\n";
                                     break;
@@ -112,8 +102,8 @@ public class RecvThread extends Thread {
                                     messageText += " 休息\n";
                                     break;
                             }
-                            messageText += "共同駕駛\n" + temp[3];
-                            switch (temp[4].trim()) {
+                            messageText += "共同駕駛\n" + temp[4];
+                            switch (temp[5].trim()) {
                                 case "0":
                                     messageText += " 車停\n";
                                     break;
@@ -129,59 +119,44 @@ public class RecvThread extends Thread {
                             }
                             break;
 
-                        case "$VDR+SHOW DATA=2":
+                        case "2":
 
                             break;
 
 
-                        case "$VDR+SHOW DATA=3":
-                            messageText = "BUS-ID: " + temp[1] + "\n";
-                            messageText += "HW-ID: " + temp[2] + "\n";
-                            messageText += "FW-ID: " + temp[3] + "\n";
+                        case "3":
+                            messageText = "BUS-ID: " + temp[2] + "\n";
+                            messageText += "HW-ID: " + temp[3] + "\n";
+                            messageText += "FW-ID: " + temp[4] + "\n";
+                            messageText += "日期: " + temp[5] + "\n";
+                            break;
+
+                        case "4":
+                            messageText = "GPS狀態: " + temp[2] + "\n";
+                            messageText += "衛星數: " + temp[3] + "\n";
                             messageText += "日期: " + temp[4] + "\n";
+                            messageText += "時間: " + temp[5] + "\n";
                             break;
 
-                        case "$VDR+SHOW DATA=4":
-                            tempMsg = temp[3] + ',' + temp[4];
-                            messageText = "GPS狀態: " + temp[1] + "\n";
-                            messageText += "衛星數: " + temp[2] + "\n";
-                            messageText += "日期: " + temp[3] + "\n";
-                            messageText += "時間: " + temp[4] + "\n";
+                        case "5":
+                            messageText = "里程" + temp[2] + " km\n";
+                            messageText += "VIN" + temp[3] + "\n";
                             break;
 
-                        case "$VDR+SHOW DATA=5":
-                            tempMsg = temp[1] + ',' + temp[2];
-                            messageText = "里程" + temp[1] + " km\n";
-                            messageText += "VIN" + temp[2] + "\n";
-                            break;
-                        case "$VDR+SHOW DATA=6":
-                        case "$VDR+SHOW DATA=7":
-                        case "$VDR+SHOW DATA=8":
-                            tempMsg = temp[1] + ',' + temp[2];
-                            messageText = "主駕駛\n" + temp[1] + "\n";
-                            messageText += "共同駕駛\n" + temp[2];
-                            break;
 
                         default:
                             messageText = "資料讀取中...";
                             break;
-
-
                     }
-                    Log.d(TAG, "tempMsg: " + tempMsg);
-                    Log.d(TAG, "messageText: " + messageText);
-
-                    msg = Message.obtain();
-                    msg.obj = messageText;
-                    //msg.obj = received;
-
-                    if (recvType == 1) {
-                        msg.obj = tempMsg;
-                    }
-                    handler.sendMessage(msg);
                 }
 
+                Log.d(TAG, "messageText: " + messageText);
 
+                msg = Message.obtain();
+                msg.obj = messageText;
+                //msg.obj = received;
+
+                handler.sendMessage(msg);
             }
         }
         Log.i(TAG, "Received = RecvThread ended~~~");
