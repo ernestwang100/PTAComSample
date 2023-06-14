@@ -30,18 +30,16 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private DriverStatusFragment driverStatusFragment;
     private DriverCodeFragment driverCodeFragment;
     private DrivingTimeFragment drivingTimeFragment;
-    private GainFragment gainFragment;
+    private GainFragment speedGainFragment, rpmGainFragment;
     private ManufacturerFragment manufacturerFragment;
     private PrintFragment printFragment;
     private DownloadFragment downloadFragment;
-    private ThresholdTimeFragment thresholdTimeFragment;
+    private ThresholdTimeFragment drivingThresholdTimeFragment, restingThresholdTimeFragment;
     private SystemTimeFragment systemTimeFragment;
     private BrightnessFragment brightnessFragment;
     private Fragment selectedFragment = null;
 
     private static final String TAG = "SettingDetailsActivity";
-
-
 
 
     public SettingDetailsActivity() {
@@ -50,16 +48,15 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_details);
 
-        if(getIntent().hasExtra("INDEX")){
+        if (getIntent().hasExtra("INDEX")) {
             round = getIntent().getIntExtra("INDEX", 0);
             Log.d(TAG, "onCreate: round = " + round);
-        }else {
+        } else {
             round = 0;
         }
         titleTV = findViewById(R.id.titleTV);
@@ -106,21 +103,20 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         });
 
 
-
     }
 
 
-    private void fragmentSwitcher(int round){
+    private void fragmentSwitcher(int round) {
         Log.d(TAG, "fragmentSwitcher: round = " + round);
 
         round = getValidRoundIndex(round, title.length);
         titleTV.setText(title[round]);
 
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        switch (round){
+        switch (round) {
             case 0:
-                if(driverStatusFragment == null)
-                driverStatusFragment = new DriverStatusFragment();
+                if (driverStatusFragment == null)
+                    driverStatusFragment = new DriverStatusFragment();
                 selectedFragment = driverStatusFragment;
 
 //               Set the top margin of the fragment container
@@ -129,13 +125,13 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
 
             case 1:
-                if(driverCodeFragment == null)
-                driverCodeFragment = new DriverCodeFragment();
+                if (driverCodeFragment == null)
+                    driverCodeFragment = new DriverCodeFragment();
                 selectedFragment = driverCodeFragment;
                 break;
             case 2:
-                if(drivingTimeFragment == null)
-                drivingTimeFragment = new DrivingTimeFragment();
+                if (drivingTimeFragment == null)
+                    drivingTimeFragment = new DrivingTimeFragment();
                 selectedFragment = drivingTimeFragment;
 
                 //               Set the top margin of the fragment container
@@ -144,8 +140,8 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
 
             case 3:
-                if(printFragment == null)
-                printFragment = new PrintFragment();
+                if (printFragment == null)
+                    printFragment = new PrintFragment();
                 selectedFragment = printFragment;
 
                 layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()), 0, 0);
@@ -153,56 +149,56 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
 
             case 4:
-                if(downloadFragment == null)
-                downloadFragment = new DownloadFragment();
+                if (downloadFragment == null)
+                    downloadFragment = new DownloadFragment();
                 selectedFragment = downloadFragment;
                 break;
 
             case 5:
-                if(thresholdTimeFragment == null)
-                thresholdTimeFragment = new ThresholdTimeFragment(0);
-                selectedFragment = thresholdTimeFragment;
+                if (drivingThresholdTimeFragment == null)
+                    drivingThresholdTimeFragment = new ThresholdTimeFragment(0);
+                selectedFragment = drivingThresholdTimeFragment;
                 break;
 
             case 6:
-                if(thresholdTimeFragment == null)
-                thresholdTimeFragment = new ThresholdTimeFragment(1);
-                selectedFragment = thresholdTimeFragment;
+                if (restingThresholdTimeFragment == null)
+                    restingThresholdTimeFragment = new ThresholdTimeFragment(1);
+                selectedFragment = restingThresholdTimeFragment;
                 break;
 
             case 7:
-                if(gainFragment == null)
-                gainFragment = new GainFragment(0);
-                selectedFragment = gainFragment;
+                if (speedGainFragment == null)
+                    speedGainFragment = new GainFragment(0);
+                selectedFragment = speedGainFragment;
                 break;
 
             case 8:
-                if(gainFragment == null)
-                gainFragment = new GainFragment(1);
-                selectedFragment = gainFragment;
+                if (rpmGainFragment == null)
+                    rpmGainFragment = new GainFragment(1);
+                selectedFragment = rpmGainFragment;
                 break;
 
             case 9:
-                if(systemTimeFragment == null)
-                systemTimeFragment = new SystemTimeFragment();
+                if (systemTimeFragment == null)
+                    systemTimeFragment = new SystemTimeFragment();
                 selectedFragment = systemTimeFragment;
                 break;
 
             case 10:
-                if(brightnessFragment == null)
-                brightnessFragment = new BrightnessFragment();
+                if (brightnessFragment == null)
+                    brightnessFragment = new BrightnessFragment();
                 selectedFragment = brightnessFragment;
                 break;
 
             case 11:
-                if(manufacturerFragment == null)
-                manufacturerFragment = new ManufacturerFragment();
+                if (manufacturerFragment == null)
+                    manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
                 break;
             default:
                 break;
         }
-        if(selectedFragment != null){
+        if (selectedFragment != null) {
             // Get the reference to the fragment container
             FrameLayout fragmentContainer = findViewById(R.id.settingDetailsFragmentContainer);
 
@@ -244,18 +240,18 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     }
 
 
-
-
     private boolean needWaiting() {
         if (selectedFragment instanceof PrintFragment || selectedFragment instanceof DownloadFragment) {
             return true;
         }
         return false;
     }
+
     private void showWaitingFragment() {
         WaitingFragment waitingFragment = new WaitingFragment();
         waitingFragment.show(getSupportFragmentManager(), "waiting");
     }
+
     private boolean needLoginCredentials() {
 
         if (selectedFragment instanceof GainFragment || selectedFragment instanceof ThresholdTimeFragment || selectedFragment instanceof SystemTimeFragment) {
@@ -263,6 +259,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         }
         return false;
     }
+
     private void showLoginFragment() {
         LoginFragment loginFragment = new LoginFragment();
         loginFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog); // Set the custom dialog style
@@ -276,9 +273,6 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             mPort.write(writeData, writeData.length);
         }
     }
-
-
-
 
 
     @Override
@@ -299,7 +293,6 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     public void onLoginCancelled() {
         Toast.makeText(this, "Login cancelled", Toast.LENGTH_SHORT).show();
     }
-
 
 
 }
