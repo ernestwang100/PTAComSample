@@ -13,24 +13,25 @@ import com.asuka.ptacomsample.R;
 
 public class DownloadFragment extends Fragment {
     private RadioGroup radioGroupDownload;
-    private String cmd;
+    private String cmd, cmdStart;
     private DatePickerFragment datePickerFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_download, container, false);
 
+        cmdStart = "$LCD+DOWNLOAD=";
         radioGroupDownload = view.findViewById(R.id.radioGroupDownload);
         radioGroupDownload.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId){
                 case R.id.download1RB:
-                    cmd = "$LCD+DOWNLOAD=24";
-                    break;
-                case R.id.download2RB:
                     showDatePickerDialog();
                     break;
+                case R.id.download2RB:
+                    cmd = cmdStart + "2,0";
+                    break;
                 case R.id.download3RB:
-                    cmd = "$LCD+DOWNLOAD=NOW";
+                    cmd = cmdStart + "3,24";
                     break;
 
             }
@@ -43,10 +44,10 @@ public class DownloadFragment extends Fragment {
         datePickerFragment.setOnDateSelectedListener((year, month, day) -> {
             // Handle the selected date
             String selectedDate = String.format("%04d%02d%02d", year, month + 1, day);
-            RadioButton download2RB = getView().findViewById(R.id.download2RB);
-            download2RB.setText(selectedDate + " 下載");
+            RadioButton download1RB = getView().findViewById(R.id.download1RB);
+            download1RB.setText(selectedDate + " 下載");
             
-            cmd = "$LCD+DOWNLOAD=" + selectedDate;
+            cmd = cmdStart +"1," + selectedDate;
         });
         datePickerFragment.show(getFragmentManager(), "datePicker");
     }

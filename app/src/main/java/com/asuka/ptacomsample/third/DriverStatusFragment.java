@@ -25,8 +25,8 @@ public class DriverStatusFragment extends Fragment {
     private String cmd, temp[], cmdStart;
     private RecvThread mRecvThread;
     private Handler handler;
-    public static final int DRIVER_STATUS = 1;
-    public static final int CODRIVER_STATUS = 3;
+    public static final int DRIVER_STATUS = 0;
+    public static final int CODRIVER_STATUS = 1;
     private boolean isDefaultsSet = false;
     private static final String TAG = "DriverStatusFragment";
 
@@ -40,9 +40,7 @@ public class DriverStatusFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_status, container, false);
 
-        cmdStart = "$LCD+DRIVERSTATUS=";
-        writeData = "$LCD+PAGE=1".getBytes();
-        mPort.write(writeData, writeData.length);
+        cmdStart = "$LCD+DRIVER STATUS=";
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -52,7 +50,7 @@ public class DriverStatusFragment extends Fragment {
                     temp[i] = temp[i].trim();
                 }
 
-                if (!isDefaultsSet && temp != null && temp.length > 3 &&TextUtils.isDigitsOnly(temp[DRIVER_STATUS]) && TextUtils.isDigitsOnly(temp[CODRIVER_STATUS])) {
+                if (!isDefaultsSet && temp != null && temp.length > Math.max(DRIVER_STATUS, CODRIVER_STATUS) &&TextUtils.isDigitsOnly(temp[DRIVER_STATUS]) && TextUtils.isDigitsOnly(temp[CODRIVER_STATUS])) {
 
                     Log.d(TAG, "onCreateView: temp: " + temp[DRIVER_STATUS] + ", " + temp[CODRIVER_STATUS]);
 
@@ -63,7 +61,9 @@ public class DriverStatusFragment extends Fragment {
 
             }
         };
-        mRecvThread = new RecvThread(handler, mPort, writeData, 1);
+
+        writeData = (cmdStart+"?").getBytes();
+        mRecvThread = new RecvThread(handler, mPort, writeData);
         mRecvThread.start();
 
         radioGroupDriverStatus = view.findViewById(R.id.DRBtnGroup);
@@ -110,9 +110,10 @@ public class DriverStatusFragment extends Fragment {
             radioGroupCodriverStatus.check(R.id.CRBtn3);
         }
     }
+
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onPause() {
+        super.onPause();
         mRecvThread.interrupt();
     }
 

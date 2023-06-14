@@ -22,7 +22,7 @@ public class DriverCodeFragment extends Fragment {
     private RecvThread mRecvThread;
     private Handler handler;
     public static final int DRIVER_STATUS = 0;
-    public static final int CODRIVER_STATUS = 2;
+    public static final int CODRIVER_STATUS = 1;
     private boolean isDefaultsSet = false;
 
     private static final String TAG = "DriverCodeFragment";
@@ -37,9 +37,6 @@ public class DriverCodeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_code, container, false);
 
-        cmdStart = "$LCD+DRIVER IN=";
-        writeData = "$LCD+PAGE=1".getBytes();
-        mPort.write(writeData, writeData.length);
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(android.os.Message msg) {
@@ -56,7 +53,9 @@ public class DriverCodeFragment extends Fragment {
             }
         };
 
-        mRecvThread = new RecvThread(handler, mPort, writeData, 1);
+        cmdStart = "$LCD+DRIVER IN=";
+        writeData = (cmdStart+"?").getBytes();
+        mRecvThread = new RecvThread(handler, mPort, writeData);
         mRecvThread.start();
 
         driverCodeEdt = view.findViewById(R.id.driverCodeEdt);
@@ -65,8 +64,10 @@ public class DriverCodeFragment extends Fragment {
         return view;
     }
 
-    public void onDestroyView() {
-        super.onDestroyView();
+
+    @Override
+    public void onPause() {
+        super.onPause();
         mRecvThread.interrupt();
     }
 

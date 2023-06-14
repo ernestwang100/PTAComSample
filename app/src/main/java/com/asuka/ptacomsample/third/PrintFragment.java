@@ -1,51 +1,86 @@
 package com.asuka.ptacomsample.third;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.NumberPicker;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
+import com.asuka.ptacomsample.main.RecvThread;
 
 public class PrintFragment extends Fragment {
     private RadioGroup radioGroupPrint;
-    private String cmd;
+    private Integer printDataID;
+    private String cmd, cmdStart, temp[];
+    private byte[] writeData;
+    private ComPort mPort;
+    private RecvThread mRecvThread;
+    private Handler handler;
+    public static final String TAG = "PrintFragment";
+
+    public PrintFragment() {
+        super();
+        mPort = new ComPort();
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_print, container, false);
 
+
         radioGroupPrint = view.findViewById(R.id.radioGroupPrint);
         radioGroupPrint.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                RadioButton print1RB = view.findViewById(R.id.print1RB);
-                RadioButton print2RB = view.findViewById(R.id.print2RB);
-                RadioButton print3RB = view.findViewById(R.id.print3RB);
-                RadioButton print4RB = view.findViewById(R.id.print4RB);
-
-                if (print1RB.isChecked()){
-                    cmd = "$LCD+PRINT=1";
-                } else if (print2RB.isChecked()){
-                    cmd = "$LCD+PRINT=2";
-                } else if (print3RB.isChecked()){
-                    cmd = "$LCD+PRINT=3";
-                } else if (print4RB.isChecked()){
-                    cmd = "$LCD+PRINT=4";
-                }
+                printDataID = radioGroupPrint.indexOfChild(view.findViewById(i));
+                Log.d(TAG, "onCheckedChanged: printDataID: " + printDataID);
             }
         });
 
+
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                Log.d(TAG, "handleMessage: " + msg.obj.toString());
+                temp = msg.obj.toString().split(",");
+                for (int i = 0; i < temp.length; i++) {
+                    temp[i] = temp[i].trim();
+                }
+
+                switch (temp[0]) {
+                    case "0":
+                        Log.d(TAG, "handleMessage: processing complete");
+                        break;
+                    case "1":
+                        Log.d(TAG, "handleMessage: processing");
+                        break;
+                    case "2":
+                        Log.d(TAG, "handleMessage: processing error");
+                        break;
+                }
+            }
+        };
+
+        cmdStart = "$LCD+PRINT=";
+        cmd = cmdStart + printDataID;
+        writeData = cmd.getBytes();
+        mRecvThread = new RecvThread(handler, mPort, writeData);
+        mRecvThread.start();
 
         return view;
     }
 
     public String getCmd() {
+        cmd = cmdStart + printDataID;
         return cmd;
     }
 }

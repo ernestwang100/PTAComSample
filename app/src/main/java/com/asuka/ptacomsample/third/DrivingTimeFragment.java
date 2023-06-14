@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class DrivingTimeFragment extends Fragment {
     private TextView drivertimeTV1, drivertimeTV2, drivertimeTV3, codrivertimeTV1, codrivertimeTV2, codrivertimeTV3;
-    private String cmd, temp[];
+    private String cmd, cmdStart, temp[];
     private byte[] writeData;
     private ComPort mPort;
     private RecvThread mRecvThread;
@@ -42,9 +42,6 @@ public class DrivingTimeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driving_time, container, false);
 
-        writeData = "$LCD+DRIVER TIME=?".getBytes();
-        mPort.write(writeData, writeData.length);
-
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(android.os.Message msg) {
@@ -55,14 +52,21 @@ public class DrivingTimeFragment extends Fragment {
                 }
 
                 if ( !isDefaultsSet && temp != null && temp.length > 1) {
+//                    TODO set mins and secs
                     drivertimeTV1.setText(temp[0]);
                     drivertimeTV2.setText(temp[1]);
+                    drivertimeTV3.setText(temp[2]);
+                    codrivertimeTV1.setText(temp[3]);
+                    codrivertimeTV2.setText(temp[4]);
+                    codrivertimeTV3.setText(temp[5]);
                     isDefaultsSet = true;
                 }
             }
         };
 
-        mRecvThread = new RecvThread(handler, mPort, writeData, 1);
+        cmdStart = "$LCD+DRIVER TIME=";
+        writeData = (cmdStart+"?").getBytes();
+        mRecvThread = new RecvThread(handler, mPort, writeData);
         mRecvThread.start();
 
         drivertimeTV1 = view.findViewById(R.id.drivertimeTV1);
@@ -77,10 +81,9 @@ public class DrivingTimeFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onPause() {
+        super.onPause();
         mRecvThread.interrupt();
-        mPort.close();
     }
 
 
