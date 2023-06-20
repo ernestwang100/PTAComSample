@@ -23,8 +23,8 @@ public class MainFragmentTV2 extends Fragment {
     private TextView tv2;
     private Handler handler;
     private String messageText = "";
-    ComPort mPort;
-    RecvThread mRecvThread;
+    private ComPort mPort;
+    private static RecvThread mRecvThread;
     static final String LOG_TAG = "ComSampleApp";
 
     public MainFragmentTV2() {
@@ -67,10 +67,15 @@ public class MainFragmentTV2 extends Fragment {
         super.onPause();
         Log.d(LOG_TAG, "Received = run TV2 onPause()");
         Log.d(LOG_TAG, "Received = current thread: " + Thread.currentThread().toString());
-        mRecvThread.interrupt();
+//        mRecvThread.interrupt();
+//        handler.removeCallbacksAndMessages(null);  // Remove any pending messages from the handler's queue
+
         Log.d(LOG_TAG, "Received = current thread: " + Thread.currentThread());
         Log.d(LOG_TAG, "Received = thread 數量: " + Thread.getAllStackTraces().size());
     }
+
+
+
 
     /*
     class RecvThread extends Thread {

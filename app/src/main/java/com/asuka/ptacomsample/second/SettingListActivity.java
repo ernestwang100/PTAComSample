@@ -18,10 +18,9 @@ import com.asuka.ptacomsample.third.SettingDetailsActivity;
 import java.util.ArrayList;
 
 public class SettingListActivity extends AppCompatActivity implements RecyclerViewInterface {
-    ArrayList<SettingListModel> settingListModels = new ArrayList<>();
-    RecyclerView recyclerView;
-    Button homeBtn, upBtn, downBtn;
-
+    private ArrayList<SettingListModel> settingListModels = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private Button homeBtn, upBtn, downBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +39,11 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
 
 
         homeBtn.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setClass(SettingListActivity.this, MainActivity.class);
+            Intent intent = new Intent(SettingListActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("FragmentIndex", 1);
             startActivity(intent);
+//            finish();
         });
         upBtn.setOnClickListener(new View.OnClickListener(){
             @Override

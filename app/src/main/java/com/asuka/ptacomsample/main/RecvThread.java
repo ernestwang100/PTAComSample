@@ -10,8 +10,10 @@ public class RecvThread extends Thread {
     private String messageText = "NULL";
     private byte[] readBuf, writeData;
     private ComPort mPort;
-    private Handler handler;
+    private static Handler handler;
     private String[] temp;
+    private boolean isRunning = true;
+
     private static final String TAG = "RecvThread";
 
 
@@ -22,27 +24,37 @@ public class RecvThread extends Thread {
     }
 
     public void run() {
+//        isRunning = writeData == "$LCD+PAGE=99".getBytes() ? false : true;
+//        if (!isRunning) {
+//            Log.d(TAG, "run: writeData = " + new String(writeData));
+//            mPort.write(writeData, writeData.length);
+//
+//            Thread.currentThread().interrupt();
+//        }
 
         Message msg = Message.obtain();
         msg.obj = "資料讀取中...";
         //msg.obj = received;
         handler.sendMessage(msg);
-
         readBuf = new byte[200];
-        while (!Thread.currentThread().isInterrupted()) {
+        while (isRunning || !Thread.currentThread().isInterrupted()) {
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
                 Log.i(TAG, "Exception: " + e.toString() + " occurs");
-                if (e instanceof InterruptedException) break;
+                if (e instanceof InterruptedException)
+                    setWriteData("$LCD+PAGE=99".getBytes());
+
+                break;
             }
 
+            Log.d(TAG, "run: writeData = " + new String(writeData));
             mPort.write(writeData, writeData.length);
 
 //            int count = readBuf == null ? 0 : mPort.read(readBuf, readBuf.length);
             int count = mPort.read(readBuf, readBuf.length);
             if (count > 0) {
-                Log.d(TAG, "run: readbuf: " + new String(readBuf));
+//                Log.d(TAG, "run: readbuf: " + new String(readBuf));
                 String received = "";
                 for (int i = 0; i < count; i++) {
                     try {
@@ -58,7 +70,7 @@ public class RecvThread extends Thread {
                 messageText = received.replace("#", "").split("=")[1].trim();
 
                 temp = received.replace("#", "").replace("=", ",").split(",");
-                Log.i(TAG, "temp[0]: " + temp[0]);
+//                Log.i(TAG, "temp[0]: " + temp[0]);
 
                 // if received data is the same as the data sent
                 if (temp[0].contains("$VDR+SHOW DATA") && temp.length > 2 && new String(writeData).split("=")[1].equals(temp[1].trim())) {
@@ -150,7 +162,7 @@ public class RecvThread extends Thread {
                     }
                 }
 
-                Log.d(TAG, "messageText: " + messageText);
+//                Log.d(TAG, "messageText: " + messageText);
 
                 msg = Message.obtain();
                 msg.obj = messageText;
@@ -160,6 +172,15 @@ public class RecvThread extends Thread {
             }
         }
         Log.i(TAG, "Received = RecvThread ended~~~");
+    }
+
+
+    public void setWriteData(byte[] writeData) {
+        this.writeData = writeData;
+    }
+
+    public static Handler getHandler() {
+        return handler;
     }
 }
 

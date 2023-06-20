@@ -5,11 +5,17 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Button;
 
+import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.second.SettingListActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Button mainMenuBtn, upBtn, downBtn;
@@ -23,14 +29,58 @@ public class MainActivity extends AppCompatActivity {
     private MainFragmentTV6 mainFragmentTV6;
     private MainFragmentTV7 mainFragmentTV7;
     private MainFragmentTV8 mainFragmentTV8;
+    private static RecvThread mRecvThread;
+    private ComPort mPort;
+    private static Handler handler;
+    private byte[] writeData;
     private static final String TAG = "MainActivity";
     public static final int FRAGMENT_NUM = 8;
     Fragment selectedFragment = null;
+    private static MainActivity instance;
+    private static String data;
+    private static List<DataUpdateListener> listeners = new ArrayList<>();
+    // Method to register a listener
+    public static void registerDataUpdateListener(DataUpdateListener listener) {
+        listeners.add(listener);
+    }
 
+    // Method to unregister a listener
+    public static void unregisterDataUpdateListener(DataUpdateListener listener) {
+        listeners.remove(listener);
+    }
+
+    // Method to notify listeners when data is updated
+    private void notifyDataUpdated(String newData) {
+        for (DataUpdateListener listener : listeners) {
+            listener.onDataUpdated(newData);
+        }
+    }
+
+    // Example method that updates the data and notifies listeners
+    private void updateData(String newData) {
+        // Update the data
+        data = newData;
+
+        // Notify listeners
+        notifyDataUpdated(data);
+    }
+
+    public static MainActivity getInstance() {
+        return instance;
+    }
+    public MainActivity() {
+        super();
+        mPort = new ComPort();
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+        writeData = "$LCD+PAGE=99".getBytes();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+// Assign the instance variable when MainActivity is created
+        instance = this;
 
         if (getIntent().hasExtra("FragmentIndex")) {
             round = getIntent().getIntExtra("FragmentIndex", 0);
@@ -39,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             round = 0;
         }
 
-        initializeFragments();
+        mainFragmentWelcomeTV = new MainFragmentWelcomeTV();
         fragmentSwitcher(round);
 
         mainMenuBtn = findViewById(R.id.homeBtn);
@@ -65,10 +115,23 @@ public class MainActivity extends AppCompatActivity {
             fragmentSwitcher(round);
             Log.d(TAG, "onCreate downBtn: round = " + round);
         });
+
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(android.os.Message msg) {
+                data = (String) msg.obj;
+                Log.d(TAG, "handleMessage: data = " + data);
+                notifyDataUpdated(data);
+            }
+        };
+        mRecvThread = new RecvThread(handler, mPort, writeData);
+        mRecvThread.start();
+        initializeFragments();
+        Log.d(TAG, "onCreate: initializeFragments()");
+
     }
 
     private void initializeFragments() {
-        mainFragmentWelcomeTV = new MainFragmentWelcomeTV();
         mainFragmentTV1 = new MainFragmentTV1();
         mainFragmentTV2 = new MainFragmentTV2();
         mainFragmentTV3 = new MainFragmentTV3();
@@ -122,4 +185,36 @@ public class MainActivity extends AppCompatActivity {
     private int getValidRoundIndex(int round) {
         return (round % FRAGMENT_NUM + FRAGMENT_NUM) % FRAGMENT_NUM;
     }
+
+    public static RecvThread getRecvThread() {
+        return mRecvThread;
+    }
+
+    public static Handler getHandler() {
+        return handler;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        mRecvThread.interrupt();
+//        mPort.close();
+        Log.d(TAG, "onDestroy: ");
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        mRecvThread.interrupt();
+//        mPort.close();
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
 }

@@ -45,7 +45,7 @@ public class MainFragmentTV3 extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         tv3 = (TextView) view.findViewById(R.id.mainTV_3);
         tv3.setText("一二三四五六七八九十一二三四五六七八九十");
-        byte[] writeData = "$LCD+PAGE=2".getBytes();
+        byte[] writeData = "$LCD+PAGE=99".getBytes();
         mPort.write(writeData, writeData.length);
         handler = new Handler(Looper.getMainLooper()) {
             @Override
