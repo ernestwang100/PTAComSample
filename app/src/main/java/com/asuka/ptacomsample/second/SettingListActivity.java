@@ -2,6 +2,9 @@ package com.asuka.ptacomsample.second;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.main.MainActivity;
 import com.asuka.ptacomsample.R;
+import com.asuka.ptacomsample.main.RecvThread;
 import com.asuka.ptacomsample.third.DetailsActivity;
 import com.asuka.ptacomsample.third.SettingDetailsActivity;
 
@@ -21,6 +26,20 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
     ArrayList<SettingListModel> settingListModels = new ArrayList<>();
     RecyclerView recyclerView;
     Button homeBtn, upBtn, downBtn;
+    private Handler handler;
+    private ComPort mPort;
+    private RecvThread mRecvThread;
+    private byte[] writeData;
+    private String[] temp;
+    private static final String TAG = "SettingListActivity";
+
+    public SettingListActivity(){
+        super();
+        mPort = new ComPort();
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+    }
+
+
 
 
     @Override
@@ -31,6 +50,17 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
         homeBtn = findViewById(R.id.homeBtn);
         upBtn = findViewById(R.id.upBtn);
         downBtn = findViewById(R.id.downBtn);
+        writeData = "$LCD+PAGE=99".getBytes();
+        mPort.write(writeData, writeData.length);
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                temp = msg.obj.toString().split(",");
+            }
+        };
+
+        mRecvThread = new RecvThread(handler, mPort, writeData, this);
+        mRecvThread.start();
 
         setSettingModels();
 
@@ -84,5 +114,12 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
         intent.putExtra("DETAILS", getResources().getStringArray(R.array.setting_details_txt));
         intent.putExtra("INDEX", position);
         startActivity(intent);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mRecvThread.interrupt();
+        mPort.close();
     }
 }

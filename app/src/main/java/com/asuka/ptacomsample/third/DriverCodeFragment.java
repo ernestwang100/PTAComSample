@@ -55,7 +55,7 @@ public class DriverCodeFragment extends Fragment {
 
         cmdStart = "$LCD+DRIVER IN=";
         writeData = (cmdStart+"?").getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData);
+        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
         mRecvThread.start();
 
         driverCodeEdt = view.findViewById(R.id.driverCodeEdt);

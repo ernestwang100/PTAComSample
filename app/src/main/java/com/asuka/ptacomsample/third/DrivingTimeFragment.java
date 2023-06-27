@@ -66,7 +66,7 @@ public class DrivingTimeFragment extends Fragment {
 
         cmdStart = "$LCD+DRIVER TIME=";
         writeData = (cmdStart+"?").getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData);
+        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
         mRecvThread.start();
 
         drivertimeTV1 = view.findViewById(R.id.drivertimeTV1);

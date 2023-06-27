@@ -53,7 +53,7 @@ public class MainFragmentTV3 extends Fragment {
                 tv3.setText(msg.obj.toString());
             }
         };
-        mRecvThread = new RecvThread(handler, mPort,writeData);
+        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
         mRecvThread.start();
 
 

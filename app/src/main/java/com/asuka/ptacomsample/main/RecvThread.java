@@ -1,8 +1,16 @@
 package com.asuka.ptacomsample.main;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.asuka.comm.ComPort;
 
@@ -11,14 +19,18 @@ public class RecvThread extends Thread {
     private byte[] readBuf, writeData;
     private ComPort mPort;
     private Handler handler;
-    private String[] temp;
+    private String temp[], warningMsg;
+    private boolean isRunning = true;
+    private Context context;
+    private Fragment fragment;
     private static final String TAG = "RecvThread";
 
 
-    public RecvThread(Handler handler, ComPort mPort, byte[] writeData) {
+    public RecvThread(Handler handler, ComPort mPort, byte[] writeData, Context context) {
         this.mPort = mPort;
         this.handler = handler;
         this.writeData = writeData;
+        this.context = context;
     }
 
     public void run() {
@@ -29,20 +41,35 @@ public class RecvThread extends Thread {
         handler.sendMessage(msg);
 
         readBuf = new byte[200];
-        while (!Thread.currentThread().isInterrupted()) {
+        Log.d(TAG, "run: writeData: " + new String(writeData));
+        mPort.write(writeData, writeData.length);
+
+
+        while (!Thread.currentThread().isInterrupted() && isRunning) {
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
                 Log.i(TAG, "Exception: " + e.toString() + " occurs");
-                if (e instanceof InterruptedException) break;
+//                try {
+//                    writeData = "$LCD+PAGE=99".getBytes();
+//                    mPort.write(writeData, writeData.length);
+//                    Log.d(TAG, "run: writeData: " + new String(writeData));
+//                    sleep(5000);
+//                } catch (Exception ex) {
+//                    Log.i(TAG, "Exception: " + ex.toString() + " occurs");
+//                }
+
+                break;
+
             }
 
-            mPort.write(writeData, writeData.length);
+
 
 //            int count = readBuf == null ? 0 : mPort.read(readBuf, readBuf.length);
             int count = mPort.read(readBuf, readBuf.length);
+//            Log.d(TAG, "run: count: " + count);
             if (count > 0) {
-                Log.d(TAG, "run: readbuf: " + new String(readBuf));
+//                Log.d(TAG, "run: readbuf: " + new String(readBuf));
                 String received = "";
                 for (int i = 0; i < count; i++) {
                     try {
@@ -54,17 +81,62 @@ public class RecvThread extends Thread {
                 }
                 Log.i(TAG, "received: " + received);
 
+//                if (!received.contains("$VDR+SHOW DATA")) {
+//                    isRunning = false;
+//                }
+
 //                default messageText
+
                 messageText = received.replace("#", "").split("=")[1].trim();
 
                 temp = received.replace("#", "").replace("=", ",").split(",");
+
                 Log.i(TAG, "temp[0]: " + temp[0]);
 
+
+                warningMsg = "請注意！";
+//                String searchTerm = "$VDR+WARNING=";
+//                if(received.contains(searchTerm)){
+//                    int index = received.indexOf(searchTerm);
+//                    String warning = received.substring(index + searchTerm.length(), index + searchTerm.length() + 1);
+//                    Log.i(TAG, "warning: " + warning);
+//                    if(warning.equals("1")){
+//                        warningMsg = "請注意！\n車輛即將到站！";
+//                    }
+//
+//                    openWarningDialog(warningMsg);
+//
+//                }
+
+
+//                Log.d(TAG, "run: !temp[0].contains(\"$\"): " + !temp[0].contains("$"));
+                Log.d(TAG, "run: writeData: " + new String(writeData));
                 // if received data is the same as the data sent
-                if (temp[0].contains("$VDR+SHOW DATA") && temp.length > 2 && new String(writeData).split("=")[1].equals(temp[1].trim())) {
+                if (!temp[0].startsWith("$")) {
+                    messageText = "資料讀取中...";
+                } else if (temp[0].contains("$VDR+WARNING")) {
+                    switch (temp[1].trim()){
+                        case "0":
+                            warningMsg = "Alert 0";
+                            messageText = "Alert 0";
+                            break;
+                        case "1":
+                            warningMsg = "Alert 1";
+                            messageText = "Alert 1";
+                            break;
+                        case "2":
+                            warningMsg = "Alert 2";
+                            messageText = "Alert 2";
+                            break;
+                    }
+
+                    openWarningDialog(messageText);
+                } else if (temp[0].contains("$VDR+SHOW DATA") && temp.length > 2 && new String(writeData).split("=")[1].equals(temp[1].trim())) {
+//                    Log.d(TAG, "run: temp[1]=" + temp[1]);
+
                     switch (temp[1]) {
                         case "0":
-
+//                            Log.d(TAG, "run: temp.length: " + temp.length);
                             if (temp.length == 7) {
                                 messageText = temp[2] + "\n" + temp[3] + "\n" + "速度 " + temp[4] + " km/h\n" + "駕駛 " + temp[5];
                                 switch (temp[6].trim()) {
@@ -148,6 +220,7 @@ public class RecvThread extends Thread {
                             messageText = "資料讀取中...";
                             break;
                     }
+
                 }
 
                 Log.d(TAG, "messageText: " + messageText);
@@ -160,8 +233,37 @@ public class RecvThread extends Thread {
             }
         }
         Log.i(TAG, "Received = RecvThread ended~~~");
+
+
     }
+
+
+    private void openWarningDialog(final String warningMsg) {
+        if (context instanceof Activity) {
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("警告");
+                    builder.setMessage(warningMsg);
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Handle button click if needed
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    Toast.makeText(context, "openWarningDialog", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
 }
+
 
 
 

@@ -63,7 +63,7 @@ public class DriverStatusFragment extends Fragment {
         };
 
         writeData = (cmdStart+"?").getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData);
+        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
         mRecvThread.start();
 
         radioGroupDriverStatus = view.findViewById(R.id.DRBtnGroup);

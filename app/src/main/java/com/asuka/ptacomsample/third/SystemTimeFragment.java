@@ -64,7 +64,7 @@ public class SystemTimeFragment extends Fragment {
         };
 
         writeData = "$LCD+PAGE=4".getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData);
+        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
         mRecvThread.start();
 
         systemDateTV = view.findViewById(R.id.systemDateTV);
