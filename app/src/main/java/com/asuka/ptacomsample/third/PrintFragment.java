@@ -83,4 +83,10 @@ public class PrintFragment extends Fragment {
         cmd = cmdStart + printDataID;
         return cmd;
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mRecvThread.interrupt();
+    }
+
 }

@@ -37,15 +37,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="203dp"
-                android:text="@string/driver"
+                android:text="@string/driverstatus1"
                 android:textSize="30sp"
 
                 />
 
             <TextView
-                android:id="@+id/drivertimeTV"
+                android:id="@+id/drivetimeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="48sp"
+                android:textSize="30sp"
                 android:hint="@string/inputtime"></TextView>
 
 
@@ -60,13 +61,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="203dp"
-                android:text="@string/coDriver"
+                android:text="@string/driverstatus3"
                 android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/codrivertimeTV"
+                android:id="@+id/resttimeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="48sp"
+                android:textSize="30sp"
                 android:hint="@string/inputtime"></TextView>
 
         </TableRow>

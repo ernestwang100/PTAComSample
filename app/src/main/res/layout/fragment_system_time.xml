@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".third.DrivingTimeFragment">
 
-
     <TextView
         android:id="@+id/titleTV"
         android:layout_width="wrap_content"
@@ -14,45 +13,31 @@
         android:textSize="40sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
-    <TableLayout
+    <TextView
+        android:id="@+id/systemDateTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="8dp"
+        android:text="@string/inputdate"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/systemTimeTV"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/systemTimeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:hint="@string/inputtime"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="40sp">
-
-            <TextView
-                android:id="@+id/systemDateTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="203dp"
-                android:text="@string/inputdate"
-                android:textSize="30sp"
-
-                />
-
-            <TextView
-                android:id="@+id/systemTimeTV"
-                android:layout_width="wrap_content"
-                android:layout_height="48sp"
-                android:hint="@string/inputtime"></TextView>
-
-
-        </TableRow>
-
-
-
-    </TableLayout>
+        app:layout_constraintStart_toEndOf="@id/systemDateTV"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

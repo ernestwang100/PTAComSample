@@ -22,7 +22,7 @@ public class RecvThread extends Thread {
     private String temp[], warningMsg;
     private boolean isRunning = true;
     private Context context;
-    private Fragment fragment;
+    private Message msg;
     private static final String TAG = "RecvThread";
 
 
@@ -35,10 +35,10 @@ public class RecvThread extends Thread {
 
     public void run() {
 
-        Message msg = Message.obtain();
-        msg.obj = "資料讀取中...";
-        //msg.obj = received;
-        handler.sendMessage(msg);
+//        msg = Message.obtain();
+//        msg.obj = "資料讀取中...";
+//        //msg.obj = received;
+//        handler.sendMessage(msg);
 
         readBuf = new byte[200];
         Log.d(TAG, "run: writeData: " + new String(writeData));
@@ -47,7 +47,7 @@ public class RecvThread extends Thread {
 
         while (!Thread.currentThread().isInterrupted() && isRunning) {
             try {
-                sleep(1000);
+                sleep(30);
             } catch (InterruptedException e) {
                 Log.i(TAG, "Exception: " + e.toString() + " occurs");
 //                try {
@@ -63,9 +63,6 @@ public class RecvThread extends Thread {
 
             }
 
-
-
-//            int count = readBuf == null ? 0 : mPort.read(readBuf, readBuf.length);
             int count = mPort.read(readBuf, readBuf.length);
 //            Log.d(TAG, "run: count: " + count);
             if (count > 0) {
@@ -93,20 +90,6 @@ public class RecvThread extends Thread {
 
                 Log.i(TAG, "temp[0]: " + temp[0]);
 
-
-                warningMsg = "請注意！";
-//                String searchTerm = "$VDR+WARNING=";
-//                if(received.contains(searchTerm)){
-//                    int index = received.indexOf(searchTerm);
-//                    String warning = received.substring(index + searchTerm.length(), index + searchTerm.length() + 1);
-//                    Log.i(TAG, "warning: " + warning);
-//                    if(warning.equals("1")){
-//                        warningMsg = "請注意！\n車輛即將到站！";
-//                    }
-//
-//                    openWarningDialog(warningMsg);
-//
-//                }
 
 
 //                Log.d(TAG, "run: !temp[0].contains(\"$\"): " + !temp[0].contains("$"));
@@ -239,27 +222,32 @@ public class RecvThread extends Thread {
 
 
     private void openWarningDialog(final String warningMsg) {
-        if (context instanceof Activity) {
-            ((Activity) context).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("警告");
-                    builder.setMessage(warningMsg);
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Handle button click if needed
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-                    Toast.makeText(context, "openWarningDialog", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+        Log.d(TAG, "openWarningDialog: ");
+//        TODO:
+//        if (context instanceof Activity) {
+//            ((Activity) context).runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//                    builder.setTitle("警告");
+//                    builder.setMessage(warningMsg);
+//                    builder.setCancelable(false);
+//                    builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            // Handle button click if needed
+////                         terminate the runnable on runOnUiThread
+//                            dialog.dismiss();
+//
+//                        }
+//                    });
+//                    AlertDialog dialog = builder.create();
+//                    dialog.show();
+//
+//                    Toast.makeText(context, "openWarningDialog", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
     }
 
 }

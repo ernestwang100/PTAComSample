@@ -4,6 +4,7 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,10 @@ import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.main.RecvThread;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class SystemTimeFragment extends Fragment {
@@ -41,29 +45,44 @@ public class SystemTimeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_system_time, container, false);
+        cmdStart = "$LCD+TIME ADJ=";
 
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(android.os.Message msg) {
-                temp = msg.obj.toString().replace("#", "").split(",");
+                Log.d(TAG, "handleMessage: " + msg.obj.toString());
+                temp = msg.obj.toString().split(",");
                 for (int i = 0; i < temp.length; i++) {
                     temp[i] = temp[i].trim();
+                    Log.d(TAG, "handleMessage: temp[" + i + "]: " + temp[i]);
                 }
+                if (temp != null && temp.length > 0) {
+                    Log.d(TAG, "handleMessage: temp[0]: " + temp[0]);
+                    String dateTimeString = temp[0];
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyMMddHHmmss");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
-                if (!isDateSelected && temp!= null && temp.length > 1) {
-                    systemDateTV.setText(temp[DATE_STATUS]);
-                    cmdDate = temp[DATE_STATUS].replace("/", "").trim();
-                    cmdDate = cmdDate.substring(2);
-                }
 
-                if (!isTimeSelected && temp!= null && temp.length > 1) {
-                    systemTimeTV.setText(temp[TIME_STATUS]);
-                    cmdTime = temp[TIME_STATUS].replace(":", "").trim();
+                    try {
+                        Date dateTime = inputFormat.parse(dateTimeString);
+                        String formattedDate = dateFormat.format(dateTime); // "2023/06/08"
+                        String formattedTime = timeFormat.format(dateTime); // "10:11:12"
+                        Log.d(TAG, "handleMessage: dateTime: " + dateTime);
+                        Log.d(TAG, "handleMessage: formattedDate, formattedTime: " + formattedDate + ", " + formattedTime);
+
+                        // Set the formatted date and time to the respective TextViews
+                        systemDateTV.setText(formattedDate);
+                        systemTimeTV.setText(formattedTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        Log.d(TAG, "handleMessage: ParseException: " + e.getMessage());
+                    }
                 }
             }
         };
 
-        writeData = "$LCD+PAGE=4".getBytes();
+        writeData = (cmdStart + "?").getBytes();
         mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
         mRecvThread.start();
 
@@ -124,7 +143,6 @@ public class SystemTimeFragment extends Fragment {
     }
 
     public String getCmd() {
-        cmdStart = "$LCD+TIME ADJ=";
         cmd = cmdStart + cmdDate + cmdTime;
         return cmd;
     }

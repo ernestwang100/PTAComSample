@@ -2,6 +2,10 @@ package com.asuka.ptacomsample.third;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,29 +13,58 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
+import com.asuka.ptacomsample.main.RecvThread;
 
 import java.util.Calendar;
 import java.util.Locale;
 
 public class ThresholdTimeFragment extends Fragment {
-    private TextView drivertimeTV, codrivertimeTV;
-    private String cmd, cmdStart;
-    private int thresholdType;
+    private TextView drivetimeTV, resttimeTV;
+    private String cmd, cmdStart, temp[];
+    private byte[] writeData;
+    private ComPort mPort;
+    private RecvThread mRecvThread;
+    private Handler handler;
+    private static final String TAG = "ThresholdTimeFragment";
 
-    public ThresholdTimeFragment(int thresholdType) {
-        this.thresholdType = thresholdType;
+    public ThresholdTimeFragment() {
+        mPort = new ComPort();
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_threshold_time, container, false);
 
-        drivertimeTV = view.findViewById(R.id.drivertimeTV);
-        codrivertimeTV = view.findViewById(R.id.codrivertimeTV);
+        drivetimeTV = view.findViewById(R.id.drivetimeTV);
+        resttimeTV = view.findViewById(R.id.resttimeTV);
 
-        drivertimeTV.setOnClickListener(v -> showTimePickerDialog((TextView) v));
-        codrivertimeTV.setOnClickListener(v -> showTimePickerDialog((TextView) v));
+        drivetimeTV.setOnClickListener(v -> showTimePickerDialog((TextView) v));
+        resttimeTV.setOnClickListener(v -> showTimePickerDialog((TextView) v));
+
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                Log.d(TAG, "handleMessage: " + msg.obj.toString());
+                temp = msg.obj.toString().split(",");
+                for (int i = 0; i < temp.length; i++) {
+                    temp[i] = temp[i].trim();
+                    Log.d(TAG, "handleMessage: temp[" + i + "]: " + temp[i]);
+                }
+                if (temp != null && temp.length > 1) {
+                    drivetimeTV.setText(temp[0] + ":" + temp[1]);
+//                    resttimeTV.setText(temp[2] + ":" + temp[3]);
+                }
+            }
+        };
+
+        cmdStart = "$LCD+SET DRIVE TIME=";
+//        cmdStart = "$LCD+SET THRESHOLD TIME=";
+        writeData = (cmdStart + "?").getBytes();
+        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
+        mRecvThread.start();
 
         return view;
     }
@@ -61,15 +94,14 @@ public class ThresholdTimeFragment extends Fragment {
         tv.setText(time);
     }
 
-    public String getCmd() {
+    @Override
+    public void onPause() {
+        super.onPause();
+        mRecvThread.interrupt();
+    }
 
-        if (thresholdType == 0){
-            cmdStart = "$LCD+SET DRIVE TIME=";
-        } else {
-            cmdStart = "$LCD+SET REST TIME=";
-        }
-        cmd = cmdStart + "0," + drivertimeTV.getText().toString() + "\n" +
-                cmdStart +"1," + codrivertimeTV.getText().toString();
+    public String getCmd() {
+        cmd = cmdStart + drivetimeTV.getText().toString().replace(':',',') + "," + resttimeTV.getText().toString().replace(':',',');
         return cmd;
     }
 }

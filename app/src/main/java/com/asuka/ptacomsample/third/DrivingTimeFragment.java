@@ -52,13 +52,12 @@ public class DrivingTimeFragment extends Fragment {
                 }
 
                 if ( !isDefaultsSet && temp != null && temp.length > 1) {
-//                    TODO set mins and secs
-                    drivertimeTV1.setText(temp[0]);
-                    drivertimeTV2.setText(temp[1]);
-                    drivertimeTV3.setText(temp[2]);
-                    codrivertimeTV1.setText(temp[3]);
-                    codrivertimeTV2.setText(temp[4]);
-                    codrivertimeTV3.setText(temp[5]);
+                    drivertimeTV1.setText(temp[0] + ":" + temp[1]);
+                    drivertimeTV2.setText(temp[2] + ":" + temp[3]);
+                    drivertimeTV3.setText(temp[4] + ":" + temp[5]);
+                    codrivertimeTV1.setText(temp[6] + ":" + temp[7]);
+                    codrivertimeTV2.setText(temp[8] + ":" + temp[9]);
+                    codrivertimeTV3.setText(temp[10] + ":" + temp[11]);
                     isDefaultsSet = true;
                 }
             }
@@ -88,7 +87,6 @@ public class DrivingTimeFragment extends Fragment {
 
 
     public String getCmd() {
-
         return cmd;
     }
 }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.widget.FrameLayout;
 import android.content.Intent;
 import android.os.Bundle;
@@ -81,11 +82,19 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         upBtn.setOnClickListener(v -> {
             fragmentSwitcher(--round);
             round = getValidRoundIndex(round, title.length);
+//            v.setEnabled(false); // Disable the button to prevent multiple clicks
+//            new Handler().postDelayed(() -> {
+//                v.setEnabled(true); // Enable the button after the delay
+//            }, 500); // 1000 milliseconds = 1 second delay
         });
 
         downBtn.setOnClickListener(v -> {
             fragmentSwitcher(++round);
             round = getValidRoundIndex(round, title.length);
+//            v.setEnabled(false); // Disable the button to prevent multiple clicks
+//            new Handler().postDelayed(() -> {
+//                v.setEnabled(true); // Enable the button after the delay
+//            }, 500); // 1000 milliseconds = 1 second delay
         });
 
         confirmBtn.setOnClickListener(v -> {
@@ -156,41 +165,35 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
             case 5:
                 if (drivingThresholdTimeFragment == null)
-                    drivingThresholdTimeFragment = new ThresholdTimeFragment(0);
+                    drivingThresholdTimeFragment = new ThresholdTimeFragment();
                 selectedFragment = drivingThresholdTimeFragment;
                 break;
 
             case 6:
-                if (restingThresholdTimeFragment == null)
-                    restingThresholdTimeFragment = new ThresholdTimeFragment(1);
-                selectedFragment = restingThresholdTimeFragment;
-                break;
-
-            case 7:
                 if (speedGainFragment == null)
                     speedGainFragment = new GainFragment(0);
                 selectedFragment = speedGainFragment;
                 break;
 
-            case 8:
+            case 7:
                 if (rpmGainFragment == null)
                     rpmGainFragment = new GainFragment(1);
                 selectedFragment = rpmGainFragment;
                 break;
 
-            case 9:
+            case 8:
                 if (systemTimeFragment == null)
                     systemTimeFragment = new SystemTimeFragment();
                 selectedFragment = systemTimeFragment;
                 break;
 
-            case 10:
+            case 9:
                 if (brightnessFragment == null)
                     brightnessFragment = new BrightnessFragment();
                 selectedFragment = brightnessFragment;
                 break;
 
-            case 11:
+            case 10:
                 if (manufacturerFragment == null)
                     manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
