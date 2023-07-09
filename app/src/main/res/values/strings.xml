@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JAS208U 數位行車記錄器</string>
+    <string name="app_name">數位行車記錄器</string>
     <string name="backBtnCover">回上一層</string>
     <string name="homeBtnCover">回主畫面</string>
     <string name="mainMenuBtnCover">主選單</string>
@@ -7,7 +7,7 @@
     <string name="downBtnCover">▼</string>
     <string name="confirmBtnCover">確　定</string>
     <string name="printBtnCover">列　印</string>
-    <string name="mainWelcomeTV">歡迎使用 JassLin\nJAS280U 數位行車記錄器\n祝您行車平安</string>
+    <string name="mainWelcomeTV">歡迎使用\n數位行車記錄器\n祝您行車平安</string>
     <string name="contentTV1">2023/03/01\n09:41:00\n速度 000.0 km/h\n駕駛FFFFFFF車停</string>
     <string name="contentTV2">主駕駛\nFFFFFFFF 車停中\n共同駕駛\nFFFFFFFF 車停中</string>
     <string name="contentTV3">警告資訊\n(超時駕駛警告)\n(印表機缺紙警告)\n(斷電警告)</string>

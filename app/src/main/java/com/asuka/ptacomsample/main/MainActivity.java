@@ -1,18 +1,23 @@
 package com.asuka.ptacomsample.main;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Button;
+import android.widget.Switch;
 
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
 public class MainActivity extends AppCompatActivity {
     private Button mainMenuBtn, upBtn, downBtn;
+    private Switch themeSW;
     private int round = 0;
     private MainFragmentWelcomeTV mainFragmentWelcomeTV;
     private MainFragmentTV1 mainFragmentTV1;
@@ -24,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private MainFragmentTV7 mainFragmentTV7;
     private MainFragmentTV8 mainFragmentTV8;
     private static final String TAG = "MainActivity";
-    public static final int FRAGMENT_NUM = 8;
+    public static final int FRAGMENT_NUM = 5;
     Fragment selectedFragment = null;
 
     @Override
@@ -35,16 +40,40 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().hasExtra("FragmentIndex")) {
             round = getIntent().getIntExtra("FragmentIndex", 0);
             Log.d(TAG, "onCreate: round = " + round);
-        } else {
-            round = 0;
         }
 
         initializeFragments();
-        fragmentSwitcher(round);
+        selectedFragment = mainFragmentWelcomeTV;
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, selectedFragment).commit();
 
+        themeSW = findViewById(R.id.themeSwitchButton);
         mainMenuBtn = findViewById(R.id.homeBtn);
         upBtn = findViewById(R.id.upBtn);
         downBtn = findViewById(R.id.downBtn);
+
+        themeSW.setOnClickListener(v -> {
+            runOnUiThread(() -> {
+                if (themeSW.isChecked()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+                recreate();
+            });
+        });
+
+//        Switch themeSwitchButton = findViewById(R.id.themeSwitchButton);
+//
+//        themeSwitchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (!isChecked) {
+//                setTheme(R.style.Theme_PTAComSample_Light);
+//            } else {
+//                setTheme(R.style.Theme_PTAComSample_Dark);
+//            }
+//            recreate();
+//        });
+
+//        switchTheme();
 
         mainMenuBtn.setOnClickListener(v -> {
             if (selectedFragment != null) {
@@ -58,14 +87,46 @@ public class MainActivity extends AppCompatActivity {
             round--;
             fragmentSwitcher(round);
             Log.d(TAG, "onCreate upBtn: round = " + round);
+            v.setEnabled(false); // Disable the button to prevent multiple clicks
+            new Handler().postDelayed(() -> {
+                v.setEnabled(true); // Enable the button after the delay
+            }, 500); // 1000 milliseconds = 1 second delay
         });
 
         downBtn.setOnClickListener(v -> {
             round++;
             fragmentSwitcher(round);
             Log.d(TAG, "onCreate downBtn: round = " + round);
+            v.setEnabled(false); // Disable the button to prevent multiple clicks
+            new Handler().postDelayed(() -> {
+                v.setEnabled(true); // Enable the button after the delay
+            }, 500); // 1000 milliseconds = 1 second delay
         });
     }
+
+//    private void switchTheme() {
+//        // Retrieve the current theme
+//        int currentTheme = getCurrentTheme();
+//
+//        // Determine the new theme based on the current theme
+//        int newTheme = currentTheme == R.style.Theme_PTAComSample_Light
+//                ? R.style.Theme_PTAComSample_Dark
+//                : R.style.Theme_PTAComSample_Light;
+//
+//        // Set the new theme for the activity
+//        setTheme(newTheme);
+//
+//        // Recreate the activity to apply the new theme
+//        recreate();
+//    }
+//
+//    private int getCurrentTheme() {
+//        // Retrieve the current theme resource ID of the activity
+//        TypedValue typedValue = new TypedValue();
+//        getTheme().resolveAttribute(androidx.appcompat.R.attr.theme, typedValue, true);
+//        return typedValue.resourceId;
+//    }
+
 
     private void initializeFragments() {
         mainFragmentWelcomeTV = new MainFragmentWelcomeTV();
@@ -81,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void fragmentSwitcher(int round) {
         Log.d(TAG, "fragmentSwitcher: round = " + round);
-
         round = getValidRoundIndex(round);
         Log.d(TAG, "fragmentSwitcher: round%FRAGMENT_NUM = " + round);
         switch (round) {

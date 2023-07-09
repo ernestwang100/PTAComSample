@@ -17,7 +17,6 @@ import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.main.MainActivity;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.main.RecvThread;
-import com.asuka.ptacomsample.third.DetailsActivity;
 import com.asuka.ptacomsample.third.SettingDetailsActivity;
 
 import java.util.ArrayList;

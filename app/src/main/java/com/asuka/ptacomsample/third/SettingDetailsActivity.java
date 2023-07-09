@@ -82,19 +82,19 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         upBtn.setOnClickListener(v -> {
             fragmentSwitcher(--round);
             round = getValidRoundIndex(round, title.length);
-//            v.setEnabled(false); // Disable the button to prevent multiple clicks
-//            new Handler().postDelayed(() -> {
-//                v.setEnabled(true); // Enable the button after the delay
-//            }, 500); // 1000 milliseconds = 1 second delay
+            v.setEnabled(false); // Disable the button to prevent multiple clicks
+            new Handler().postDelayed(() -> {
+                v.setEnabled(true); // Enable the button after the delay
+            }, 500); // 1000 milliseconds = 1 second delay
         });
 
         downBtn.setOnClickListener(v -> {
             fragmentSwitcher(++round);
             round = getValidRoundIndex(round, title.length);
-//            v.setEnabled(false); // Disable the button to prevent multiple clicks
-//            new Handler().postDelayed(() -> {
-//                v.setEnabled(true); // Enable the button after the delay
-//            }, 500); // 1000 milliseconds = 1 second delay
+            v.setEnabled(false); // Disable the button to prevent multiple clicks
+            new Handler().postDelayed(() -> {
+                v.setEnabled(true); // Enable the button after the delay
+            }, 500); // 1000 milliseconds = 1 second delay
         });
 
         confirmBtn.setOnClickListener(v -> {
