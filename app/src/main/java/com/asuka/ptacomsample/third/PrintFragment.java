@@ -73,7 +73,7 @@ public class PrintFragment extends Fragment {
         cmdStart = "$LCD+PRINT=";
         cmd = cmdStart + printDataID;
         writeData = cmd.getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData);
+        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
         mRecvThread.start();
 
         return view;
@@ -83,4 +83,10 @@ public class PrintFragment extends Fragment {
         cmd = cmdStart + printDataID;
         return cmd;
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mRecvThread.interrupt();
+    }
+
 }

@@ -19,62 +19,69 @@ import com.asuka.ptacomsample.R;
 
 import java.lang.ref.WeakReference;
 
-public class MainFragmentTV1 extends Fragment implements DataUpdateListener {
+public class MainFragmentTV1 extends Fragment implements Handler.Callback {
     private TextView tv1;
-    MainActivity mainActivity = MainActivity.getInstance();
-    private RecvThread mRecvThread = mainActivity.getRecvThread();
-    private byte[] writeData;
+    private Handler handler;
+    private ComPort mPort;
+    private RecvThread mRecvThread;
     static final String TAG = "MainFragmentTV1";
 
+    public MainFragmentTV1() {
+        super();
+        mPort = new ComPort();
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_main_tv1, container, false);
-        writeData = "$LCD+PAGE=0".getBytes();
-
         return view;
     }
 
-    @Nullable
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated: mainActivity = " + mainActivity);
-        Log.d(TAG, "onViewCreated:  mRecvThread = " + mRecvThread);
-        Log.d(TAG, "onViewCreated: writeData = " + new String(writeData));
-        mRecvThread.setWriteData(writeData);
         tv1 = view.findViewById(R.id.mainTV_1);
+        byte[] writeData = "$LCD+PAGE=0".getBytes();
+        mPort.write(writeData, writeData.length);
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                tv1.setText(msg.obj.toString());
+            }
+        };
+
+        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
+        mRecvThread.start();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        registerListener();
         tv1.setText("資料讀取中...");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        unregisterListener();
-//        mRecvThread.interrupt();
-    }
+        Log.d(TAG, "Received = run TV1 onPause()");
+        Log.d(TAG, "Received = current thread: " + Thread.currentThread().toString());
+        mRecvThread.interrupt();
+        Log.d(TAG, "Received = current thread: " + Thread.currentThread());
+        Log.d(TAG, "Received = thread 數量: " + Thread.getAllStackTraces().size());
 
+
+    }
 
     @Override
-    public void onDataUpdated(String newData) {
-        Log.d(TAG, "Received updated data: " + newData);
-        tv1.setText(newData);
+    public boolean handleMessage(@NonNull Message msg) {
+        if (tv1 != null) {
+            tv1.setText(msg.obj.toString());
+            Log.d(TAG, "handleMessage: " + msg.obj.toString());
+        }
+        return true;
     }
 
-    // Register the listener in the appropriate place, e.g., in onCreate() or onResume()
-    public void registerListener() {
-        MainActivity.registerDataUpdateListener(this);
-    }
 
-    // Unregister the listener in the appropriate place, e.g., in onDestroy() or onPause()
-    public void unregisterListener() {
-        MainActivity.unregisterDataUpdateListener(this);
-    }
 }

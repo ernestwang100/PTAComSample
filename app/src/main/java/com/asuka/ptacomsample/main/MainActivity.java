@@ -1,24 +1,23 @@
 package com.asuka.ptacomsample.main;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Button;
+import android.widget.Switch;
 
-import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ButtonFreezeListener {
     private Button mainMenuBtn, upBtn, downBtn;
+    private Switch themeSW;
     private int round = 0;
     private MainFragmentWelcomeTV mainFragmentWelcomeTV;
     private MainFragmentTV1 mainFragmentTV1;
@@ -29,72 +28,52 @@ public class MainActivity extends AppCompatActivity {
     private MainFragmentTV6 mainFragmentTV6;
     private MainFragmentTV7 mainFragmentTV7;
     private MainFragmentTV8 mainFragmentTV8;
-    private static RecvThread mRecvThread;
-    private ComPort mPort;
-    private static Handler handler;
-    private byte[] writeData;
     private static final String TAG = "MainActivity";
-    public static final int FRAGMENT_NUM = 8;
+    public static final int FRAGMENT_NUM = 5;
     Fragment selectedFragment = null;
-    private static MainActivity instance;
-    private static String data;
-    private static List<DataUpdateListener> listeners = new ArrayList<>();
-    // Method to register a listener
-    public static void registerDataUpdateListener(DataUpdateListener listener) {
-        listeners.add(listener);
-    }
 
-    // Method to unregister a listener
-    public static void unregisterDataUpdateListener(DataUpdateListener listener) {
-        listeners.remove(listener);
-    }
-
-    // Method to notify listeners when data is updated
-    private void notifyDataUpdated(String newData) {
-        for (DataUpdateListener listener : listeners) {
-            listener.onDataUpdated(newData);
-        }
-    }
-
-    // Example method that updates the data and notifies listeners
-    private void updateData(String newData) {
-        // Update the data
-        data = newData;
-
-        // Notify listeners
-        notifyDataUpdated(data);
-    }
-
-    public static MainActivity getInstance() {
-        return instance;
-    }
-    public MainActivity() {
-        super();
-        mPort = new ComPort();
-        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
-        writeData = "$LCD+PAGE=99".getBytes();
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-// Assign the instance variable when MainActivity is created
-        instance = this;
-
         if (getIntent().hasExtra("FragmentIndex")) {
             round = getIntent().getIntExtra("FragmentIndex", 0);
             Log.d(TAG, "onCreate: round = " + round);
-        } else {
-            round = 0;
         }
 
-        mainFragmentWelcomeTV = new MainFragmentWelcomeTV();
-        fragmentSwitcher(round);
+        initializeFragments();
+        selectedFragment = mainFragmentWelcomeTV;
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, selectedFragment).commit();
 
+        themeSW = findViewById(R.id.themeSwitchButton);
         mainMenuBtn = findViewById(R.id.homeBtn);
         upBtn = findViewById(R.id.upBtn);
         downBtn = findViewById(R.id.downBtn);
+
+        themeSW.setOnClickListener(v -> {
+            runOnUiThread(() -> {
+                if (themeSW.isChecked()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+                recreate();
+            });
+        });
+
+//        Switch themeSwitchButton = findViewById(R.id.themeSwitchButton);
+//
+//        themeSwitchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (!isChecked) {
+//                setTheme(R.style.Theme_PTAComSample_Light);
+//            } else {
+//                setTheme(R.style.Theme_PTAComSample_Dark);
+//            }
+//            recreate();
+//        });
+
+//        switchTheme();
 
         mainMenuBtn.setOnClickListener(v -> {
             if (selectedFragment != null) {
@@ -108,30 +87,49 @@ public class MainActivity extends AppCompatActivity {
             round--;
             fragmentSwitcher(round);
             Log.d(TAG, "onCreate upBtn: round = " + round);
+            v.setEnabled(false); // Disable the button to prevent multiple clicks
+            new Handler().postDelayed(() -> {
+                v.setEnabled(true); // Enable the button after the delay
+            }, 500); // 1000 milliseconds = 1 second delay
         });
 
         downBtn.setOnClickListener(v -> {
             round++;
             fragmentSwitcher(round);
             Log.d(TAG, "onCreate downBtn: round = " + round);
+            v.setEnabled(false); // Disable the button to prevent multiple clicks
+            new Handler().postDelayed(() -> {
+                v.setEnabled(true); // Enable the button after the delay
+            }, 500); // 1000 milliseconds = 1 second delay
         });
-
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(android.os.Message msg) {
-                data = (String) msg.obj;
-                Log.d(TAG, "handleMessage: data = " + data);
-                notifyDataUpdated(data);
-            }
-        };
-        mRecvThread = new RecvThread(handler, mPort, writeData);
-        mRecvThread.start();
-        initializeFragments();
-        Log.d(TAG, "onCreate: initializeFragments()");
-
     }
 
+//    private void switchTheme() {
+//        // Retrieve the current theme
+//        int currentTheme = getCurrentTheme();
+//
+//        // Determine the new theme based on the current theme
+//        int newTheme = currentTheme == R.style.Theme_PTAComSample_Light
+//                ? R.style.Theme_PTAComSample_Dark
+//                : R.style.Theme_PTAComSample_Light;
+//
+//        // Set the new theme for the activity
+//        setTheme(newTheme);
+//
+//        // Recreate the activity to apply the new theme
+//        recreate();
+//    }
+//
+//    private int getCurrentTheme() {
+//        // Retrieve the current theme resource ID of the activity
+//        TypedValue typedValue = new TypedValue();
+//        getTheme().resolveAttribute(androidx.appcompat.R.attr.theme, typedValue, true);
+//        return typedValue.resourceId;
+//    }
+
+
     private void initializeFragments() {
+        mainFragmentWelcomeTV = new MainFragmentWelcomeTV();
         mainFragmentTV1 = new MainFragmentTV1();
         mainFragmentTV2 = new MainFragmentTV2();
         mainFragmentTV3 = new MainFragmentTV3();
@@ -144,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void fragmentSwitcher(int round) {
         Log.d(TAG, "fragmentSwitcher: round = " + round);
-
         round = getValidRoundIndex(round);
         Log.d(TAG, "fragmentSwitcher: round%FRAGMENT_NUM = " + round);
         switch (round) {
@@ -186,35 +183,15 @@ public class MainActivity extends AppCompatActivity {
         return (round % FRAGMENT_NUM + FRAGMENT_NUM) % FRAGMENT_NUM;
     }
 
-    public static RecvThread getRecvThread() {
-        return mRecvThread;
-    }
-
-    public static Handler getHandler() {
-        return handler;
-    }
-
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        mRecvThread.interrupt();
-//        mPort.close();
-        Log.d(TAG, "onDestroy: ");
-    }
-    
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        mRecvThread.interrupt();
-//        mPort.close();
-        Log.d(TAG, "onPause: ");
+    public void enableButton() {
+        upBtn.setEnabled(true);
+        downBtn.setEnabled(true);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: ");
+    public void disableButton() {
+        upBtn.setEnabled(false);
+        downBtn.setEnabled(false);
     }
-
 }

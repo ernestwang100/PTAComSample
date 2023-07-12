@@ -24,6 +24,7 @@ import com.asuka.ptacomsample.R;
 public class MainFragmentTV7 extends Fragment {
     private TextView tv1, tv2, tv3;
     private ImageButton ib1, ib2, ib3;
+    private  String pk_fail, pk1, pk2, pk3;
 
     @Nullable
     @Override
@@ -50,11 +51,16 @@ public class MainFragmentTV7 extends Fragment {
         ib2.setImageResource(R.drawable.phone);
         ib3.setImageResource(R.drawable.gear);
 
+        pk_fail = " cannot be opened";
+        pk1 = "com.google.android.youtube";
+        pk2 = "com.asuka.radio";
+        pk3 = "com.android.launcher";
+
         ib1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setPackage("com.google.android.youtube");
+                intent.setPackage(pk1);
 
                 PackageManager packageManager = requireActivity().getPackageManager();
                 ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -62,7 +68,7 @@ public class MainFragmentTV7 extends Fragment {
                     startActivity(intent);
                 } else {
                     // YouTube app is not installed
-                    Toast.makeText(requireContext(), "YouTube app is not installed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), pk1 + pk_fail , Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -70,17 +76,26 @@ public class MainFragmentTV7 extends Fragment {
         ib2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setPackage("com.android.phone");
-
-                PackageManager packageManager = requireActivity().getPackageManager();
-                ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-                if (resolveInfo != null) {
+                Intent intent = getContext().getPackageManager().getLaunchIntentForPackage(pk2);
+                if (intent != null) {
                     startActivity(intent);
                 } else {
-                    // Phone app is not installed
-                    Toast.makeText(requireContext(), "Phone app is not installed", Toast.LENGTH_SHORT).show();
+                    // Sound Recorder app is not installed or cannot be opened
+                    // Handle this case accordingly
+                    Toast.makeText(requireContext(), pk2 + pk_fail, Toast.LENGTH_SHORT).show();
                 }
+
+//                Intent intent = new Intent(Intent.ACTION_MAIN);
+//                intent.setPackage(pk2);
+//
+//                PackageManager packageManager = requireActivity().getPackageManager();
+//                ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+//                if (resolveInfo != null) {
+//                    startActivity(intent);
+//                } else {
+//                    // Phone app is not installed
+//                    Toast.makeText(requireContext(), pk2 + pk_fail, Toast.LENGTH_SHORT).show();
+//                }
             }
         });
 
@@ -88,7 +103,7 @@ public class MainFragmentTV7 extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setPackage("com.android.launcher");
+                intent.setPackage(pk3);
 
                 PackageManager packageManager = requireActivity().getPackageManager();
                 ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -96,7 +111,7 @@ public class MainFragmentTV7 extends Fragment {
                     startActivity(intent);
                 } else {
                     // Settings app is not installed
-                    Toast.makeText(requireContext(), "Settings app is not installed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), pk3 + pk_fail, Toast.LENGTH_SHORT).show();
                 }
             }
         });

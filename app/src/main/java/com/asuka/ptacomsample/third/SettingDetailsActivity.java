@@ -4,20 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.widget.FrameLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
-import com.asuka.ptacomsample.main.DataUpdateListener;
-import com.asuka.ptacomsample.main.MainActivity;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
 public class SettingDetailsActivity extends AppCompatActivity implements LoginDialogListener {
@@ -43,14 +42,12 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
     private static final String TAG = "SettingDetailsActivity";
 
-    private DataUpdateListener dataUpdateListener = new DataUpdateListener() {
-        @Override
-        public void onDataUpdated(String newData) {
-            // Handle the updated data here
-            Log.d(TAG, "Received updated data: " + newData);
-            // Perform any necessary operations based on the updated data
-        }
-    };
+
+    public SettingDetailsActivity() {
+        mPort = new ComPort();
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,20 +71,30 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         fragmentSwitcher(round);
 
         homeBtn.setOnClickListener(v -> {
+//            finish();
+//            onBackPressed();
+
             Intent intent = new Intent();
             intent.setClass(SettingDetailsActivity.this, SettingListActivity.class);
             startActivity(intent);
-//            finish();
         });
 
         upBtn.setOnClickListener(v -> {
             fragmentSwitcher(--round);
             round = getValidRoundIndex(round, title.length);
+            v.setEnabled(false); // Disable the button to prevent multiple clicks
+            new Handler().postDelayed(() -> {
+                v.setEnabled(true); // Enable the button after the delay
+            }, 500); // 1000 milliseconds = 1 second delay
         });
 
         downBtn.setOnClickListener(v -> {
             fragmentSwitcher(++round);
             round = getValidRoundIndex(round, title.length);
+            v.setEnabled(false); // Disable the button to prevent multiple clicks
+            new Handler().postDelayed(() -> {
+                v.setEnabled(true); // Enable the button after the delay
+            }, 500); // 1000 milliseconds = 1 second delay
         });
 
         confirmBtn.setOnClickListener(v -> {
@@ -103,19 +110,10 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 writeDataToPort(cmd);
             }
         });
+
+
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MainActivity.registerDataUpdateListener(dataUpdateListener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MainActivity.unregisterDataUpdateListener(dataUpdateListener);
-    }
 
     private void fragmentSwitcher(int round) {
         Log.d(TAG, "fragmentSwitcher: round = " + round);
@@ -130,6 +128,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                     driverStatusFragment = new DriverStatusFragment();
                 selectedFragment = driverStatusFragment;
 
+//               Set the top margin of the fragment container
                 layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, getResources().getDisplayMetrics()), 0, 0);
                 settingDetailsFragmentContainer.setLayoutParams(layoutParams);
                 break;
@@ -144,6 +143,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                     drivingTimeFragment = new DrivingTimeFragment();
                 selectedFragment = drivingTimeFragment;
 
+                //               Set the top margin of the fragment container
                 layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, getResources().getDisplayMetrics()), 0, 0);
                 settingDetailsFragmentContainer.setLayoutParams(layoutParams);
                 break;
@@ -165,41 +165,35 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
             case 5:
                 if (drivingThresholdTimeFragment == null)
-                    drivingThresholdTimeFragment = new ThresholdTimeFragment(0);
+                    drivingThresholdTimeFragment = new ThresholdTimeFragment();
                 selectedFragment = drivingThresholdTimeFragment;
                 break;
 
             case 6:
-                if (restingThresholdTimeFragment == null)
-                    restingThresholdTimeFragment = new ThresholdTimeFragment(1);
-                selectedFragment = restingThresholdTimeFragment;
-                break;
-
-            case 7:
                 if (speedGainFragment == null)
                     speedGainFragment = new GainFragment(0);
                 selectedFragment = speedGainFragment;
                 break;
 
-            case 8:
+            case 7:
                 if (rpmGainFragment == null)
                     rpmGainFragment = new GainFragment(1);
                 selectedFragment = rpmGainFragment;
                 break;
 
-            case 9:
+            case 8:
                 if (systemTimeFragment == null)
                     systemTimeFragment = new SystemTimeFragment();
                 selectedFragment = systemTimeFragment;
                 break;
 
-            case 10:
+            case 9:
                 if (brightnessFragment == null)
                     brightnessFragment = new BrightnessFragment();
                 selectedFragment = brightnessFragment;
                 break;
 
-            case 11:
+            case 10:
                 if (manufacturerFragment == null)
                     manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
@@ -208,8 +202,12 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
         }
         if (selectedFragment != null) {
+            // Get the reference to the fragment container
             FrameLayout fragmentContainer = findViewById(R.id.settingDetailsFragmentContainer);
+
+            // Clear the fragment container by removing all views
             fragmentContainer.removeAllViews();
+
             getSupportFragmentManager().beginTransaction().replace(R.id.settingDetailsFragmentContainer, selectedFragment).commit();
         }
     }
@@ -244,8 +242,12 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         return cmd;
     }
 
+
     private boolean needWaiting() {
-        return selectedFragment instanceof PrintFragment || selectedFragment instanceof DownloadFragment;
+        if (selectedFragment instanceof PrintFragment || selectedFragment instanceof DownloadFragment) {
+            return true;
+        }
+        return false;
     }
 
     private void showWaitingFragment() {
@@ -254,12 +256,16 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     }
 
     private boolean needLoginCredentials() {
-        return selectedFragment instanceof GainFragment || selectedFragment instanceof ThresholdTimeFragment || selectedFragment instanceof SystemTimeFragment;
+
+        if (selectedFragment instanceof GainFragment || selectedFragment instanceof ThresholdTimeFragment || selectedFragment instanceof SystemTimeFragment) {
+            return true;
+        }
+        return false;
     }
 
     private void showLoginFragment() {
         LoginFragment loginFragment = new LoginFragment();
-        loginFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
+        loginFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog); // Set the custom dialog style
         loginFragment.show(getSupportFragmentManager(), "LoginFragment");
     }
 
@@ -271,14 +277,17 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         }
     }
 
+
     @Override
     public void onLoginResult(String username, boolean isLoginSuccessful) {
         if (isLoginSuccessful) {
+            // Login successful
             Toast.makeText(this, "Login successful for user: " + username, Toast.LENGTH_SHORT).show();
             String cmd = getCmdFromSelectedFragment();
             Log.d(TAG, "onCreate: cmd = " + cmd);
             writeDataToPort(cmd);
         } else {
+            // Login failed
             Toast.makeText(this, "Login failed for user: " + username, Toast.LENGTH_SHORT).show();
         }
     }
@@ -287,6 +296,8 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     public void onLoginCancelled() {
         Toast.makeText(this, "Login cancelled", Toast.LENGTH_SHORT).show();
     }
+
+
 }
 
 
