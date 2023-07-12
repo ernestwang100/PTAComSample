@@ -24,6 +24,7 @@ public class RecvThread extends Thread {
     private Context context;
     private Message msg;
     private static final String TAG = "RecvThread";
+    private ButtonFreezeListener buttonFreezeListener;
 
 
     public RecvThread(Handler handler, ComPort mPort, byte[] writeData, Context context) {
@@ -31,7 +32,23 @@ public class RecvThread extends Thread {
         this.handler = handler;
         this.writeData = writeData;
         this.context = context;
+        this.buttonFreezeListener = new ButtonFreezeListener() {
+            @Override
+            public void enableButton() {
+                ((Activity) context).runOnUiThread(() -> {
+                    ((MainActivity) context).enableButton();
+                });
+            }
+
+            @Override
+            public void disableButton() {
+                ((Activity) context).runOnUiThread(() -> {
+                    ((MainActivity) context).disableButton();
+                });
+            }
+        };
     }
+
 
     public void run() {
 
@@ -83,11 +100,12 @@ public class RecvThread extends Thread {
 //                }
 
 //                default messageText
-                messageText = received.replace("#", "").split("=")[1].trim();
+                if(received.contains("=")){
+                    messageText = received.replace("#", "").split("=")[1].trim();
+                    temp = received.replace("#", ",").replace("=", ",").split(",");
+                }
 
-                temp = received.replace("#", ",").replace("=", ",").split(",");
 
-                Log.i(TAG, "temp[0]: " + temp[0]);
 
 
 //                Log.d(TAG, "run: !temp[0].contains(\"$\"): " + !temp[0].contains("$"));
@@ -115,10 +133,14 @@ public class RecvThread extends Thread {
                     openWarningDialog(messageText);
                 } else if (temp[0].contains("$VDR+SHOW DATA")) {
 //                    Log.d(TAG, "run: temp[1]=" + temp[1]);
-                    if (new String(writeData).split("=")[1].equals(temp[1].trim())) {
+
+                    boolean istheSame = new String(writeData).split("=")[1].equals(temp[1].trim());
+                    if (istheSame) {
+                        buttonFreezeListener.enableButton();
+                        Log.d(TAG, "run: enable button");
                         switch (temp[1]) {
                             case "0":
-                            Log.d(TAG, "run: temp.length: " + temp.length);
+//                            Log.d(TAG, "run: temp.length: " + temp.length);
                                 if (temp.length == 8) {
                                 messageText = temp[2] + "\n" + temp[3] + "\n" + "速度 " + temp[4] + " km/h\n" + "駕駛 " + temp[5];
                                 switch (temp[6].trim()) {
@@ -232,6 +254,8 @@ public class RecvThread extends Thread {
 
                         }
                     } else {
+                        buttonFreezeListener.disableButton();
+                        Log.d(TAG, "run: disable button");
                         messageText = "資料讀取中...";
                     }
 

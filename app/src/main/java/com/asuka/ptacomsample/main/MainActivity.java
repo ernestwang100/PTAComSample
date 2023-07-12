@@ -15,7 +15,7 @@ import android.widget.Switch;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ButtonFreezeListener {
     private Button mainMenuBtn, upBtn, downBtn;
     private Switch themeSW;
     private int round = 0;
@@ -181,5 +181,17 @@ public class MainActivity extends AppCompatActivity {
 
     private int getValidRoundIndex(int round) {
         return (round % FRAGMENT_NUM + FRAGMENT_NUM) % FRAGMENT_NUM;
+    }
+
+    @Override
+    public void enableButton() {
+        upBtn.setEnabled(true);
+        downBtn.setEnabled(true);
+    }
+
+    @Override
+    public void disableButton() {
+        upBtn.setEnabled(false);
+        downBtn.setEnabled(false);
     }
 }
