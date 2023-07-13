@@ -147,7 +147,12 @@ public class MainActivity extends AppCompatActivity{
 //    }
 
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mRecvThread.interrupt();
+        mPort.close();
+    }
 
     private int getValidRoundIndex(int round) {
         return (round % FRAGMENT_NUM + FRAGMENT_NUM) % FRAGMENT_NUM;
