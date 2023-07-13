@@ -19,7 +19,7 @@ import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements ButtonFreezeListener{
 
     private Button mainMenuBtn, upBtn, downBtn;
     private Switch themeSW;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity{
             }
         };
 
-        mRecvThread = new RecvThread(handler, mPort, writeData, this);
+        mRecvThread = new RecvThread(handler, mPort, writeData, this,this);
         mRecvThread.start();
         themeSW.setOnClickListener(v -> {
             runOnUiThread(() -> {
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity{
         });
 
         upBtn.setOnClickListener(v -> {
+            freezeButtons();
             round--;
             round = getValidRoundIndex(round);
             writeData = ("$LCD+PAGE=" + round).getBytes();
@@ -101,13 +102,14 @@ public class MainActivity extends AppCompatActivity{
 //            mPort.write(writeData, writeData.length);
 
             Log.d(TAG, "onCreate upBtn: round = " + round);
-            v.setEnabled(false); // Disable the button to prevent multiple clicks
-            new Handler().postDelayed(() -> {
-                v.setEnabled(true); // Enable the button after the delay
-            }, 1000); // 1000 milliseconds = 1 second delay
+//            v.setEnabled(false); // Disable the button to prevent multiple clicks
+//            new Handler().postDelayed(() -> {
+//                v.setEnabled(true); // Enable the button after the delay
+//            }, 1000); // 1000 milliseconds = 1 second delay
         });
 
         downBtn.setOnClickListener(v -> {
+            freezeButtons();
             round++;
             round = getValidRoundIndex(round);
             writeData = ("$LCD+PAGE=" + round).getBytes();
@@ -116,10 +118,10 @@ public class MainActivity extends AppCompatActivity{
 
 
             Log.d(TAG, "onCreate downBtn: round = " + round);
-            v.setEnabled(false); // Disable the button to prevent multiple clicks
-            new Handler().postDelayed(() -> {
-                v.setEnabled(true); // Enable the button after the delay
-            }, 1000); // 1000 milliseconds = 1 second delay
+//            v.setEnabled(false); // Disable the button to prevent multiple clicks
+//            new Handler().postDelayed(() -> {
+//                v.setEnabled(true); // Enable the button after the delay
+//            }, 1000); // 1000 milliseconds = 1 second delay
         });
     }
 
@@ -156,5 +158,21 @@ public class MainActivity extends AppCompatActivity{
 
     private int getValidRoundIndex(int round) {
         return (round % FRAGMENT_NUM + FRAGMENT_NUM) % FRAGMENT_NUM;
+    }
+
+    @Override
+    public void freezeButtons() {
+        runOnUiThread(() -> {
+            upBtn.setEnabled(false);
+            downBtn.setEnabled(false);
+        });
+    }
+
+    @Override
+    public void unfreezeButtons() {
+        runOnUiThread(() -> {
+            upBtn.setEnabled(true);
+            downBtn.setEnabled(true);
+        });
     }
 }

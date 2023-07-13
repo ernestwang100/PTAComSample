@@ -51,7 +51,7 @@ public class DrivingTimeFragment extends Fragment {
                     temp[i] = temp[i].trim();
                 }
 
-                if ( !isDefaultsSet && temp != null && temp.length > 1) {
+                if (temp != null && temp.length > 1) {
                     drivertimeTV1.setText(temp[0] + ":" + temp[1]);
                     drivertimeTV2.setText(temp[2] + ":" + temp[3]);
                     drivertimeTV3.setText(temp[4] + ":" + temp[5]);

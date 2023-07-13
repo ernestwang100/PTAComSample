@@ -5,6 +5,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.widget.FrameLayout;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,17 +19,22 @@ import android.widget.Toast;
 
 import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
+import com.asuka.ptacomsample.main.ButtonFreezeListener;
+import com.asuka.ptacomsample.main.RecvThread;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
-public class SettingDetailsActivity extends AppCompatActivity implements LoginDialogListener {
+public class SettingDetailsActivity extends AppCompatActivity implements LoginDialogListener, ButtonFreezeListener {
     private Button homeBtn, upBtn, downBtn, confirmBtn;
     private FrameLayout settingDetailsFragmentContainer;
     private TextView titleTV;
     private int round = 0;
     private String cmd;
     private String[] title;
+    private Handler handler;
     private ComPort mPort;
+    private RecvThread mRecvThread;
     private byte[] writeData;
+    private String[] temp;
     private DriverStatusFragment driverStatusFragment;
     private DriverCodeFragment driverCodeFragment;
     private DrivingTimeFragment drivingTimeFragment;
@@ -35,7 +42,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private ManufacturerFragment manufacturerFragment;
     private PrintFragment printFragment;
     private DownloadFragment downloadFragment;
-    private ThresholdTimeFragment drivingThresholdTimeFragment, restingThresholdTimeFragment;
+    private ThresholdTimeFragment drivingThresholdTimeFragment;
     private SystemTimeFragment systemTimeFragment;
     private BrightnessFragment brightnessFragment;
     private Fragment selectedFragment = null;
@@ -67,6 +74,18 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         confirmBtn = findViewById(R.id.confirmBtn);
         settingDetailsFragmentContainer = findViewById(R.id.settingDetailsFragmentContainer);
 
+        writeData = "$LCD+PAGE=99".getBytes();
+        mPort.write(writeData, writeData.length);
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                temp = (String[]) msg.obj;
+            }
+        };
+
+        mRecvThread = new RecvThread(handler, mPort, writeData, this,this);
+        mRecvThread.start();
+
         title = getResources().getStringArray(R.array.setting_full_txt);
         fragmentSwitcher(round);
 
@@ -80,21 +99,23 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         });
 
         upBtn.setOnClickListener(v -> {
+            freezeButtons();
             fragmentSwitcher(--round);
             round = getValidRoundIndex(round, title.length);
-            v.setEnabled(false); // Disable the button to prevent multiple clicks
-            new Handler().postDelayed(() -> {
-                v.setEnabled(true); // Enable the button after the delay
-            }, 500); // 1000 milliseconds = 1 second delay
+//            v.setEnabled(false); // Disable the button to prevent multiple clicks
+//            new Handler().postDelayed(() -> {
+//                v.setEnabled(true); // Enable the button after the delay
+//            }, 100); // 1000 milliseconds = 1 second delay
         });
 
         downBtn.setOnClickListener(v -> {
+            freezeButtons();
             fragmentSwitcher(++round);
             round = getValidRoundIndex(round, title.length);
-            v.setEnabled(false); // Disable the button to prevent multiple clicks
-            new Handler().postDelayed(() -> {
-                v.setEnabled(true); // Enable the button after the delay
-            }, 500); // 1000 milliseconds = 1 second delay
+//            v.setEnabled(false); // Disable the button to prevent multiple clicks
+//            new Handler().postDelayed(() -> {
+//                v.setEnabled(true); // Enable the button after the delay
+//            }, 100); // 1000 milliseconds = 1 second delay
         });
 
         confirmBtn.setOnClickListener(v -> {
@@ -296,6 +317,30 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     public void onLoginCancelled() {
         Toast.makeText(this, "Login cancelled", Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void freezeButtons() {
+        runOnUiThread(() -> {
+            upBtn.setEnabled(false);
+            downBtn.setEnabled(false);
+        });
+    }
+
+    @Override
+    public void unfreezeButtons() {
+        runOnUiThread(() -> {
+            upBtn.setEnabled(true);
+            downBtn.setEnabled(true);
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mRecvThread.interrupt();
+        mPort.close();
+    }
+
 
 
 }

@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 
 import com.asuka.comm.ComPort;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class RecvThread extends Thread {
     private String messageText = "NULL";
     private byte[] readBuf, writeData;
@@ -24,23 +27,24 @@ public class RecvThread extends Thread {
     private Context context;
     private Message msg;
     private static final String TAG = "RecvThread";
+    private ButtonFreezeListener buttonFreezeListener;
 
     public RecvThread(Handler handler, ComPort mPort, byte[] writeData, Context context) {
         this.mPort = mPort;
         this.handler = handler;
         this.writeData = writeData;
         this.context = context;
-
     }
 
+    public RecvThread(Handler handler, ComPort mPort, byte[] writeData, Context context, ButtonFreezeListener listener) {
+        this.mPort = mPort;
+        this.handler = handler;
+        this.writeData = writeData;
+        this.context = context;
+        this.buttonFreezeListener = listener;
+    }
 
     public void run() {
-
-//        msg = Message.obtain();
-//        msg.obj = "資料讀取中...";
-//        //msg.obj = received;
-//        handler.sendMessage(msg);
-
         readBuf = new byte[200];
         Log.d(TAG, "run: writeData: " + new String(writeData));
         mPort.write(writeData, writeData.length);
@@ -51,23 +55,11 @@ public class RecvThread extends Thread {
                 sleep(30);
             } catch (InterruptedException e) {
                 Log.i(TAG, "Exception: " + e.toString() + " occurs");
-//                try {
-//                    writeData = "$LCD+PAGE=99".getBytes();
-//                    mPort.write(writeData, writeData.length);
-//                    Log.d(TAG, "run: writeData: " + new String(writeData));
-//                    sleep(5000);
-//                } catch (Exception ex) {
-//                    Log.i(TAG, "Exception: " + ex.toString() + " occurs");
-//                }
-
                 break;
-
             }
 
             int count = mPort.read(readBuf, readBuf.length);
-//            Log.d(TAG, "run: count: " + count);
             if (count > 0) {
-//                Log.d(TAG, "run: readbuf: " + new String(readBuf));
                 String received = "";
                 for (int i = 0; i < count; i++) {
                     try {
@@ -79,20 +71,12 @@ public class RecvThread extends Thread {
                 }
                 Log.i(TAG, "received: " + received);
 
-//                if (!received.contains("$VDR+SHOW DATA")) {
-//                    isRunning = false;
-//                }
-
 //                default messageText
-                if(received.contains("=")){
+                if (received.contains("=")) {
                     messageText = received.replace("#", "").split("=")[1].trim();
                     temp = received.replace("#", ",").replace("=", ",").split(",");
                 }
 
-
-
-
-//                Log.d(TAG, "run: !temp[0].contains(\"$\"): " + !temp[0].contains("$"));
                 Log.d(TAG, "run: writeData: " + new String(writeData));
                 // if received data is the same as the data sent
                 if (!temp[0].startsWith("$")) {
@@ -116,30 +100,30 @@ public class RecvThread extends Thread {
 
                     openWarningDialog(messageText);
                 } else if (temp[0].contains("$VDR+SHOW DATA")) {
-//                    Log.d(TAG, "run: temp[1]=" + temp[1]);
 
                     boolean istheSame = new String(writeData).split("=")[1].equals(temp[1].trim());
                     if (istheSame) {
                         Log.d(TAG, "run: enable button");
+                        if (buttonFreezeListener != null) buttonFreezeListener.unfreezeButtons();
                         switch (temp[1]) {
                             case "0":
 //                            Log.d(TAG, "run: temp.length: " + temp.length);
                                 if (temp.length == 8) {
-                                messageText = temp[2] + "\n" + temp[3] + "\n" + "速度 " + temp[4] + " km/h\n" + "駕駛 " + temp[5];
-                                switch (temp[6].trim()) {
-                                    case "0":
-                                        messageText += " 車停";
-                                        break;
-                                    case "1":
-                                        messageText += " 行駛";
-                                        break;
-                                    case "2":
-                                        messageText += " 待班";
-                                        break;
-                                    case "3":
-                                        messageText += " 休息";
-                                        break;
-                                }
+                                    messageText = temp[2] + "\n" + temp[3] + "\n" + "速度 " + temp[4] + " km/h\n" + "駕駛 " + temp[5];
+                                    switch (temp[6].trim()) {
+                                        case "0":
+                                            messageText += " 車停";
+                                            break;
+                                        case "1":
+                                            messageText += " 行駛";
+                                            break;
+                                        case "2":
+                                            messageText += " 待班";
+                                            break;
+                                        case "3":
+                                            messageText += " 休息";
+                                            break;
+                                    }
                                 } else {
                                     messageText = "資料讀取中...";
                                 }
@@ -238,6 +222,7 @@ public class RecvThread extends Thread {
                         }
                     } else {
                         Log.d(TAG, "run: disable button");
+                        if (buttonFreezeListener != null) buttonFreezeListener.freezeButtons();
                         messageText = "資料讀取中...";
                     }
 
@@ -250,6 +235,9 @@ public class RecvThread extends Thread {
                 //msg.obj = received;
 
                 handler.sendMessage(msg);
+                Log.d(TAG, "run: enable button");
+                Log.d(TAG, "run: buttonFreezeListener: " + buttonFreezeListener);
+                if (buttonFreezeListener != null) buttonFreezeListener.unfreezeButtons();
             }
         }
         Log.i(TAG, "Received = RecvThread ended~~~");
@@ -286,6 +274,19 @@ public class RecvThread extends Thread {
             });
         }
     }
+
+    public static String extractWordsBetweenSymbols(String input, String startSymbol, String endSymbol) {
+        String patternString = Pattern.quote(startSymbol) + "(.*?)" + Pattern.quote(endSymbol);
+        Pattern pattern = Pattern.compile(patternString);
+        Matcher matcher = pattern.matcher(input);
+
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        }
+
+        return null;
+    }
+
     public void setWriteData(byte[] writeData) {
         this.writeData = writeData;
         mPort.write(writeData, writeData.length);
