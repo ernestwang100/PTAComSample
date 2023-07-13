@@ -7,50 +7,63 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.Switch;
+import android.widget.TextView;
 
+import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
-public class MainActivity extends AppCompatActivity implements ButtonFreezeListener {
+public class MainActivity extends AppCompatActivity{
+
     private Button mainMenuBtn, upBtn, downBtn;
     private Switch themeSW;
+    private TextView tv;
     private int round = 0;
-    private MainFragmentWelcomeTV mainFragmentWelcomeTV;
-    private MainFragmentTV1 mainFragmentTV1;
-    private MainFragmentTV2 mainFragmentTV2;
-    private MainFragmentTV3 mainFragmentTV3;
-    private MainFragmentTV4 mainFragmentTV4;
-    private MainFragmentTV5 mainFragmentTV5;
-    private MainFragmentTV6 mainFragmentTV6;
-    private MainFragmentTV7 mainFragmentTV7;
-    private MainFragmentTV8 mainFragmentTV8;
+
     private static final String TAG = "MainActivity";
     public static final int FRAGMENT_NUM = 5;
     Fragment selectedFragment = null;
+    private Handler handler;
+    private ComPort mPort;
+    private RecvThread mRecvThread;
+    private byte[] writeData;
+    private String[] temp;
+
+    public MainActivity(){
+        super();
+        mPort = new ComPort();
+        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (getIntent().hasExtra("FragmentIndex")) {
-            round = getIntent().getIntExtra("FragmentIndex", 0);
-            Log.d(TAG, "onCreate: round = " + round);
-        }
-
-        initializeFragments();
-        selectedFragment = mainFragmentWelcomeTV;
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, selectedFragment).commit();
-
+        tv = findViewById(R.id.tv);
         themeSW = findViewById(R.id.themeSwitchButton);
         mainMenuBtn = findViewById(R.id.homeBtn);
         upBtn = findViewById(R.id.upBtn);
         downBtn = findViewById(R.id.downBtn);
 
+
+        writeData = "$LCD+PAGE=0".getBytes();
+        mPort.write(writeData, writeData.length);
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                tv.setText(msg.obj.toString());
+            }
+        };
+
+        mRecvThread = new RecvThread(handler, mPort, writeData, this);
+        mRecvThread.start();
         themeSW.setOnClickListener(v -> {
             runOnUiThread(() -> {
                 if (themeSW.isChecked()) {
@@ -76,31 +89,37 @@ public class MainActivity extends AppCompatActivity implements ButtonFreezeListe
 //        switchTheme();
 
         mainMenuBtn.setOnClickListener(v -> {
-            if (selectedFragment != null) {
-                selectedFragment.onPause();
-            }
             Intent intent = new Intent(MainActivity.this, SettingListActivity.class);
             startActivity(intent);
         });
 
         upBtn.setOnClickListener(v -> {
             round--;
-            fragmentSwitcher(round);
+            round = getValidRoundIndex(round);
+            writeData = ("$LCD+PAGE=" + round).getBytes();
+            mRecvThread.setWriteData(writeData);
+//            mPort.write(writeData, writeData.length);
+
             Log.d(TAG, "onCreate upBtn: round = " + round);
             v.setEnabled(false); // Disable the button to prevent multiple clicks
             new Handler().postDelayed(() -> {
                 v.setEnabled(true); // Enable the button after the delay
-            }, 500); // 1000 milliseconds = 1 second delay
+            }, 1000); // 1000 milliseconds = 1 second delay
         });
 
         downBtn.setOnClickListener(v -> {
             round++;
-            fragmentSwitcher(round);
+            round = getValidRoundIndex(round);
+            writeData = ("$LCD+PAGE=" + round).getBytes();
+            mRecvThread.setWriteData(writeData);
+//            mPort.write(writeData, writeData.length);
+
+
             Log.d(TAG, "onCreate downBtn: round = " + round);
             v.setEnabled(false); // Disable the button to prevent multiple clicks
             new Handler().postDelayed(() -> {
                 v.setEnabled(true); // Enable the button after the delay
-            }, 500); // 1000 milliseconds = 1 second delay
+            }, 1000); // 1000 milliseconds = 1 second delay
         });
     }
 
@@ -128,70 +147,9 @@ public class MainActivity extends AppCompatActivity implements ButtonFreezeListe
 //    }
 
 
-    private void initializeFragments() {
-        mainFragmentWelcomeTV = new MainFragmentWelcomeTV();
-        mainFragmentTV1 = new MainFragmentTV1();
-        mainFragmentTV2 = new MainFragmentTV2();
-        mainFragmentTV3 = new MainFragmentTV3();
-        mainFragmentTV4 = new MainFragmentTV4();
-        mainFragmentTV5 = new MainFragmentTV5();
-        mainFragmentTV6 = new MainFragmentTV6();
-        mainFragmentTV7 = new MainFragmentTV7();
-        mainFragmentTV8 = new MainFragmentTV8();
-    }
 
-    private void fragmentSwitcher(int round) {
-        Log.d(TAG, "fragmentSwitcher: round = " + round);
-        round = getValidRoundIndex(round);
-        Log.d(TAG, "fragmentSwitcher: round%FRAGMENT_NUM = " + round);
-        switch (round) {
-            case 0:
-                selectedFragment = mainFragmentWelcomeTV;
-                break;
-            case 1:
-                selectedFragment = mainFragmentTV1;
-                break;
-            case 2:
-                selectedFragment = mainFragmentTV2;
-                break;
-            case 3:
-                selectedFragment = mainFragmentTV3;
-                break;
-            case 4:
-                selectedFragment = mainFragmentTV4;
-                break;
-            case 5:
-                selectedFragment = mainFragmentTV5;
-                break;
-            case 6:
-                selectedFragment = mainFragmentTV6;
-                break;
-            case 7:
-                selectedFragment = mainFragmentTV7;
-                break;
-            case 8:
-                selectedFragment = mainFragmentTV8;
-                break;
-        }
-
-        if (selectedFragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrameLayout, selectedFragment).commit();
-        }
-    }
 
     private int getValidRoundIndex(int round) {
         return (round % FRAGMENT_NUM + FRAGMENT_NUM) % FRAGMENT_NUM;
-    }
-
-    @Override
-    public void enableButton() {
-        upBtn.setEnabled(true);
-        downBtn.setEnabled(true);
-    }
-
-    @Override
-    public void disableButton() {
-        upBtn.setEnabled(false);
-        downBtn.setEnabled(false);
     }
 }

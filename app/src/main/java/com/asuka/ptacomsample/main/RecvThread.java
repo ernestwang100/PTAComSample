@@ -24,29 +24,13 @@ public class RecvThread extends Thread {
     private Context context;
     private Message msg;
     private static final String TAG = "RecvThread";
-    private ButtonFreezeListener buttonFreezeListener;
-
 
     public RecvThread(Handler handler, ComPort mPort, byte[] writeData, Context context) {
         this.mPort = mPort;
         this.handler = handler;
         this.writeData = writeData;
         this.context = context;
-        this.buttonFreezeListener = new ButtonFreezeListener() {
-            @Override
-            public void enableButton() {
-                ((Activity) context).runOnUiThread(() -> {
-                    ((MainActivity) context).enableButton();
-                });
-            }
 
-            @Override
-            public void disableButton() {
-                ((Activity) context).runOnUiThread(() -> {
-                    ((MainActivity) context).disableButton();
-                });
-            }
-        };
     }
 
 
@@ -136,7 +120,6 @@ public class RecvThread extends Thread {
 
                     boolean istheSame = new String(writeData).split("=")[1].equals(temp[1].trim());
                     if (istheSame) {
-                        buttonFreezeListener.enableButton();
                         Log.d(TAG, "run: enable button");
                         switch (temp[1]) {
                             case "0":
@@ -254,7 +237,6 @@ public class RecvThread extends Thread {
 
                         }
                     } else {
-                        buttonFreezeListener.disableButton();
                         Log.d(TAG, "run: disable button");
                         messageText = "資料讀取中...";
                     }
@@ -303,6 +285,10 @@ public class RecvThread extends Thread {
                 }
             });
         }
+    }
+    public void setWriteData(byte[] writeData) {
+        this.writeData = writeData;
+        mPort.write(writeData, writeData.length);
     }
 
 }
