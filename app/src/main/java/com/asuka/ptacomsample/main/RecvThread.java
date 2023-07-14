@@ -13,11 +13,13 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.asuka.comm.ComPort;
+import com.asuka.ptacomsample.third.SettingDetailsActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RecvThread extends Thread {
+    private SettingDetailsActivity activity;
     private String messageText = "NULL";
     private byte[] readBuf, writeData;
     private ComPort mPort;
@@ -34,6 +36,7 @@ public class RecvThread extends Thread {
         this.handler = handler;
         this.writeData = writeData;
         this.context = context;
+        mPort.write(writeData, writeData.length);
     }
 
     public RecvThread(Handler handler, ComPort mPort, byte[] writeData, Context context, ButtonFreezeListener listener) {
@@ -42,13 +45,20 @@ public class RecvThread extends Thread {
         this.writeData = writeData;
         this.context = context;
         this.buttonFreezeListener = listener;
+        mPort.write(writeData, writeData.length);
+    }
+
+    public RecvThread(Handler handler, ComPort mPort, Context context, SettingDetailsActivity activity) {
+        this.mPort = mPort;
+        this.handler = handler;
+        this.context = context;
+        this.activity = activity;
+        Log.d(TAG, "Constructor RecvThread: activity: " + activity);
     }
 
     public void run() {
         readBuf = new byte[200];
-        Log.d(TAG, "run: writeData: " + new String(writeData));
-        mPort.write(writeData, writeData.length);
-
+        if (writeData != null) Log.d(TAG, "run: writeData: " + new String(writeData));
 
         while (!Thread.currentThread().isInterrupted() && isRunning) {
             try {
@@ -77,7 +87,7 @@ public class RecvThread extends Thread {
                     temp = received.replace("#", ",").replace("=", ",").split(",");
                 }
 
-                Log.d(TAG, "run: writeData: " + new String(writeData));
+                if (writeData != null) Log.d(TAG, "run: writeData: " + new String(writeData));
                 // if received data is the same as the data sent
                 if (!temp[0].startsWith("$")) {
                     messageText = "資料讀取中...";
@@ -103,8 +113,7 @@ public class RecvThread extends Thread {
 
                     boolean istheSame = new String(writeData).split("=")[1].equals(temp[1].trim());
                     if (istheSame) {
-                        Log.d(TAG, "run: enable button");
-                        if (buttonFreezeListener != null) buttonFreezeListener.unfreezeButtons();
+
                         switch (temp[1]) {
                             case "0":
 //                            Log.d(TAG, "run: temp.length: " + temp.length);
@@ -177,7 +186,6 @@ public class RecvThread extends Thread {
                                         messageText += "駕駛超時開車\n";
                                         break;
                                 }
-
                                 switch (temp[3].trim()) {
                                     case "0":
                                         messageText += "印表機正常\n";
@@ -186,7 +194,6 @@ public class RecvThread extends Thread {
                                         messageText += "印表機缺紙\n";
                                         break;
                                 }
-
                                 switch (temp[4].trim()) {
                                     case "0":
                                         messageText += "供電正常";
@@ -195,7 +202,6 @@ public class RecvThread extends Thread {
                                         messageText += temp[5] + " 斷電發生";
                                         break;
                                 }
-
 
                                 break;
 
@@ -220,6 +226,8 @@ public class RecvThread extends Thread {
                                 break;
 
                         }
+                        Log.d(TAG, "run: enable button");
+                        if (buttonFreezeListener != null) buttonFreezeListener.unfreezeButtons();
                     } else {
                         Log.d(TAG, "run: disable button");
                         if (buttonFreezeListener != null) buttonFreezeListener.freezeButtons();
@@ -236,8 +244,8 @@ public class RecvThread extends Thread {
 
                 handler.sendMessage(msg);
                 Log.d(TAG, "run: enable button");
-                Log.d(TAG, "run: buttonFreezeListener: " + buttonFreezeListener);
-                if (buttonFreezeListener != null) buttonFreezeListener.unfreezeButtons();
+                Log.d(TAG, "run: activity: " + activity);
+                if (activity != null) activity.unfreezeButtons();
             }
         }
         Log.i(TAG, "Received = RecvThread ended~~~");
@@ -288,6 +296,7 @@ public class RecvThread extends Thread {
     }
 
     public void setWriteData(byte[] writeData) {
+        Log.d(TAG, "setWriteData: writeData: " + new String(writeData));
         this.writeData = writeData;
         mPort.write(writeData, writeData.length);
     }

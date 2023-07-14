@@ -22,17 +22,8 @@ import java.util.Locale;
 
 public class ThresholdTimeFragment extends Fragment {
     private TextView drivetimeTV, resttimeTV;
-    private String cmd, cmdStart, temp[];
-    private byte[] writeData;
-    private ComPort mPort;
-    private RecvThread mRecvThread;
-    private Handler handler;
+    private String cmd, cmdStart;
     private static final String TAG = "ThresholdTimeFragment";
-
-    public ThresholdTimeFragment() {
-        mPort = new ComPort();
-        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,27 +35,9 @@ public class ThresholdTimeFragment extends Fragment {
         drivetimeTV.setOnClickListener(v -> showTimePickerDialog((TextView) v));
         resttimeTV.setOnClickListener(v -> showTimePickerDialog((TextView) v));
 
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                Log.d(TAG, "handleMessage: " + msg.obj.toString());
-                temp = msg.obj.toString().split(",");
-                for (int i = 0; i < temp.length; i++) {
-                    temp[i] = temp[i].trim();
-                    Log.d(TAG, "handleMessage: temp[" + i + "]: " + temp[i]);
-                }
-                if (temp != null && temp.length > 1) {
-                    drivetimeTV.setText(temp[0] + ":" + temp[1]);
-//                    resttimeTV.setText(temp[2] + ":" + temp[3]);
-                }
-            }
-        };
 
         cmdStart = "$LCD+SET DRIVE TIME=";
 //        cmdStart = "$LCD+SET THRESHOLD TIME=";
-        writeData = (cmdStart + "?").getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
-        mRecvThread.start();
 
         return view;
     }
@@ -94,14 +67,13 @@ public class ThresholdTimeFragment extends Fragment {
         tv.setText(time);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mRecvThread.interrupt();
-    }
-
     public String getCmd() {
         cmd = cmdStart + drivetimeTV.getText().toString().replace(':',',') + "," + resttimeTV.getText().toString().replace(':',',');
         return cmd;
+    }
+
+    public void updateValues(String[] temp){
+        drivetimeTV.setText(temp[0] + ":" + temp[1]);
+//        resttimeTV.setText(temp[2] + ":" + temp[3]);
     }
 }

@@ -20,51 +20,19 @@ import com.asuka.ptacomsample.main.RecvThread;
 public class DriverStatusFragment extends Fragment {
     private RadioGroup radioGroupDriverStatus, radioGroupCodriverStatus;
     private Integer driverStatus, codriverStatus;
-    private byte[] writeData;
-    private ComPort mPort;
+
     private String cmd, temp[], cmdStart;
-    private RecvThread mRecvThread;
-    private Handler handler;
     public static final int DRIVER_STATUS = 0;
     public static final int CODRIVER_STATUS = 1;
     private boolean isDefaultsSet = false;
     private static final String TAG = "DriverStatusFragment";
 
-    public DriverStatusFragment() {
-        super();
-        mPort = new ComPort();
-        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_status, container, false);
 
         cmdStart = "$LCD+DRIVER STATUS=";
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                Log.d(TAG, "handleMessage: " + msg.obj.toString());
-                temp = msg.obj.toString().split(",");
-                for (int i = 0; i < temp.length; i++) {
-                    temp[i] = temp[i].trim();
-                }
-
-                if (!isDefaultsSet && temp != null && temp.length > Math.max(DRIVER_STATUS, CODRIVER_STATUS) &&TextUtils.isDigitsOnly(temp[DRIVER_STATUS]) && TextUtils.isDigitsOnly(temp[CODRIVER_STATUS])) {
-
-                    Log.d(TAG, "onCreateView: temp: " + temp[DRIVER_STATUS] + ", " + temp[CODRIVER_STATUS]);
-
-                    setRadioButtons(temp[DRIVER_STATUS], temp[CODRIVER_STATUS]);
-                    isDefaultsSet = true;
-                }
-
-
-            }
-        };
-
-        writeData = (cmdStart+"?").getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
-        mRecvThread.start();
 
         radioGroupDriverStatus = view.findViewById(R.id.DRBtnGroup);
         radioGroupCodriverStatus = view.findViewById(R.id.CRBtnGroup);
@@ -84,7 +52,6 @@ public class DriverStatusFragment extends Fragment {
                 Log.d(TAG, "onCheckedChanged: codriverStatus: " + codriverStatus);
             }
         });
-
 
         return view;
     }
@@ -111,16 +78,15 @@ public class DriverStatusFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mRecvThread.interrupt();
-    }
-
     public String getCmd() {
         if (driverStatus != null && codriverStatus != null) {
             cmd = cmdStart + driverStatus + "," + codriverStatus;
         }
         return cmd;
+    }
+
+    public void updateValues(String[] temp) {
+        this.temp = temp;
+        setRadioButtons(temp[DRIVER_STATUS], temp[CODRIVER_STATUS]);
     }
 }

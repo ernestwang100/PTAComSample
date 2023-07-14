@@ -28,8 +28,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private FrameLayout settingDetailsFragmentContainer;
     private TextView titleTV;
     private int round = 0;
-    private String cmd;
-    private String[] title;
+    private String cmd, cmdStart, title[];
     private Handler handler;
     private ComPort mPort;
     private RecvThread mRecvThread;
@@ -53,6 +52,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     public SettingDetailsActivity() {
         mPort = new ComPort();
         mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
+//        mRecvThread = new RecvThread(handler, mPort, null, this, this);
     }
 
 
@@ -74,16 +74,18 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         confirmBtn = findViewById(R.id.confirmBtn);
         settingDetailsFragmentContainer = findViewById(R.id.settingDetailsFragmentContainer);
 
-        writeData = "$LCD+PAGE=99".getBytes();
-        mPort.write(writeData, writeData.length);
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                temp = (String[]) msg.obj;
+                temp = msg.obj.toString().split(",");
+                for (int i = 0; i < temp.length; i++) {
+                    temp[i] = temp[i].trim();
+                }
+                updateValuestoFragment(temp);
             }
         };
 
-        mRecvThread = new RecvThread(handler, mPort, writeData, this,this);
+        mRecvThread = new RecvThread(handler, mPort, this, this);
         mRecvThread.start();
 
         title = getResources().getStringArray(R.array.setting_full_txt);
@@ -102,23 +104,16 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             freezeButtons();
             fragmentSwitcher(--round);
             round = getValidRoundIndex(round, title.length);
-//            v.setEnabled(false); // Disable the button to prevent multiple clicks
-//            new Handler().postDelayed(() -> {
-//                v.setEnabled(true); // Enable the button after the delay
-//            }, 100); // 1000 milliseconds = 1 second delay
         });
 
         downBtn.setOnClickListener(v -> {
             freezeButtons();
             fragmentSwitcher(++round);
             round = getValidRoundIndex(round, title.length);
-//            v.setEnabled(false); // Disable the button to prevent multiple clicks
-//            new Handler().postDelayed(() -> {
-//                v.setEnabled(true); // Enable the button after the delay
-//            }, 100); // 1000 milliseconds = 1 second delay
         });
 
         confirmBtn.setOnClickListener(v -> {
+            freezeButtons();
             cmd = getCmdFromSelectedFragment();
             if (needLoginCredentials()) {
                 showLoginFragment();
@@ -130,6 +125,11 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 Log.d(TAG, "onCreate: cmd = " + cmd);
                 writeDataToPort(cmd);
             }
+
+//            v.setEnabled(false); // Disable the button to prevent multiple clicks
+//            new Handler().postDelayed(() -> {
+//                v.setEnabled(true); // Enable the button after the delay
+//            }, 2000); // 1000 milliseconds = 1 second delay
         });
 
 
@@ -148,6 +148,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 if (driverStatusFragment == null)
                     driverStatusFragment = new DriverStatusFragment();
                 selectedFragment = driverStatusFragment;
+                cmdStart = "$LCD+DRIVER STATUS=";
 
 //               Set the top margin of the fragment container
                 layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, getResources().getDisplayMetrics()), 0, 0);
@@ -158,11 +159,14 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 if (driverCodeFragment == null)
                     driverCodeFragment = new DriverCodeFragment();
                 selectedFragment = driverCodeFragment;
+                cmdStart = "$LCD+DRIVER IN=";
+
                 break;
             case 2:
                 if (drivingTimeFragment == null)
                     drivingTimeFragment = new DrivingTimeFragment();
                 selectedFragment = drivingTimeFragment;
+                cmdStart = "$LCD+DRIVER TIME=";
 
                 //               Set the top margin of the fragment container
                 layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, getResources().getDisplayMetrics()), 0, 0);
@@ -173,6 +177,8 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 if (printFragment == null)
                     printFragment = new PrintFragment();
                 selectedFragment = printFragment;
+                cmdStart = "$LCD+PRINT=";
+                this.unfreezeButtons();
 
                 layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()), 0, 0);
                 settingDetailsFragmentContainer.setLayoutParams(layoutParams);
@@ -182,46 +188,58 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 if (downloadFragment == null)
                     downloadFragment = new DownloadFragment();
                 selectedFragment = downloadFragment;
+                cmdStart = "$LCD+DOWNLOAD=";
+                this.unfreezeButtons();
                 break;
 
             case 5:
                 if (drivingThresholdTimeFragment == null)
                     drivingThresholdTimeFragment = new ThresholdTimeFragment();
                 selectedFragment = drivingThresholdTimeFragment;
+                cmdStart = "$LCD+SET DRIVE TIME=";
+//                cmdStart = "$LCD+SET THRESHOLD TIME=";
                 break;
 
             case 6:
                 if (speedGainFragment == null)
                     speedGainFragment = new GainFragment(0);
                 selectedFragment = speedGainFragment;
+                cmdStart = "$LCD+SPEED GAIN=";
                 break;
 
             case 7:
                 if (rpmGainFragment == null)
                     rpmGainFragment = new GainFragment(1);
                 selectedFragment = rpmGainFragment;
+                cmdStart = "$LCD+RPM GAIN=";
                 break;
 
             case 8:
                 if (systemTimeFragment == null)
                     systemTimeFragment = new SystemTimeFragment();
                 selectedFragment = systemTimeFragment;
+                cmdStart = "$LCD+TIME ADJ=";
                 break;
 
             case 9:
                 if (brightnessFragment == null)
                     brightnessFragment = new BrightnessFragment();
                 selectedFragment = brightnessFragment;
+                this.unfreezeButtons();
                 break;
 
             case 10:
                 if (manufacturerFragment == null)
                     manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
+                this.unfreezeButtons();
                 break;
             default:
                 break;
         }
+        writeData = (cmdStart + "?").getBytes();
+        if(writeData!=null) Log.d(TAG, "run: writeData: " + new String(writeData));
+        mRecvThread.setWriteData(writeData);
         if (selectedFragment != null) {
             // Get the reference to the fragment container
             FrameLayout fragmentContainer = findViewById(R.id.settingDetailsFragmentContainer);
@@ -230,6 +248,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             fragmentContainer.removeAllViews();
 
             getSupportFragmentManager().beginTransaction().replace(R.id.settingDetailsFragmentContainer, selectedFragment).commit();
+//            selectedFragment.setRecvThread(mRecvThread);
         }
     }
 
@@ -293,9 +312,10 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private void writeDataToPort(String cmd) {
         if (cmd != null) {
             writeData = cmd.getBytes();
-            Log.d(TAG, "writeDataToPort: writeData = " + writeData);
+            Log.d(TAG, "writeDataToPort: writeData = " + new String(writeData));
             mPort.write(writeData, writeData.length);
         }
+        this.unfreezeButtons();
     }
 
 
@@ -318,11 +338,35 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         Toast.makeText(this, "Login cancelled", Toast.LENGTH_SHORT).show();
     }
 
+    public void updateValuestoFragment(String[] temp) {
+        Log.d(TAG, "passTemptoFragment: temp[0] = " + temp[0]);
+        if (selectedFragment instanceof DriverStatusFragment) {
+            ((DriverStatusFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof DriverCodeFragment) {
+            ((DriverCodeFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof DrivingTimeFragment) {
+            ((DrivingTimeFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof GainFragment) {
+            ((GainFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof ManufacturerFragment) {
+            ((ManufacturerFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof ThresholdTimeFragment) {
+            ((ThresholdTimeFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof SystemTimeFragment) {
+            ((SystemTimeFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof PrintFragment) {
+            ((PrintFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof DownloadFragment) {
+            ((DownloadFragment) selectedFragment).updateValues(temp);
+        }
+    }
+
     @Override
     public void freezeButtons() {
         runOnUiThread(() -> {
             upBtn.setEnabled(false);
             downBtn.setEnabled(false);
+            confirmBtn.setEnabled(false);
         });
     }
 
@@ -331,6 +375,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         runOnUiThread(() -> {
             upBtn.setEnabled(true);
             downBtn.setEnabled(true);
+            confirmBtn.setEnabled(true);
         });
     }
 
@@ -340,9 +385,6 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         mRecvThread.interrupt();
         mPort.close();
     }
-
-
-
 }
 
 

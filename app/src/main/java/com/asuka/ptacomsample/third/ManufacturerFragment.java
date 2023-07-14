@@ -30,4 +30,8 @@ public class ManufacturerFragment extends Fragment {
         cmd = "$LCD+MANUFACTURER=" + tv.getText().toString();
         return cmd;
     }
+
+    public void updateValues(String[] values) {
+        tv.setText(values[0]);
+    }
 }

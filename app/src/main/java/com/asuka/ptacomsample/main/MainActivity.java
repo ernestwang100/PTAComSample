@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements ButtonFreezeListe
         mainMenuBtn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, SettingListActivity.class);
             startActivity(intent);
+            writeData = "$LCD+PAGE=98".getBytes();
+            mPort.write(writeData, writeData.length);
         });
 
         upBtn.setOnClickListener(v -> {

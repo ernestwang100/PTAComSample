@@ -27,12 +27,6 @@ public class DownloadFragment extends Fragment {
     private Handler handler;
     private static final String TAG = "DownloadFragment";
 
-    public DownloadFragment() {
-        super();
-        mPort = new ComPort();
-        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,33 +51,29 @@ public class DownloadFragment extends Fragment {
 
 //        TODO: cmd
         cmdStart = "$LCD+DOWNLOAD=";
-        cmd = "$LCD+PAGE=99";
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                Log.d(TAG, "handleMessage: " + msg.obj.toString());
-                temp = msg.obj.toString().split(",");
-                for (int i = 0; i < temp.length; i++) {
-                    temp[i] = temp[i].trim();
-                }
+//        handler = new Handler(Looper.getMainLooper()) {
+//            @Override
+//            public void handleMessage(Message msg) {
+//                Log.d(TAG, "handleMessage: " + msg.obj.toString());
+//                temp = msg.obj.toString().split(",");
+//                for (int i = 0; i < temp.length; i++) {
+//                    temp[i] = temp[i].trim();
+//                }
+//
+//                switch (temp[0]) {
+//                    case "0":
+//                        Log.d(TAG, "handleMessage: processing complete");
+//                        break;
+//                    case "1":
+//                        Log.d(TAG, "handleMessage: processing");
+//                        break;
+//                    case "2":
+//                        Log.d(TAG, "handleMessage: processing error");
+//                        break;
+//                }
+//            }
+//        };
 
-                switch (temp[0]) {
-                    case "0":
-                        Log.d(TAG, "handleMessage: processing complete");
-                        break;
-                    case "1":
-                        Log.d(TAG, "handleMessage: processing");
-                        break;
-                    case "2":
-                        Log.d(TAG, "handleMessage: processing error");
-                        break;
-                }
-            }
-        };
-
-        writeData = (cmd).getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
-        mRecvThread.start();
         return view;
     }
 
@@ -104,10 +94,9 @@ public class DownloadFragment extends Fragment {
         return cmd;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mRecvThread.interrupt();
+    public void updateValues(String[] temp){
+//        default set as download1RB
+        radioGroupDownload.check(R.id.download1RB);
     }
 }
 

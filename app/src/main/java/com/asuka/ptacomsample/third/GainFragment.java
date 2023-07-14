@@ -21,10 +21,6 @@ public class GainFragment extends Fragment {
     private NumberPicker numberPicker;
     private String cmd, cmdStart, temp[];
     private int gainType;
-    private byte[] writeData;
-    private ComPort mPort;
-    private RecvThread mRecvThread;
-    private Handler handler;
     private static final String TAG = "GainFragment";
 
     public GainFragment(int gainType) {
@@ -33,10 +29,8 @@ public class GainFragment extends Fragment {
         if (gainType == 0) {
             cmdStart = "$LCD+SPEED GAIN=";
         } else {
-            cmdStart = "$LCD+RPM DIV=";
+            cmdStart = "$LCD+RPM GAIN=";
         }
-        mPort = new ComPort();
-        mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
 
     }
 
@@ -49,37 +43,17 @@ public class GainFragment extends Fragment {
         numberPicker.setMinValue(1);
         int hour = numberPicker.getValue();
 
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                Log.d(TAG, "handleMessage: " + msg.obj.toString());
-                temp = msg.obj.toString().split(",");
-                for (int i = 0; i < temp.length; i++) {
-                    temp[i] = temp[i].trim();
-                    Log.d(TAG, "handleMessage: temp[" + i + "]: " + temp[i]);
-                }
-                if(temp.length > 0 && temp[0] != null && !temp[0].isEmpty() && TextUtils.isDigitsOnly(temp[0])) {
-                    numberPicker.setValue(Integer.parseInt(temp[0]));
-                }
-
-            }
-        };
-        writeData = (cmdStart+"?").getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData, getContext());
-        mRecvThread.start();
-
-
         return view;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mRecvThread.interrupt();
     }
 
     public String getCmd() {
         cmd = cmdStart + numberPicker.getValue();
         return cmd;
+    }
+
+    public void updateValues(String[] temp) {
+        if(temp.length > 0 && temp[0] != null && !temp[0].isEmpty() && TextUtils.isDigitsOnly(temp[0])) {
+            numberPicker.setValue(Integer.parseInt(temp[0]));
+        }
     }
 }
