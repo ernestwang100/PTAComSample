@@ -31,12 +31,18 @@ public class RecvThread extends Thread {
     private static final String TAG = "RecvThread";
     private ButtonFreezeListener buttonFreezeListener;
 
-    public RecvThread(Handler handler, ComPort mPort, byte[] writeData, Context context) {
+//    public RecvThread(Handler handler, ComPort mPort, byte[] writeData, Context context) {
+//        this.mPort = mPort;
+//        this.handler = handler;
+//        this.writeData = writeData;
+//        this.context = context;
+//        mPort.write(writeData, writeData.length);
+//    }
+
+    public RecvThread(Handler handler, ComPort mPort, Context context) {
         this.mPort = mPort;
         this.handler = handler;
-        this.writeData = writeData;
         this.context = context;
-        mPort.write(writeData, writeData.length);
     }
 
     public RecvThread(Handler handler, ComPort mPort, byte[] writeData, Context context, ButtonFreezeListener listener) {
@@ -109,7 +115,7 @@ public class RecvThread extends Thread {
                     }
 
                     openWarningDialog(messageText);
-                } else if (temp[0].contains("$VDR+SHOW DATA")) {
+                } else if (writeData!= null && temp[0].contains("$VDR+SHOW DATA")) {
 
                     boolean istheSame = new String(writeData).split("=")[1].equals(temp[1].trim());
                     if (istheSame) {

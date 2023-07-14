@@ -49,8 +49,8 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
         homeBtn = findViewById(R.id.homeBtn);
         upBtn = findViewById(R.id.upBtn);
         downBtn = findViewById(R.id.downBtn);
-        writeData = "$LCD+PAGE=99".getBytes();
-        mPort.write(writeData, writeData.length);
+//        writeData = "$LCD+PAGE=99".getBytes();
+//        mPort.write(writeData, writeData.length);
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -58,8 +58,9 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
             }
         };
 
-        mRecvThread = new RecvThread(handler, mPort, writeData, this);
+        mRecvThread = new RecvThread(handler, mPort, this);
         mRecvThread.start();
+
 
         setSettingModels();
 
@@ -71,7 +72,6 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
         homeBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.setClass(SettingListActivity.this, MainActivity.class);
-            intent.putExtra("FragmentIndex", 1);
             startActivity(intent);
         });
         upBtn.setOnClickListener(new View.OnClickListener(){
