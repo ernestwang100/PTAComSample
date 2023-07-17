@@ -2,6 +2,7 @@ package com.asuka.ptacomsample.third;
 
 
 import android.app.Dialog;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +21,7 @@ public class WaitingFragment extends DialogFragment {
     private int mCount;
     private TextView tv;
     private static final String TAG = "WaitingFragment";
-
-        public WaitingFragment() {
-            mPort = new ComPort();
-            mPort.open(5, ComPort.BAUD_115200, 8, 'N', 1);
-        }
-
+    private String mStr;
 
         @NonNull
         @Override
@@ -36,57 +32,20 @@ public class WaitingFragment extends DialogFragment {
 
             tv = view.findViewById(R.id.waiting_tv);
 
-
-            mCount = mPort.read(readBuf, readBuf.length);
-            Log.d(TAG, "onViewCreated: mCount = " + mCount);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                tv.setText(mStr);
+            }, 1000);
 
             // Disable dialog cancellation
 //            setCancelable(false);
 
-            thread.start();
             builder.setView(view);
             return builder.create();
 
         }
 
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!Thread.currentThread().isInterrupted()) {
-                    mCount = mPort.read(readBuf, readBuf.length);
-                    if (mCount > 0) {
-                        String messageText = new String(readBuf, 0, mCount);
-                        Log.d(TAG, "run: messageText = " + messageText);
-                        requireActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                tv.setText(messageText);
-                            }
-                        });
-
-                        if (messageText.contains("OK")) {
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "Received = run onPause()");
-        Log.d(TAG, "Received = current thread: " + Thread.currentThread().toString());
-        thread.interrupt();
+    public void setmStr(String mStr) {
+        this.mStr = mStr;
     }
-
-
-
-
-
-
-
-
-
 }

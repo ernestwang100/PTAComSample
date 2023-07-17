@@ -36,8 +36,8 @@ public class ThresholdTimeFragment extends Fragment {
         resttimeTV.setOnClickListener(v -> showTimePickerDialog((TextView) v));
 
 
-        cmdStart = "$LCD+SET DRIVE TIME=";
-//        cmdStart = "$LCD+SET THRESHOLD TIME=";
+//        cmdStart = "$LCD+SET DRIVE TIME=";
+        cmdStart = "$LCD+SET THRESHOLD TIME=";
 
         return view;
     }
@@ -73,7 +73,15 @@ public class ThresholdTimeFragment extends Fragment {
     }
 
     public void updateValues(String[] temp){
-        drivetimeTV.setText(temp[0] + ":" + temp[1]);
-//        resttimeTV.setText(temp[2] + ":" + temp[3]);
+        drivetimeTV.setText(addZero(temp[0]) + ":" + addZero(temp[1]));
+        resttimeTV.setText(addZero(temp[2]) + ":" + addZero(temp[3]));
+    }
+
+    //    add 0 in front of single digit numbers
+    public String addZero(String num) {
+        if (num.length() == 1) {
+            num = "0" + num;
+        }
+        return num;
     }
 }

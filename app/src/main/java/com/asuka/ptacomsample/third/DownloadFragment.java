@@ -17,6 +17,8 @@ import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.main.RecvThread;
 
+import java.text.SimpleDateFormat;
+
 public class DownloadFragment extends Fragment {
     private RadioGroup radioGroupDownload;
     private String cmd, cmdStart, temp[];
@@ -40,10 +42,10 @@ public class DownloadFragment extends Fragment {
                     showDatePickerDialog();
                     break;
                 case R.id.download2RB:
-                    cmd = cmdStart + "2,0";
+                    cmd = cmdStart + "0";
                     break;
                 case R.id.download3RB:
-                    cmd = cmdStart + "3,24";
+                    showNumberPickerDialog();
                     break;
 
             }
@@ -51,28 +53,6 @@ public class DownloadFragment extends Fragment {
 
 //        TODO: cmd
         cmdStart = "$LCD+DOWNLOAD=";
-//        handler = new Handler(Looper.getMainLooper()) {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                Log.d(TAG, "handleMessage: " + msg.obj.toString());
-//                temp = msg.obj.toString().split(",");
-//                for (int i = 0; i < temp.length; i++) {
-//                    temp[i] = temp[i].trim();
-//                }
-//
-//                switch (temp[0]) {
-//                    case "0":
-//                        Log.d(TAG, "handleMessage: processing complete");
-//                        break;
-//                    case "1":
-//                        Log.d(TAG, "handleMessage: processing");
-//                        break;
-//                    case "2":
-//                        Log.d(TAG, "handleMessage: processing error");
-//                        break;
-//                }
-//            }
-//        };
 
         return view;
     }
@@ -83,18 +63,34 @@ public class DownloadFragment extends Fragment {
             // Handle the selected date
             String selectedDate = String.format("%04d%02d%02d", year, month + 1, day);
             RadioButton download1RB = getView().findViewById(R.id.download1RB);
-            download1RB.setText(selectedDate + " 下載");
+            String formattedDate = String.format("%04d/%02d/%02d", year, month + 1, day);
+            download1RB.setText(formattedDate);
 
-            cmd = cmdStart + "1," + selectedDate;
+            cmd = cmdStart + selectedDate;
         });
         datePickerFragment.show(getFragmentManager(), "datePicker");
     }
+
+    private void showNumberPickerDialog() {
+        NumberPickerFragment numberPickerFragment = new NumberPickerFragment(1, 24, 1, 8);
+        numberPickerFragment.setOnNumberSelectedListener(new NumberPickerFragment.OnNumberSelectedListener() {
+            @Override
+            public void onNumberSelected(int numberPickerId, int selectedValue) {
+                RadioButton download3RB = getView().findViewById(R.id.download3RB);
+                download3RB.setText("最近" + selectedValue + "小時");
+
+                cmd = cmdStart + selectedValue;
+            }
+        });
+        numberPickerFragment.show(getFragmentManager(), "numberPicker");
+    }
+
 
     public String getCmd() {
         return cmd;
     }
 
-    public void updateValues(String[] temp){
+    public void updateValues(String[] temp) {
 //        default set as download1RB
         radioGroupDownload.check(R.id.download1RB);
     }

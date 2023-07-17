@@ -45,6 +45,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private SystemTimeFragment systemTimeFragment;
     private BrightnessFragment brightnessFragment;
     private Fragment selectedFragment = null;
+    private WaitingFragment waitingFragment;
 
     private static final String TAG = "SettingDetailsActivity";
 
@@ -121,6 +122,23 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 Log.d(TAG, "onCreate: cmd = " + cmd);
                 writeDataToPort(cmd);
                 showWaitingFragment();
+//                TODO: 這邊要改成等待回傳的方式
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "run: temp[0] = " + temp[0]);
+                        if(temp[0].equals("0")){
+                            waitingFragment.setmStr("處理完成");
+                            waitingFragment.dismiss();
+                        } else {
+                            waitingFragment.setmStr("處理中...");
+                        }
+
+                    }
+                }, 1000);
+
+
             } else {
                 Log.d(TAG, "onCreate: cmd = " + cmd);
                 writeDataToPort(cmd);
@@ -178,7 +196,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                     printFragment = new PrintFragment();
                 selectedFragment = printFragment;
                 cmdStart = "$LCD+PRINT=";
-                this.unfreezeButtons();
+//                this.unfreezeButtons();
 
                 layoutParams.setMargins(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()), 0, 0);
                 settingDetailsFragmentContainer.setLayoutParams(layoutParams);
@@ -196,8 +214,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 if (drivingThresholdTimeFragment == null)
                     drivingThresholdTimeFragment = new ThresholdTimeFragment();
                 selectedFragment = drivingThresholdTimeFragment;
-                cmdStart = "$LCD+SET DRIVE TIME=";
-//                cmdStart = "$LCD+SET THRESHOLD TIME=";
+                cmdStart = "$LCD+SET THRESHOLD TIME=";
                 break;
 
             case 6:
@@ -225,6 +242,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 if (brightnessFragment == null)
                     brightnessFragment = new BrightnessFragment();
                 selectedFragment = brightnessFragment;
+                cmdStart = "$LCD+INFO=";
                 this.unfreezeButtons();
                 break;
 
@@ -232,6 +250,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 if (manufacturerFragment == null)
                     manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
+                cmdStart = "$LCD+INFO=";
                 this.unfreezeButtons();
                 break;
             default:
@@ -291,7 +310,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     }
 
     private void showWaitingFragment() {
-        WaitingFragment waitingFragment = new WaitingFragment();
+        waitingFragment = new WaitingFragment();
         waitingFragment.show(getSupportFragmentManager(), "waiting");
     }
 

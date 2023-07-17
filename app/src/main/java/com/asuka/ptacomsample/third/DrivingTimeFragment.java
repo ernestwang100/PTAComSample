@@ -45,12 +45,23 @@ public class DrivingTimeFragment extends Fragment {
 
     public void updateValues(String[] temp) {
         if (temp != null && temp.length > 11) {
-            drivertimeTV1.setText(temp[0] + ":" + temp[1]);
-            drivertimeTV2.setText(temp[2] + ":" + temp[3]);
-            drivertimeTV3.setText(temp[4] + ":" + temp[5]);
-            codrivertimeTV1.setText(temp[6] + ":" + temp[7]);
-            codrivertimeTV2.setText(temp[8] + ":" + temp[9]);
-            codrivertimeTV3.setText(temp[10] + ":" + temp[11]);
+
+            drivertimeTV1.setText(addZero(temp[0]) + ":" + addZero(temp[1]));
+            drivertimeTV2.setText(addZero(temp[2]) + ":" + addZero(temp[3]));
+            drivertimeTV3.setText(addZero(temp[4]) + ":" + addZero(temp[5]));
+            codrivertimeTV1.setText(addZero(temp[6]) + ":" + addZero(temp[7]));
+            codrivertimeTV2.setText(addZero(temp[8]) + ":" + addZero(temp[9]));
+            codrivertimeTV3.setText(addZero(temp[10]) + ":" + addZero(temp[11]));
         }
     }
+
+//    add 0 in front of single digit numbers
+    public String addZero(String num) {
+        if (num.length() == 1) {
+            num = "0" + num;
+        }
+        return num;
+    }
+
+
 }

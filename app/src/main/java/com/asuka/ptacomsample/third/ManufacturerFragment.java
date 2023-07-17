@@ -32,6 +32,6 @@ public class ManufacturerFragment extends Fragment {
     }
 
     public void updateValues(String[] values) {
-        tv.setText(values[0]);
+//        tv.setText(values[0]);
     }
 }
