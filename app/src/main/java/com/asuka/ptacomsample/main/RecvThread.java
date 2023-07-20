@@ -95,7 +95,7 @@ public class RecvThread extends Thread {
 
                 if (writeData != null) Log.d(TAG, "run: writeData: " + new String(writeData));
                 // if received data is the same as the data sent
-                if (!temp[0].startsWith("$")) {
+                if (temp == null || !temp[0].startsWith("$")) {
                     messageText = "資料讀取中...";
                     Log.d(TAG, "run: start without $");
                 } else if (temp[0].contains("$VDR+WARNING")) {
