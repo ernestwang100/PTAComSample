@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -70,5 +69,12 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
     @Override
     public void unfreezeButtons() {
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mRecvThread.interrupt();
+        mPort.close();
     }
 }

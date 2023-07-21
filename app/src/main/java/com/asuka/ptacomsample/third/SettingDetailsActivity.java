@@ -83,6 +83,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 for (int i = 0; i < temp.length; i++) {
                     temp[i] = temp[i].trim();
                 }
+                Log.d(TAG, "handleMessage: temp = " + temp[0]);
                 updateValuestoFragment(temp);
             }
         };

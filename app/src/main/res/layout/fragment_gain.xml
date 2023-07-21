@@ -7,6 +7,16 @@
     android:layout_gravity="center_horizontal"
     tools:context=".third.DrivingTimeFragment">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/speed"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@id/numberPicker"
+        app:layout_constraintEnd_toStartOf="@id/numberPicker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
+
 
     <NumberPicker
         android:id="@+id/numberPicker"
@@ -25,9 +35,40 @@
         android:text="@string/value"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/numberPicker2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/numberPicker"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rpm"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@id/numberPicker2"
+        app:layout_constraintEnd_toStartOf="@id/numberPicker2"
+        app:layout_constraintStart_toEndOf="@id/tv"
+        app:layout_constraintTop_toTopOf="parent"></TextView>
+
+    <NumberPicker
+        android:id="@+id/numberPicker2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv2"
+        app:layout_constraintStart_toEndOf="@id/tv"
+        app:layout_constraintTop_toTopOf="parent"></NumberPicker>
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/value"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="@id/numberPicker"/>
+        app:layout_constraintStart_toEndOf="@id/numberPicker2"/>
 
 
 

@@ -18,7 +18,7 @@ import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.main.RecvThread;
 
 public class GainFragment extends Fragment {
-    private NumberPicker numberPicker;
+    private NumberPicker numberPicker, numberPicker2;
     private String cmd, cmdStart, temp[];
     private int gainType;
     private static final String TAG = "GainFragment";
@@ -34,26 +34,34 @@ public class GainFragment extends Fragment {
 
     }
 
+//    cmdStart = "$LCD+GAIN=";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gain, container, false);
 
         numberPicker = view.findViewById(R.id.numberPicker);
         numberPicker.setMaxValue(1000);
-        numberPicker.setMinValue(1);
+        numberPicker.setMinValue(0);
         int hour = numberPicker.getValue();
+
+        numberPicker2 = view.findViewById(R.id.numberPicker2);
+        numberPicker2.setMaxValue(1000);
+        numberPicker2.setMinValue(0);
 
         return view;
     }
 
     public String getCmd() {
         cmd = cmdStart + numberPicker.getValue();
+//        cmd = cmdStart + numberPicker.getValue() + numberPicker2.getValue();
         return cmd;
     }
 
     public void updateValues(String[] temp) {
         if(temp.length > 0 && temp[0] != null && !temp[0].isEmpty() && TextUtils.isDigitsOnly(temp[0])) {
             numberPicker.setValue(Integer.parseInt(temp[0]));
+//            numberPicker2.setValue(Integer.parseInt(temp[1]));
         }
     }
 }

@@ -53,6 +53,8 @@
     <string name="driverstatus3">休息</string>
     <string name="screenbrightness">亮度調整</string>
     <string name="drivingtime">00:00</string>
+    <string name="speed">車速</string>
+    <string name="rpm">轉速</string>
 
 
     <string-array name="setting_full_txt">
@@ -62,11 +64,11 @@
         <item>列印功能</item>
         <item>資料下載</item>
         <item>活動時間門檻設定</item>
-        <item>車速GAIN值設定</item>
-        <item>轉速GAIN值設定</item>
+        <item>GAIN值設定</item>
+        <item>抽換掉</item>
         <item>系統時間設定</item>
         <item>螢幕亮度設定</item>
-        <item>車機廠商資料</item>
+        <item>車機資訊</item>
     </string-array>
 
 

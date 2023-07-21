@@ -1,7 +1,6 @@
 package com.asuka.ptacomsample.main;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;

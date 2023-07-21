@@ -44,7 +44,8 @@ public class DrivingTimeFragment extends Fragment {
     }
 
     public void updateValues(String[] temp) {
-        if (temp != null && temp.length > 11) {
+        if (temp != null && temp.length == 12) {
+            Log.d(TAG, "updateValues: temp: " + temp[0] + " " + temp[1] + " " + temp[2] + " " + temp[3] + " " + temp[4] + " " + temp[5] + " " + temp[6] + " " + temp[7] + " " + temp[8] + " " + temp[9] + " " + temp[10] + " " + temp[11]);
 
             drivertimeTV1.setText(addZero(temp[0]) + ":" + addZero(temp[1]));
             drivertimeTV2.setText(addZero(temp[2]) + ":" + addZero(temp[3]));
