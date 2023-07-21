@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    tools:context=".third.DriverStatusFragment">
+    android:padding="16dp">
 
-    <TableLayout
+    <!-- Left Column -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/leftColumn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightColumn"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- First Column -->
-        <TableRow
+        <!-- Driver TextView -->
+        <TextView
+            android:id="@+id/driverTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:text="@string/driver"
+            android:textSize="30sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/driverTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/driver"
-                android:textSize="30sp" />
+        <!-- Driver EditText -->
+        <EditText
+            android:id="@+id/driverCodeEdt"
+            android:layout_width="0dp"
+            android:layout_height="48sp"
+            android:hint="@string/inputcode"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/driverTV" />
 
-            <EditText
-                android:id="@+id/driverCodeEdt"
-                android:layout_width="wrap_content"
-                android:layout_height="48sp"
-                android:hint="@string/inputcode">
+        <!-- Driver RadioGroup -->
+        <RadioGroup
+            android:id="@+id/DRBtnGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/driverCodeEdt">
 
-            </EditText>
-
-        </TableRow>
-
-        <TableRow>
-
-            <RadioGroup
-                android:id="@+id/DRBtnGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <!-- Add RadioButtons here -->
+            <TableRow>
 
                 <RadioButton
                     android:id="@+id/DRBtn0"
@@ -59,6 +60,9 @@
                     android:layout_height="100sp"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus1" />
+            </TableRow>
+
+            <TableRow>
 
                 <RadioButton
                     android:id="@+id/DRBtn2"
@@ -73,39 +77,53 @@
                     android:layout_height="100sp"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus3" />
-            </RadioGroup>
-        </TableRow>
+            </TableRow>
 
-        <!-- Second Column -->
-        <TableRow
+
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Right Column -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rightColumn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/leftColumn"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Codriver TextView -->
+        <TextView
+            android:id="@+id/codriverTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:text="@string/coDriver"
+            android:textSize="30sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/codriverTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="203dp"
-                android:text="@string/coDriver"
-                android:textSize="30sp" />
+        <!-- Codriver EditText -->
+        <EditText
+            android:id="@+id/codriverCodeEdt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/inputcode"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/codriverTV" />
 
+        <!-- Codriver RadioGroup -->
+        <RadioGroup
+            android:id="@+id/CRBtnGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/codriverCodeEdt">
 
-            <EditText
-                android:id="@+id/codriverCodeEdt"
-                android:layout_width="46dp"
-                android:layout_height="48sp"
-                android:hint="@string/inputcode"></EditText>
-
-        </TableRow>
-
-        <TableRow>
-
-            <RadioGroup
-                android:id="@+id/CRBtnGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <!-- Add RadioButtons here -->
+            <TableRow>
 
                 <RadioButton
                     android:id="@+id/CRBtn0"
@@ -121,6 +139,10 @@
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus1" />
 
+            </TableRow>
+
+            <TableRow>
+
                 <RadioButton
                     android:id="@+id/CRBtn2"
                     android:layout_width="wrap_content"
@@ -134,9 +156,11 @@
                     android:layout_height="100sp"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus3" />
-            </RadioGroup>
-        </TableRow>
-    </TableLayout>
+            </TableRow>
+
+
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
