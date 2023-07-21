@@ -8,15 +8,6 @@
     <string name="confirmBtnCover">確　定</string>
     <string name="printBtnCover">列　印</string>
     <string name="mainWelcomeTV">歡迎使用\n數位行車記錄器\n祝您行車平安</string>
-    <string name="contentTV1">2023/03/01\n09:41:00\n速度 000.0 km/h\n駕駛FFFFFFF車停</string>
-    <string name="contentTV2">主駕駛\nFFFFFFFF 車停中\n共同駕駛\nFFFFFFFF 車停中</string>
-    <string name="contentTV3">警告資訊\n(超時駕駛警告)\n(印表機缺紙警告)\n(斷電警告)</string>
-    <string name="contentTV4">BUS-ID:------\nHW-ID: HW3.2D\nFW-ID: 1.003\n日期: 20210914</string>
-    <string name="contentTV5">GPS 狀態: A\n衛星數: 08\n日期: 2022/03/01\n時間:03:41:38</string>
-    <string name="contentTV6">里程 0001159.3 km\nVIN: XXXXXXXXXX\nXXXXXXXXXX</string>
-    <string name="contentTV7">GSM CSQ: 27\nAPN: internet\n伺服器 XX 連線\n(伺服器 2 連線)</string>
-    <string name="contentTV8">伺服器資訊\nIP Addr: 60.251.157.47\nPort: 8208</string>
-    <string name="contentTV9">伺服器資訊2\nIP Addr: 60.251.157.47\nPort: 8208</string>
     <string name="contentMainMenuText1">駕駛設定</string>
     <string name="contentMainMenuText2">列印功能</string>
     <string name="contentMainMenuText3">資料下載</string>
@@ -65,9 +56,9 @@
 
 
     <string-array name="setting_full_txt">
-        <item>駕駛活動變更</item>
-        <item>駕駛代碼輸入</item>
-        <item>駕駛活動時間顯示</item>
+        <item>即時資訊</item>
+        <item>活動變更</item>
+        <item>活動時間</item>
         <item>列印功能</item>
         <item>資料下載</item>
         <item>活動時間門檻設定</item>
@@ -78,28 +69,6 @@
         <item>車機廠商資料</item>
     </string-array>
 
-    <string-array name="setting_details_txt">
-        <item> 主駕駛共同駕駛待班休息</item>
-        <item>主駕駛共同駕駛FFFFFFFF</item>
-        <item>主駕駛00:00共同駕駛00:00</item>
-        <item>主駕駛00:00共同駕駛00:00</item>
-        <item>列印中(列印完成)</item>
-        <item>列印中(列印完成)</item>
-        <item>列印中(列印完成)</item>
-        <item>列印中(列印完成)</item>
-        <item>列印中(列印完成)</item>
-        <item>請輸入下載小時0 ~ 24</item>
-        <item>請輸入下載小時0 ~ 24</item>
-        <item>請輸入日期2023/04/20</item>
-        <item>系統時間設定2023/04/2600:00:00</item>
-        <item>連續行使門檻時間設定00:00</item>
-        <item>累計休息門檻時間設定00:00</item>
-        <item>車速GAIN值設定000</item>
-        <item>轉速GAIN值設定000</item>
-        <item>螢幕亮度設定ON / OFF</item>
-        <item>捷世林科技地址車機訊息公告</item>
-
-    </string-array>
 
     <string-array name="driver_status">
         <item>車停</item>

@@ -39,18 +39,21 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
         tv = findViewById(R.id.tv);
         themeSW = findViewById(R.id.themeSwitchButton);
         listFAB = findViewById(R.id.listFAB);
+
         writeData = "$LCD+PAGE=0".getBytes();
-        mRecvThread = new RecvThread(handler, mPort, writeData, this,this);
-        mRecvThread.start();
+        mPort.write(writeData, writeData.length);
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                tv.setText(new String((byte[]) msg.obj));
+                tv.setText(msg.obj.toString());
             }
         };
+        mRecvThread = new RecvThread(handler, mPort, writeData, this,this);
+        mRecvThread.start();
 
         listFAB.setOnClickListener(v -> {
+            writeData = "$LCD+PAGE=98".getBytes();
+            mPort.write(writeData, writeData.length);
             mRecvThread.interrupt();
             Intent intent = new Intent(this, SettingListActivity.class);
             startActivity(intent);

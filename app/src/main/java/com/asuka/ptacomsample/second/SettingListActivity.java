@@ -31,7 +31,7 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
     private byte[] writeData;
     private String[] temp;
     private static final String TAG = "SettingListActivity";
-    private int[] images = {R.drawable.baseline_people_48, R.drawable.baseline_people_48, R.drawable.baseline_access_time_48, R.drawable.baseline_print_48, R.drawable.baseline_file_download_48, R.drawable.baseline_access_time_48, R.drawable.baseline_drive_eta_48, R.drawable.baseline_drive_eta_48, R.drawable.baseline_access_time_48, R.drawable.baseline_lightbulb_circle_48, R.drawable.baseline_info_48};
+    private int[] images = {R.drawable.baseline_flare_48, R.drawable.baseline_people_48, R.drawable.baseline_access_time_48, R.drawable.baseline_print_48, R.drawable.baseline_file_download_48, R.drawable.baseline_access_time_48, R.drawable.baseline_drive_eta_48, R.drawable.baseline_drive_eta_48, R.drawable.baseline_access_time_48, R.drawable.baseline_lightbulb_circle_48, R.drawable.baseline_info_48};
 
     public SettingListActivity(){
         super();
@@ -95,7 +95,6 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
 
     private void setSettingModels() {
         String[] settingNames = getResources().getStringArray(R.array.setting_full_txt);
-        String[] settingDetails = getResources().getStringArray(R.array.setting_details_txt);
 
         Log.d("settingNames", String.valueOf(settingNames.length));
         for (int i = 0; i < settingNames.length; i++) {
@@ -115,7 +114,6 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
 //        bundle.putStringArrayList("TITLES", getResources().getStringArray(R.array.setting_full_txt));
 
         intent.putExtra("TITLES", getResources().getStringArray(R.array.setting_full_txt));
-        intent.putExtra("DETAILS", getResources().getStringArray(R.array.setting_details_txt));
         intent.putExtra("INDEX", position);
         startActivity(intent);
     }

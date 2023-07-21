@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.main.ButtonFreezeListener;
+import com.asuka.ptacomsample.main.LiveActivity;
 import com.asuka.ptacomsample.main.RecvThread;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
@@ -163,6 +164,13 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         switch (round) {
             case 0:
+//                cmdStart = "$LCD+PAGE=0";
+                Intent intent = new Intent();
+                intent.setClass(SettingDetailsActivity.this, LiveActivity.class);
+                startActivity(intent);
+                break;
+
+            case 1:
                 if (driverStatusFragment == null)
                     driverStatusFragment = new DriverStatusFragment();
                 selectedFragment = driverStatusFragment;
@@ -173,13 +181,6 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 settingDetailsFragmentContainer.setLayoutParams(layoutParams);
                 break;
 
-            case 1:
-                if (driverCodeFragment == null)
-                    driverCodeFragment = new DriverCodeFragment();
-                selectedFragment = driverCodeFragment;
-                cmdStart = "$LCD+DRIVER IN=";
-
-                break;
             case 2:
                 if (drivingTimeFragment == null)
                     drivingTimeFragment = new DrivingTimeFragment();
