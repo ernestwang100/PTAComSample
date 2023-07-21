@@ -24,7 +24,6 @@ import java.util.ArrayList;
 public class SettingListActivity extends AppCompatActivity implements RecyclerViewInterface {
     ArrayList<SettingListModel> settingListModels = new ArrayList<>();
     RecyclerView recyclerView;
-    Button homeBtn, upBtn, downBtn;
     private Handler handler;
     private ComPort mPort;
     private RecvThread mRecvThread;
@@ -47,11 +46,7 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         recyclerView = findViewById(R.id.settingrecycle);
-        homeBtn = findViewById(R.id.homeBtn);
-        upBtn = findViewById(R.id.upBtn);
-        downBtn = findViewById(R.id.downBtn);
-//        writeData = "$LCD+PAGE=99".getBytes();
-//        mPort.write(writeData, writeData.length);
+
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -69,27 +64,7 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
         recyclerView.setAdapter(settingListAdapter);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 //        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-
-
-        homeBtn.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setClass(SettingListActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
-        upBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                recyclerView.scrollBy(0, -100);
-            }
-        });
-
-        downBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                recyclerView.scrollBy(0, 100);
-            }
-        });
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
     }
 
 

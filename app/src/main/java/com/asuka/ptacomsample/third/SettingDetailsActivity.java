@@ -164,7 +164,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         switch (round) {
             case 0:
-//                cmdStart = "$LCD+PAGE=0";
+                cmdStart = "$LCD+PAGE=0";
                 Intent intent = new Intent();
                 intent.setClass(SettingDetailsActivity.this, LiveActivity.class);
                 startActivity(intent);
