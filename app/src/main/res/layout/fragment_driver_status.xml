@@ -25,9 +25,17 @@
                 android:id="@+id/driverTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="203dp"
                 android:text="@string/driver"
                 android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/driverCodeEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="48sp"
+                android:hint="@string/inputcode">
+
+            </EditText>
+
         </TableRow>
 
         <TableRow>
@@ -81,6 +89,13 @@
                 android:layout_marginEnd="203dp"
                 android:text="@string/coDriver"
                 android:textSize="30sp" />
+
+
+            <EditText
+                android:id="@+id/codriverCodeEdt"
+                android:layout_width="46dp"
+                android:layout_height="48sp"
+                android:hint="@string/inputcode"></EditText>
 
         </TableRow>
 

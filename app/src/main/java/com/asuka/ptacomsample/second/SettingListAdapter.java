@@ -36,6 +36,7 @@ public class SettingListAdapter extends RecyclerView.Adapter<SettingListAdapter.
     @Override
     public void onBindViewHolder(@NonNull SettingListAdapter.MyHolder holder, int position) {
         holder.settingName.setText(settingListModels.get(position).getSettingName());
+        holder.settingImage.setImageResource(settingListModels.get(position).getImage());
     }
 
     @Override
@@ -50,6 +51,7 @@ public class SettingListAdapter extends RecyclerView.Adapter<SettingListAdapter.
         public MyHolder(@NonNull View itemView, RecyclerViewInterface recyclerViewInterface) {
             super(itemView);
             settingName = itemView.findViewById(R.id.textView);
+            settingImage = itemView.findViewById(R.id.imageView);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

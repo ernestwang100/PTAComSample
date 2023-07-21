@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.main.MainActivity;
@@ -31,6 +31,7 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
     private byte[] writeData;
     private String[] temp;
     private static final String TAG = "SettingListActivity";
+    private int[] images = {R.drawable.baseline_people_48, R.drawable.baseline_people_48, R.drawable.baseline_access_time_48, R.drawable.baseline_print_48, R.drawable.baseline_file_download_48, R.drawable.baseline_access_time_48, R.drawable.baseline_drive_eta_48, R.drawable.baseline_drive_eta_48, R.drawable.baseline_access_time_48, R.drawable.baseline_lightbulb_circle_48, R.drawable.baseline_info_48};
 
     public SettingListActivity(){
         super();
@@ -66,7 +67,9 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
 
         SettingListAdapter settingListAdapter = new SettingListAdapter(this, settingListModels, this);
         recyclerView.setAdapter(settingListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
 
 
         homeBtn.setOnClickListener(v -> {
@@ -96,7 +99,9 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
 
         Log.d("settingNames", String.valueOf(settingNames.length));
         for (int i = 0; i < settingNames.length; i++) {
-            settingListModels.add(new SettingListModel(settingNames[i], settingDetails[i]));
+//            settingListModels.add(new SettingListModel(settingNames[i], settingDetails[i]));
+
+            settingListModels.add(new SettingListModel(settingNames[i], images[i]));
         }
     }
 
