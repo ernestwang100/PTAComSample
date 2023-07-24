@@ -9,6 +9,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
@@ -57,6 +58,17 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
             Intent intent = new Intent(this, SettingListActivity.class);
             startActivity(intent);
             finish();
+        });
+
+        themeSW.setOnClickListener(v -> {
+            runOnUiThread(() -> {
+                if (!themeSW.isChecked()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+//                recreate();
+            });
         });
     }
 
