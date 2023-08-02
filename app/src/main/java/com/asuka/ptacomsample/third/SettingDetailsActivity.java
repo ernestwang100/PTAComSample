@@ -47,6 +47,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private BrightnessFragment brightnessFragment;
     private Fragment selectedFragment = null;
     private WaitingFragment waitingFragment;
+    private GpsFragment gpsFragment;
 
     private static final String TAG = "SettingDetailsActivity";
 
@@ -227,10 +228,10 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
 
             case 7:
-                if (rpmGainFragment == null)
-                    rpmGainFragment = new GainFragment(1);
-                selectedFragment = rpmGainFragment;
-                cmdStart = "$LCD+RPM GAIN=";
+                if (gpsFragment == null)
+                    gpsFragment = new GpsFragment();
+                selectedFragment = gpsFragment;
+                cmdStart = "$LCD+PAGE=4";
                 break;
 
             case 8:
@@ -379,6 +380,8 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             ((PrintFragment) selectedFragment).updateValues(temp);
         } else if (selectedFragment instanceof DownloadFragment) {
             ((DownloadFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof GpsFragment) {
+            ((GpsFragment) selectedFragment).updateValues(temp);
         }
     }
 

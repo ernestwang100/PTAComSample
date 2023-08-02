@@ -67,7 +67,7 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
-//                recreate();
+                recreate();
             });
         });
     }

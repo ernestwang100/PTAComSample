@@ -71,11 +71,11 @@ public class MainActivity extends AppCompatActivity implements ButtonFreezeListe
         themeSW.setOnClickListener(v -> {
             runOnUiThread(() -> {
                 if (!themeSW.isChecked()) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 }
-//                recreate();
+                recreate();
             });
         });
 

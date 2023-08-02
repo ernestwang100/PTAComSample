@@ -24,7 +24,7 @@ public class RecvThread extends Thread {
     private byte[] readBuf, writeData;
     private ComPort mPort;
     private Handler handler;
-    private String temp[], warningMsg;
+    private String temp[], warningMsg, numberString;
     private boolean isRunning = true;
     private Context context;
     private Message msg;
@@ -116,8 +116,9 @@ public class RecvThread extends Thread {
 
                     openWarningDialog(messageText);
                 } else if (writeData!= null && temp[0].contains("$VDR+SHOW DATA")) {
-
-                    boolean istheSame = new String(writeData).split("=")[1].equals(temp[1].trim());
+                    Log.d(TAG, "run: temp[1]: " + temp[1]);
+                    numberString = extractNumberFromString(new String(writeData));
+                    boolean istheSame = numberString.equals(temp[1].trim());
                     if (istheSame) {
 
                         switch (temp[1]) {
@@ -287,6 +288,19 @@ public class RecvThread extends Thread {
                 }
             });
         }
+    }
+
+    public static String extractNumberFromString(String input) {
+        StringBuilder numberString = new StringBuilder();
+
+        for (char ch : input.toCharArray()) {
+            if (Character.isDigit(ch)) {
+                numberString.append(ch);
+            }
+        }
+
+        // Parse the extracted number as an integer
+        return numberString.toString();
     }
 
     public static String extractWordsBetweenSymbols(String input, String startSymbol, String endSymbol) {
