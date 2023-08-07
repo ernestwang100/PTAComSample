@@ -68,6 +68,7 @@
         <item>衛星狀態</item>
         <item>系統時間設定</item>
         <item>螢幕亮度設定</item>
+        <item>事件紀錄</item>
         <item>車機資訊</item>
     </string-array>
 

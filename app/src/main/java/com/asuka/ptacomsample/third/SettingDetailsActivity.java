@@ -48,6 +48,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private Fragment selectedFragment = null;
     private WaitingFragment waitingFragment;
     private GpsFragment gpsFragment;
+    private EventFragment eventFragment;
 
     private static final String TAG = "SettingDetailsActivity";
 
@@ -131,7 +132,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                     @Override
                     public void run() {
                         Log.d(TAG, "run: temp[0] = " + temp[0]);
-                        if(temp[0].equals("0")){
+                        if (temp[0].equals("0")) {
                             waitingFragment.setmStr("處理完成");
                             waitingFragment.dismiss();
                         } else {
@@ -250,6 +251,13 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
 
             case 10:
+                if (eventFragment == null)
+                    eventFragment = new EventFragment();
+                selectedFragment = eventFragment;
+                cmdStart = "$LCD+PAGE=2";
+                break;
+
+            case 11:
                 if (manufacturerFragment == null)
                     manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
@@ -260,7 +268,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
         }
         writeData = (cmdStart + "?").getBytes();
-        if(writeData!=null) Log.d(TAG, "run: writeData: " + new String(writeData));
+        if (writeData != null) Log.d(TAG, "run: writeData: " + new String(writeData));
         mRecvThread.setWriteData(writeData);
         if (selectedFragment != null) {
             // Get the reference to the fragment container
@@ -382,6 +390,8 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             ((DownloadFragment) selectedFragment).updateValues(temp);
         } else if (selectedFragment instanceof GpsFragment) {
             ((GpsFragment) selectedFragment).updateValues(temp);
+        } else if (selectedFragment instanceof EventFragment) {
+            ((EventFragment) selectedFragment).updateValues(temp);
         }
     }
 
