@@ -45,39 +45,39 @@
             app:layout_constraintTop_toBottomOf="@+id/driverCodeEdt">
 
             <!-- Add RadioButtons here -->
-            <TableRow>
+<!--            <TableRow>-->
 
                 <RadioButton
                     android:id="@+id/DRBtn0"
                     android:layout_width="wrap_content"
-                    android:layout_height="100sp"
+                    android:layout_height="wrap_content"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus0" />
 
                 <RadioButton
                     android:id="@+id/DRBtn1"
                     android:layout_width="wrap_content"
-                    android:layout_height="100sp"
+                    android:layout_height="wrap_content"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus1" />
-            </TableRow>
+<!--            </TableRow>-->
 
-            <TableRow>
+<!--            <TableRow>-->
 
                 <RadioButton
                     android:id="@+id/DRBtn2"
                     android:layout_width="wrap_content"
-                    android:layout_height="100sp"
+                    android:layout_height="wrap_content"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus2" />
 
                 <RadioButton
                     android:id="@+id/DRBtn3"
                     android:layout_width="wrap_content"
-                    android:layout_height="100sp"
+                    android:layout_height="wrap_content"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus3" />
-            </TableRow>
+<!--            </TableRow>-->
 
 
         </RadioGroup>
@@ -123,40 +123,40 @@
             app:layout_constraintTop_toBottomOf="@+id/codriverCodeEdt">
 
             <!-- Add RadioButtons here -->
-            <TableRow>
+<!--            <TableRow>-->
 
                 <RadioButton
                     android:id="@+id/CRBtn0"
                     android:layout_width="wrap_content"
-                    android:layout_height="100sp"
+                    android:layout_height="wrap_content"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus0" />
 
                 <RadioButton
                     android:id="@+id/CRBtn1"
                     android:layout_width="wrap_content"
-                    android:layout_height="100sp"
+                    android:layout_height="wrap_content"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus1" />
 
-            </TableRow>
+<!--            </TableRow>-->
 
-            <TableRow>
+<!--            <TableRow>-->
 
                 <RadioButton
                     android:id="@+id/CRBtn2"
                     android:layout_width="wrap_content"
-                    android:layout_height="100sp"
+                    android:layout_height="wrap_content"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus2" />
 
                 <RadioButton
                     android:id="@+id/CRBtn3"
                     android:layout_width="wrap_content"
-                    android:layout_height="100sp"
+                    android:layout_height="wrap_content"
                     android:hint="@string/inputcode"
                     android:text="@string/driverstatus3" />
-            </TableRow>
+<!--            </TableRow>-->
 
 
         </RadioGroup>

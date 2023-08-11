@@ -122,6 +122,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             cmd = getCmdFromSelectedFragment();
             if (needLoginCredentials()) {
                 showLoginFragment();
+                unfreezeButtons();
             } else if (needWaiting()) {
                 Log.d(TAG, "onCreate: cmd = " + cmd);
                 writeDataToPort(cmd);
@@ -223,9 +224,9 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
             case 6:
                 if (speedGainFragment == null)
-                    speedGainFragment = new GainFragment(0);
+                    speedGainFragment = new GainFragment();
                 selectedFragment = speedGainFragment;
-                cmdStart = "$LCD+SPEED GAIN=";
+                cmdStart = "$LCD+GAIN=";
                 break;
 
             case 7:
@@ -247,7 +248,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                     brightnessFragment = new BrightnessFragment();
                 selectedFragment = brightnessFragment;
                 cmdStart = "$LCD+INFO=";
-                this.unfreezeButtons();
+//                this.unfreezeButtons();
                 break;
 
             case 10:
@@ -262,14 +263,18 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                     manufacturerFragment = new ManufacturerFragment();
                 selectedFragment = manufacturerFragment;
                 cmdStart = "$LCD+INFO=";
-                this.unfreezeButtons();
+//                this.unfreezeButtons();
                 break;
             default:
                 break;
         }
-        writeData = (cmdStart + "?").getBytes();
-        if (writeData != null) Log.d(TAG, "run: writeData: " + new String(writeData));
+        if (!cmdStart.contains("PAGE")){
+            writeData = (cmdStart + "?").getBytes();
+        }else{
+            writeData = cmdStart.getBytes();
+        }
         mRecvThread.setWriteData(writeData);
+
         if (selectedFragment != null) {
             // Get the reference to the fragment container
             FrameLayout fragmentContainer = findViewById(R.id.settingDetailsFragmentContainer);

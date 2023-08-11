@@ -123,8 +123,8 @@ public class RecvThread extends Thread {
 
                         switch (temp[1]) {
                             case "0":
-//                            Log.d(TAG, "run: temp.length: " + temp.length);
-                                if (temp.length == 8) {
+                            Log.d(TAG, "run: temp.length: " + temp.length);
+                                if (temp.length == 10) {
                                     messageText = temp[2] + "\n" + temp[3] + "\n" + "速度 " + temp[4] + " km/h\n" + "駕駛 " + temp[5];
                                     switch (temp[6].trim()) {
                                         case "0":
@@ -140,6 +140,23 @@ public class RecvThread extends Thread {
                                             messageText += " 休息";
                                             break;
                                     }
+                                    messageText += "\n共同駕駛 " + temp[7];
+                                    switch (temp[8].trim()) {
+                                        case "0":
+                                            messageText += " 車停";
+                                            break;
+                                        case "1":
+                                            messageText += " 行駛";
+                                            break;
+                                        case "2":
+                                            messageText += " 待班";
+                                            break;
+                                        case "3":
+                                            messageText += " 休息";
+                                            break;
+                                    }
+
+
                                 } else {
                                     messageText = "資料讀取中...";
                                 }

@@ -23,22 +23,12 @@ public class GainFragment extends Fragment {
     private int gainType;
     private static final String TAG = "GainFragment";
 
-    public GainFragment(int gainType) {
-        this.gainType = gainType;
 
-        if (gainType == 0) {
-            cmdStart = "$LCD+SPEED GAIN=";
-        } else {
-            cmdStart = "$LCD+RPM GAIN=";
-        }
-
-    }
-
-//    cmdStart = "$LCD+GAIN=";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gain, container, false);
+        cmdStart = "$LCD+GAIN=";
 
         numberPicker = view.findViewById(R.id.numberPicker);
         numberPicker.setMaxValue(1000);
@@ -53,15 +43,15 @@ public class GainFragment extends Fragment {
     }
 
     public String getCmd() {
-        cmd = cmdStart + numberPicker.getValue();
-//        cmd = cmdStart + numberPicker.getValue() + numberPicker2.getValue();
+//        cmd = cmdStart + numberPicker.getValue();
+        cmd = cmdStart + numberPicker.getValue() + "," + numberPicker2.getValue();
         return cmd;
     }
 
     public void updateValues(String[] temp) {
         if(temp.length > 0 && temp[0] != null && !temp[0].isEmpty() && TextUtils.isDigitsOnly(temp[0])) {
             numberPicker.setValue(Integer.parseInt(temp[0]));
-//            numberPicker2.setValue(Integer.parseInt(temp[1]));
+            numberPicker2.setValue(Integer.parseInt(temp[1]));
         }
     }
 }

@@ -41,7 +41,6 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
         listFAB = findViewById(R.id.listFAB);
 
         writeData = "$LCD+PAGE=0".getBytes();
-        mPort.write(writeData, writeData.length);
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
