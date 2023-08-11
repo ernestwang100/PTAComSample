@@ -1,27 +1,23 @@
 package com.asuka.ptacomsample.third;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.util.Patterns;
-import android.widget.TableRow;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
-import com.asuka.ptacomsample.main.RecvThread;
 
 public class DriverStatusFragment extends Fragment {
     private RadioGroup radioGroupDriverStatus, radioGroupCodriverStatus;
@@ -29,9 +25,8 @@ public class DriverStatusFragment extends Fragment {
     private Integer driverStatus, codriverStatus;
 
     private String cmd, temp[], cmdStart;
-    public static final int DRIVER_STATUS = 0;
-    public static final int CODRIVER_STATUS = 1;
-    private boolean isDefaultsSet = false;
+    public static final int DRIVER_STATUS = 0, DRIVER_ID = 1, CODRIVER_STATUS = 2, CODRIVER_ID = 3;
+    private String driverCode, codriverCode;
     private static final String TAG = "DriverStatusFragment";
 
 
@@ -45,6 +40,49 @@ public class DriverStatusFragment extends Fragment {
         radioGroupCodriverStatus = view.findViewById(R.id.CRBtnGroup);
         driverCodeEdt = view.findViewById(R.id.driverCodeEdt);
         codriverCodeEdt = view.findViewById(R.id.codriverCodeEdt);
+
+        driverCodeEdt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String input = editable.toString();
+                if (input.isEmpty()) {
+                    driverCodeEdt.setError("Please enter a driver code");
+                } else if (input.length() != 8) {
+                    driverCodeEdt.setError("Driver code must be 8 characters long");
+                } else if (!isValidHexadecimal(input)) {
+                    driverCodeEdt.setError("Driver code must be a valid hexadecimal value");
+                }
+            }
+        });
+
+        codriverCodeEdt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String input = editable.toString();
+                if (input.isEmpty()) {
+                    codriverCodeEdt.setError("Please enter a codriver code");
+                } else if (input.length() != 8) {
+                    codriverCodeEdt.setError("Codriver code must be 8 characters long");
+                } else if (!isValidHexadecimal(input)) {
+                    codriverCodeEdt.setError("Codriver code must be a valid hexadecimal value");
+                }
+            }
+        });
+
+
+
 
         radioGroupDriverStatus.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -66,13 +104,13 @@ public class DriverStatusFragment extends Fragment {
         InputFilter hexInputFilter = new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                // Define the regular expression pattern for hexadecimal characters (0-9, A-F, a-f)
-                String regexPattern = "[0-9A-Fa-f]+";
+                // Define the regular expression pattern for hexadecimal characters (0-9, A-F)
+                String regexPattern = "[0-9A-F]+";
 
                 // Combine the existing text with the new text being inserted
                 String newText = dest.subSequence(0, dstart) + source.toString() + dest.subSequence(dend, dest.length());
 
-                // Check if the new text matches the pattern (i.e., only contains 0-9, A-F, or a-f)
+                // Check if the new text matches the pattern (i.e., only contains 0-9, A-F)
                 if (!newText.matches(regexPattern)) {
                     // Reject the new input by returning an empty string (no changes will be made to the EditText)
                     Toast.makeText(getContext(), "Only hexadecimal characters are allowed", Toast.LENGTH_SHORT).show();
@@ -84,14 +122,32 @@ public class DriverStatusFragment extends Fragment {
             }
         };
 
+
+
+        InputFilter eightDigitInputFilter = new InputFilter.LengthFilter(8);
+
         // Set the input filter to the driverCodeEdt and codriverCodeEdt EditTexts
-        driverCodeEdt.setFilters(new InputFilter[]{hexInputFilter});
-        codriverCodeEdt.setFilters(new InputFilter[]{hexInputFilter});
+        driverCodeEdt.setFilters(new InputFilter[]{hexInputFilter, eightDigitInputFilter});
+        codriverCodeEdt.setFilters(new InputFilter[]{hexInputFilter, eightDigitInputFilter});
 
         return view;
     }
 
-    private void setRadioButtons(String driverStatus, String codriverStatus) {
+    private boolean isValidHexadecimal(String input) {
+        return input.matches("[0-9A-Fa-f]+");
+    }
+
+    private void setDefaultID(String driverCode, String codriverCode) {
+        if (driverCode != null && codriverCode != null) {
+            this.driverCode = driverCode;
+            this.codriverCode = codriverCode;
+            driverCodeEdt.setText(driverCode);
+            codriverCodeEdt.setText(codriverCode);
+        }
+
+    }
+
+    private void setDefaultRadioButtons(String driverStatus, String codriverStatus) {
         if (driverStatus.equals("0")) {
             radioGroupDriverStatus.check(R.id.DRBtn0);
         } else if (driverStatus.equals("1")) {
@@ -114,14 +170,18 @@ public class DriverStatusFragment extends Fragment {
     }
 
     public String getCmd() {
+        driverCode = driverCodeEdt.getText().toString();
+        codriverCode = codriverCodeEdt.getText().toString();
+
         if (driverStatus != null && codriverStatus != null) {
-            cmd = cmdStart + driverStatus + "," + codriverStatus;
+            cmd = cmdStart + driverStatus + "," + driverCode + "," + codriverStatus + "," + codriverCode;
         }
         return cmd;
     }
 
     public void updateValues(String[] temp) {
         this.temp = temp;
-        setRadioButtons(temp[DRIVER_STATUS], temp[CODRIVER_STATUS]);
+        setDefaultRadioButtons(temp[DRIVER_STATUS], temp[CODRIVER_STATUS]);
+        setDefaultID(temp[DRIVER_ID], temp[CODRIVER_ID]);
     }
 }
