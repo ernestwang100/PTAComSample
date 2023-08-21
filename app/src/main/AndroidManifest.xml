@@ -31,7 +31,8 @@
         <activity android:name=".main.SplashScreenActivity"/>
         <activity android:name=".second.SettingListActivity" />
         <activity android:name= ".third.SettingDetailsActivity"/>
-        <activity android:name=".main.MainActivity"/>
+        <activity android:name= ".third.SettingItemsActivity"/>
+        <activity android:name=".main.MainActivity"/> 
     </application>
 
 

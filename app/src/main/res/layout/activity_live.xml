@@ -27,16 +27,16 @@
         android:layout_marginBottom="50sp"
         />
 
-    <Switch
-        android:id="@+id/themeSwitchButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Switch"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="50sp"
-        android:layout_marginBottom="50sp"
-        />
+<!--    <Switch-->
+<!--        android:id="@+id/themeSwitchButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Switch"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:layout_marginLeft="50sp"-->
+<!--        android:layout_marginBottom="50sp"-->
+<!--        />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

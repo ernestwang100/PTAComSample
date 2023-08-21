@@ -30,7 +30,7 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
     private byte[] writeData;
     private String[] temp;
     private static final String TAG = "SettingListActivity";
-    private int[] images = {R.drawable.baseline_flare_48, R.drawable.baseline_people_48, R.drawable.baseline_access_time_48, R.drawable.baseline_print_48, R.drawable.baseline_file_download_48, R.drawable.baseline_access_time_48, R.drawable.baseline_drive_eta_48, R.drawable.baseline_satellite_alt_48, R.drawable.baseline_access_time_48, R.drawable.baseline_lightbulb_circle_48, R.drawable.baseline_document_scanner_48, R.drawable.baseline_info_48};
+    private int[] images = {R.drawable.baseline_flare_48, R.drawable.baseline_people_48, R.drawable.baseline_access_time_48, R.drawable.baseline_print_48, R.drawable.baseline_file_download_48, R.drawable.baseline_settings_48, R.drawable.baseline_drive_eta_48, R.drawable.baseline_satellite_alt_48, R.drawable.baseline_access_time_48, R.drawable.baseline_lightbulb_circle_48, R.drawable.baseline_document_scanner_48, R.drawable.baseline_info_48};
 
     public SettingListActivity(){
         super();
@@ -64,7 +64,7 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
         recyclerView.setAdapter(settingListAdapter);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 //        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
     }
 
 

@@ -37,7 +37,7 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live);
         tv = findViewById(R.id.tv);
-        themeSW = findViewById(R.id.themeSwitchButton);
+//        themeSW = findViewById(R.id.themeSwitchButton);
         listFAB = findViewById(R.id.listFAB);
 
         writeData = "$LCD+PAGE=0".getBytes();
@@ -59,16 +59,16 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
             finish();
         });
 
-        themeSW.setOnClickListener(v -> {
-            runOnUiThread(() -> {
-                if (!themeSW.isChecked()) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
-                recreate();
-            });
-        });
+//        themeSW.setOnClickListener(v -> {
+//            runOnUiThread(() -> {
+//                if (!themeSW.isChecked()) {
+//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+//                } else {
+//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//                }
+//                recreate();
+//            });
+//        });
     }
 
 

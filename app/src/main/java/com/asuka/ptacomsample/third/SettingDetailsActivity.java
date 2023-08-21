@@ -164,12 +164,13 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
         round = getValidRoundIndex(round, title.length);
         titleTV.setText(title[round]);
+        Intent intent = new Intent();
 
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         switch (round) {
             case 0:
                 cmdStart = "$LCD+PAGE=0";
-                Intent intent = new Intent();
+
                 intent.setClass(SettingDetailsActivity.this, LiveActivity.class);
                 startActivity(intent);
                 break;
@@ -216,10 +217,9 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
 
             case 5:
-                if (drivingThresholdTimeFragment == null)
-                    drivingThresholdTimeFragment = new ThresholdTimeFragment();
-                selectedFragment = drivingThresholdTimeFragment;
                 cmdStart = "$LCD+SET THRESHOLD TIME=";
+                intent.setClass(SettingDetailsActivity.this, SettingItemsActivity.class);
+                startActivity(intent);
                 break;
 
             case 6:

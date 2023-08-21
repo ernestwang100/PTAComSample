@@ -59,10 +59,15 @@
 
     <string-array name="setting_full_txt">
         <item>即時資訊</item>
-        <item>活動變更</item>
-        <item>活動時間</item>
+        <item>駕駛活動</item>
+        <item>時間累計</item>
         <item>列印功能</item>
         <item>資料下載</item>
+        <item>各項設定</item>
+    </string-array>
+
+
+    <string-array name="setting_items_txt">
         <item>門檻設定</item>
         <item>GAIN值設定</item>
         <item>衛星狀態</item>
