@@ -54,12 +54,11 @@ public class RecvThread extends Thread {
         mPort.write(writeData, writeData.length);
     }
 
-    public RecvThread(Handler handler, ComPort mPort, Context context, SettingDetailsActivity activity) {
+    public RecvThread(Handler handler, ComPort mPort, Context context, ButtonFreezeListener listener) {
         this.mPort = mPort;
         this.handler = handler;
         this.context = context;
-        this.activity = activity;
-        Log.d(TAG, "Constructor RecvThread: activity: " + activity);
+        this.buttonFreezeListener = listener;
     }
 
     public void run() {
@@ -125,7 +124,7 @@ public class RecvThread extends Thread {
                             case "0":
                             Log.d(TAG, "run: temp.length: " + temp.length);
                                 if (temp.length == 10) {
-                                    messageText = temp[2] + "\n" + temp[3] + "\n" + "速度 " + temp[4] + " km/h\n" + "駕駛 " + temp[5];
+                                    messageText = temp[2] + " " + temp[3] + "\n" + "速度 " + temp[4] + " km/h\n" + "駕駛 " + temp[5];
                                     switch (temp[6].trim()) {
                                         case "0":
                                             messageText += " 車停";
@@ -266,10 +265,13 @@ public class RecvThread extends Thread {
                 msg.obj = messageText;
                 //msg.obj = received;
 
+
+
                 handler.sendMessage(msg);
                 Log.d(TAG, "run: enable button");
                 Log.d(TAG, "run: activity: " + activity);
-                if (activity != null) activity.unfreezeButtons();
+//                if (activity != null) activity.unfreezeButtons();
+                if (buttonFreezeListener != null) buttonFreezeListener.unfreezeButtons();
             }
         }
         Log.i(TAG, "Received = RecvThread ended~~~");
