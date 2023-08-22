@@ -31,7 +31,7 @@ public class PrintFragment extends Fragment {
         radioGroupPrint.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                printDataID = radioGroupPrint.indexOfChild(view.findViewById(i));
+                printDataID = radioGroupPrint.indexOfChild(view.findViewById(i)) + 1;
                 Log.d(TAG, "onCheckedChanged: printDataID: " + printDataID);
             }
         });

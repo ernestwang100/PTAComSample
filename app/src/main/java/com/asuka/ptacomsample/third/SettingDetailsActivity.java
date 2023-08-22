@@ -135,7 +135,15 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                         Log.d(TAG, "run: temp[0] = " + temp[0]);
                         if (temp[0].equals("0")) {
                             waitingFragment.setmStr("處理完成");
-                            waitingFragment.dismiss();
+                            // Delayed dismissal of the waitingFragment
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    waitingFragment.dismiss();
+                                }
+                            }, 3000); // 3000 milliseconds delay (3 seconds)
+                        } else if (temp[0].equals("2")) {
+                            waitingFragment.setmStr("發生錯誤");
                         } else {
                             waitingFragment.setmStr("處理中...");
                         }
@@ -268,9 +276,9 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
             default:
                 break;
         }
-        if (!cmdStart.contains("PAGE")){
+        if (!cmdStart.contains("PAGE")) {
             writeData = (cmdStart + "?").getBytes();
-        }else{
+        } else {
             writeData = cmdStart.getBytes();
         }
         mRecvThread.setWriteData(writeData);

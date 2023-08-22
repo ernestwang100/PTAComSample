@@ -92,7 +92,7 @@ public class DownloadFragment extends Fragment {
 
     public void updateValues(String[] temp) {
 //        default set as download1RB
-        radioGroupDownload.check(R.id.download1RB);
+//        radioGroupDownload.check(R.id.download1RB);
     }
 }
 
