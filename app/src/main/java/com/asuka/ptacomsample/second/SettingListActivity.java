@@ -6,15 +6,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.asuka.comm.ComPort;
-import com.asuka.ptacomsample.main.MainActivity;
 import com.asuka.ptacomsample.R;
 import com.asuka.ptacomsample.main.RecvThread;
 import com.asuka.ptacomsample.third.SettingDetailsActivity;

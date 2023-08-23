@@ -28,11 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.SplashScreenActivity"/>
         <activity android:name=".second.SettingListActivity" />
         <activity android:name= ".third.SettingDetailsActivity"/>
         <activity android:name= ".third.SettingItemsActivity"/>
-        <activity android:name=".main.MainActivity"/> 
     </application>
 
 
