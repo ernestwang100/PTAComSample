@@ -16,9 +16,6 @@ import com.asuka.comm.ComPort;
 import com.asuka.ptacomsample.R;
 
 public class WaitingFragment extends DialogFragment {
-    private ComPort mPort;
-    private byte[] readBuf = new byte[200];
-    private int mCount;
     private TextView tv;
     private static final String TAG = "WaitingFragment";
     private String mStr;

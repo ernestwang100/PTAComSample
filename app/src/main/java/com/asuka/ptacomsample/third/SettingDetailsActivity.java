@@ -127,7 +127,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 Log.d(TAG, "onCreate: cmd = " + cmd);
                 writeDataToPort(cmd);
                 showWaitingFragment();
-//                TODO: 這邊要改成等待回傳的方式
+
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
