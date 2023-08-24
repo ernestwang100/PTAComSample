@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PTAComSample" parent="Theme.Material3.Light.NoActionBar">
-<!--        <item name="android:windowBackground">@drawable/background20230621</item>-->
+        <item name="android:windowBackground">@drawable/launcher_web_bg</item>
         <!-- Customize your dark theme here. -->
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_700</item>

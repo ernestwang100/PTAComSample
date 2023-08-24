@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ import com.asuka.ptacomsample.main.RecvThread;
 import com.asuka.ptacomsample.second.SettingListActivity;
 
 public class SettingDetailsActivity extends AppCompatActivity implements LoginDialogListener, ButtonFreezeListener {
-    private Button homeBtn, upBtn, downBtn, confirmBtn;
+    private ImageButton homeBtn, upBtn, downBtn, confirmBtn;
     private FrameLayout settingDetailsFragmentContainer;
     private TextView titleTV;
     private int round = 0;

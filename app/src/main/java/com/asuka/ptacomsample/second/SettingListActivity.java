@@ -27,7 +27,7 @@ public class SettingListActivity extends AppCompatActivity implements RecyclerVi
     private byte[] writeData;
     private String[] temp;
     private static final String TAG = "SettingListActivity";
-    private int[] images = {R.drawable.baseline_flare_48, R.drawable.baseline_people_48, R.drawable.baseline_access_time_48, R.drawable.baseline_print_48, R.drawable.baseline_file_download_48, R.drawable.baseline_settings_48, R.drawable.baseline_drive_eta_48, R.drawable.baseline_satellite_alt_48, R.drawable.baseline_access_time_48, R.drawable.baseline_lightbulb_circle_48, R.drawable.baseline_document_scanner_48, R.drawable.baseline_info_48};
+    private int[] images = {R.drawable.ab_live, R.drawable.ab_status, R.drawable.ab_time, R.drawable.ab_print, R.drawable.ab_download, R.drawable.ab_settings, R.drawable.baseline_drive_eta_48, R.drawable.baseline_satellite_alt_48, R.drawable.baseline_access_time_48, R.drawable.baseline_lightbulb_circle_48, R.drawable.baseline_document_scanner_48, R.drawable.baseline_info_48};
 
     public SettingListActivity(){
         super();

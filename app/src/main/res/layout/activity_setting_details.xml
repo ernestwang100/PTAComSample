@@ -17,49 +17,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/homeBtn"
             android:layout_width="170sp"
             android:layout_height="0dp"
             android:layout_marginTop="10sp"
             android:layout_weight="1"
-            android:text="@string/backBtnCover"
+            android:src="@drawable/aa_mainbtn"
             android:textSize="30sp"
-            android:background="@drawable/backgroundclicked"
             />
 
-        <Button
+        <ImageButton
             android:id="@+id/upBtn"
             android:layout_width="170sp"
             android:layout_height="0dp"
             android:layout_marginTop="10sp"
             android:layout_weight="1"
-            android:text="@string/upBtnCover"
+            android:src="@drawable/aa_upbtn"
             android:textSize="30sp"
-            android:background="@drawable/backgroundclicked"
             />
 
-        <Button
+        <ImageButton
             android:id="@+id/downBtn"
             android:layout_width="170sp"
             android:layout_height="0dp"
             android:layout_marginTop="10sp"
             android:layout_weight="1"
-            android:text="@string/downBtnCover"
+            android:src="@drawable/aa_downbtn"
             android:textSize="30sp"
-            android:background="@drawable/backgroundclicked"
             />
 
-        <Button
+        <ImageButton
             android:id="@+id/confirmBtn"
             android:layout_width="170sp"
             android:layout_height="0dp"
             android:layout_marginTop="10sp"
             android:layout_marginBottom="10sp"
             android:layout_weight="1"
-            android:text="@string/confirmBtnCover"
+            android:src="@drawable/aa_confirmbtn"
             android:textSize="30sp"
-            android:background="@drawable/backgroundclicked"
             />
     </LinearLayout>
 <!--TODO adjust the width of linearlayout-->
