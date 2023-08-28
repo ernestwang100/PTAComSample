@@ -19,7 +19,7 @@ import com.asuka.ptacomsample.main.RecvThread;
 
 public class GainFragment extends Fragment {
     private NumberPicker numberPicker, numberPicker2;
-    private String cmd, cmdStart, temp[];
+    private String cmd, cmdStart, cmdEnd, temp[];
     private int gainType;
     private static final String TAG = "GainFragment";
 
@@ -29,6 +29,7 @@ public class GainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gain, container, false);
         cmdStart = "$LCD+GAIN=";
+        cmdEnd = "\r\n";
 
         numberPicker = view.findViewById(R.id.numberPicker);
         numberPicker.setMaxValue(1000);
@@ -44,7 +45,7 @@ public class GainFragment extends Fragment {
 
     public String getCmd() {
 //        cmd = cmdStart + numberPicker.getValue();
-        cmd = cmdStart + numberPicker.getValue() + "," + numberPicker2.getValue();
+        cmd = cmdStart + numberPicker.getValue() + "," + numberPicker2.getValue() + cmdEnd;
         return cmd;
     }
 

@@ -24,7 +24,7 @@ public class DriverStatusFragment extends Fragment {
     private EditText driverCodeEdt, codriverCodeEdt;
     private Integer driverStatus, codriverStatus;
 
-    private String cmd, temp[], cmdStart;
+    private String cmd, temp[], cmdStart, cmdEnd;
     public static final int DRIVER_STATUS = 0, DRIVER_ID = 1, CODRIVER_STATUS = 2, CODRIVER_ID = 3;
     private String driverCode, codriverCode;
     private static final String TAG = "DriverStatusFragment";
@@ -35,6 +35,7 @@ public class DriverStatusFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_driver_status, container, false);
 
         cmdStart = "$LCD+DRIVER STATUS=";
+        cmdEnd = "\r\n";
 
         radioGroupDriverStatus = view.findViewById(R.id.DRBtnGroup);
         radioGroupCodriverStatus = view.findViewById(R.id.CRBtnGroup);
@@ -174,7 +175,7 @@ public class DriverStatusFragment extends Fragment {
         codriverCode = codriverCodeEdt.getText().toString();
 
         if (driverStatus != null && codriverStatus != null) {
-            cmd = cmdStart + driverStatus + "," + driverCode + "," + codriverStatus + "," + codriverCode;
+            cmd = cmdStart + driverStatus + "," + driverCode + "," + codriverStatus + "," + codriverCode + cmdEnd;
         }
         return cmd;
     }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
     private ComPort mPort;
     private RecvThread mRecvThread;
     private byte[] writeData;
+    private String cmdStart, cmdEnd;
 
     public LiveActivity(){
         super();
@@ -40,7 +42,10 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
 //        themeSW = findViewById(R.id.themeSwitchButton);
         listFAB = findViewById(R.id.listFAB);
 
-        writeData = "$LCD+PAGE=0".getBytes();
+        cmdStart = "$LCD+PAGE=0";
+        cmdEnd = "\r\n";
+        writeData = (cmdStart + cmdEnd).getBytes();
+
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -51,8 +56,9 @@ public class LiveActivity extends AppCompatActivity implements ButtonFreezeListe
         mRecvThread.start();
 
         listFAB.setOnClickListener(v -> {
-            writeData = "$LCD+PAGE=98".getBytes();
+            writeData = ("$LCD+PAGE=98" +cmdEnd).getBytes();
             mPort.write(writeData, writeData.length);
+            Log.d(TAG, "onCreate: + writeData: " + writeData);
             mRecvThread.interrupt();
             Intent intent = new Intent(this, SettingListActivity.class);
             startActivity(intent);

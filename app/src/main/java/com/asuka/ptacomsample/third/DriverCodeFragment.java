@@ -17,7 +17,7 @@ import com.asuka.ptacomsample.main.RecvThread;
 public class DriverCodeFragment extends Fragment {
     private EditText driverCodeEdt, codriverCodeEdt;
     private ComPort mPort;
-    private String cmd, temp[], cmdStart;
+    private String cmd, temp[], cmdStart, cmdEnd;
 
     public static final int DRIVER_STATUS = 0;
     public static final int CODRIVER_STATUS = 1;
@@ -41,7 +41,7 @@ public class DriverCodeFragment extends Fragment {
 
 
         cmdStart = "$LCD+DRIVER IN=";
-
+        cmdEnd = "\r\n";
 
         driverCodeEdt = view.findViewById(R.id.driverCodeEdt);
         codriverCodeEdt = view.findViewById(R.id.codriverCodeEdt);
@@ -51,7 +51,7 @@ public class DriverCodeFragment extends Fragment {
 
 
     public String getCmd() {
-        cmd = cmdStart + driverCodeEdt.getText().toString() + "," + codriverCodeEdt.getText().toString();
+        cmd = cmdStart + driverCodeEdt.getText().toString() + "," + codriverCodeEdt.getText().toString() + cmdEnd;
         return cmd;
 
     }

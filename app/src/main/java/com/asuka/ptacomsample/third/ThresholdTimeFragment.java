@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class ThresholdTimeFragment extends Fragment {
     private TextView drivetimeTV, resttimeTV;
-    private String cmd, cmdStart;
+    private String cmd, cmdStart, cmdEnd;
     private static final String TAG = "ThresholdTimeFragment";
 
     @Override
@@ -38,6 +38,7 @@ public class ThresholdTimeFragment extends Fragment {
 
 //        cmdStart = "$LCD+SET DRIVE TIME=";
         cmdStart = "$LCD+SET THRESHOLD TIME=";
+        cmdEnd = "\r\n";
 
         return view;
     }
@@ -68,7 +69,7 @@ public class ThresholdTimeFragment extends Fragment {
     }
 
     public String getCmd() {
-        cmd = cmdStart + drivetimeTV.getText().toString().replace(':',',') + "," + resttimeTV.getText().toString().replace(':',',');
+        cmd = cmdStart + drivetimeTV.getText().toString().replace(':',',') + "," + resttimeTV.getText().toString().replace(':',',') + cmdEnd;
         return cmd;
     }
 

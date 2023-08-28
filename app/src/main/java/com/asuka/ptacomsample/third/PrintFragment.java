@@ -19,7 +19,7 @@ import com.asuka.ptacomsample.main.RecvThread;
 public class PrintFragment extends Fragment {
     private RadioGroup radioGroupPrint;
     private Integer printDataID;
-    private String cmd, cmdStart, temp[];
+    private String cmd, cmdStart, cmdEnd, temp[];
     public static final String TAG = "PrintFragment";
 
     @Override
@@ -37,11 +37,12 @@ public class PrintFragment extends Fragment {
         });
 
         cmdStart = "$LCD+PRINT=";
+        cmdEnd = "\r\n";
         return view;
     }
 
     public String getCmd() {
-        cmd = cmdStart + printDataID;
+        cmd = cmdStart + printDataID + cmdEnd;
         return cmd;
     }
 

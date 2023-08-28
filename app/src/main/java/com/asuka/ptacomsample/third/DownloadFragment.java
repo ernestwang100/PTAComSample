@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 
 public class DownloadFragment extends Fragment {
     private RadioGroup radioGroupDownload;
-    private String cmd, cmdStart, temp[];
+    private String cmd, cmdStart, cmdEnd, temp[];
     private DatePickerFragment datePickerFragment;
     private byte[] writeData;
     private ComPort mPort;
@@ -53,6 +53,7 @@ public class DownloadFragment extends Fragment {
 
 //        TODO: cmd
         cmdStart = "$LCD+DOWNLOAD=";
+        cmdEnd = "\r\n";
 
         return view;
     }
@@ -79,7 +80,7 @@ public class DownloadFragment extends Fragment {
                 RadioButton download3RB = getView().findViewById(R.id.download3RB);
                 download3RB.setText("最近" + selectedValue + "小時");
 
-                cmd = cmdStart + selectedValue;
+                cmd = cmdStart + selectedValue + cmdEnd;
             }
         });
         numberPickerFragment.show(getFragmentManager(), "numberPicker");

@@ -30,7 +30,7 @@ public class SettingItemsActivity extends AppCompatActivity implements LoginDial
     private FrameLayout settingDetailsFragmentContainer;
     private TextView titleTV;
     private int round = 0;
-    private String cmd, cmdStart, title[];
+    private String cmd, cmdStart, cmdEnd, title[];
     private Handler handler;
     private ComPort mPort;
     private RecvThread mRecvThread;
@@ -72,6 +72,8 @@ public class SettingItemsActivity extends AppCompatActivity implements LoginDial
 //        } else {
 //            round = 0;
 //        }
+
+        cmdEnd = "\r\n";
         titleTV = findViewById(R.id.titleTV);
         homeBtn = findViewById(R.id.homeBtn);
         upBtn = findViewById(R.id.upBtn);
@@ -221,10 +223,10 @@ public class SettingItemsActivity extends AppCompatActivity implements LoginDial
             default:
                 break;
         }
-        if (!cmdStart.contains("PAGE")){
-            writeData = (cmdStart + "?").getBytes();
-        }else{
-            writeData = cmdStart.getBytes();
+        if (!cmdStart.contains("PAGE")) {
+            writeData = (cmdStart + "?" + cmdEnd).getBytes();
+        } else {
+            writeData = (cmdStart + cmdEnd).getBytes();
         }
         mRecvThread.setWriteData(writeData);
 

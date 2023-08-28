@@ -12,7 +12,7 @@ import com.asuka.ptacomsample.R;
 
 public class ManufacturerFragment extends Fragment {
     private TextView tv;
-    private String cmd;
+    private String cmd, cmdEnd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -20,13 +20,14 @@ public class ManufacturerFragment extends Fragment {
 
         tv = view.findViewById(R.id.tv);
 
+        cmdEnd = "\r\n";
 
 
         return view;
     }
 
     public String getCmd() {
-        cmd = "$LCD+MANUFACTURER=" + tv.getText().toString();
+        cmd = "$LCD+MANUFACTURER=" + tv.getText().toString() + cmdEnd;
         return cmd;
     }
 

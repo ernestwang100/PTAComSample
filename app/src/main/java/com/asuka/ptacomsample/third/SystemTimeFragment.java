@@ -24,7 +24,7 @@ import java.util.Locale;
 
 public class SystemTimeFragment extends Fragment {
     private TextView systemDateTV, systemTimeTV;
-    private String cmd, cmdStart, selectedDate, selectedTime, cmdDate, cmdTime, temp[];
+    private String cmd, cmdStart, cmdEnd, selectedDate, selectedTime, cmdDate, cmdTime, temp[];
     private DatePickerFragment datePickerFragment;
     private boolean isDateSelected = false;
     private boolean isTimeSelected = false;
@@ -35,6 +35,7 @@ public class SystemTimeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_system_time, container, false);
         cmdStart = "$LCD+TIME ADJ=";
+        cmdEnd = "\r\n";
 
         systemDateTV = view.findViewById(R.id.systemDateTV);
         systemTimeTV = view.findViewById(R.id.systemTimeTV);
@@ -87,7 +88,7 @@ public class SystemTimeFragment extends Fragment {
     }
 
     public String getCmd() {
-        cmd = cmdStart + cmdDate + cmdTime;
+        cmd = cmdStart + cmdDate + cmdTime + cmdEnd;
         return cmd;
     }
 

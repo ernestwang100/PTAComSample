@@ -30,7 +30,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
     private FrameLayout settingDetailsFragmentContainer;
     private TextView titleTV;
     private int round = 0;
-    private String cmd, cmdStart, title[];
+    private String cmd, cmdStart, cmdEnd, title[];
     private Handler handler;
     private ComPort mPort;
     private RecvThread mRecvThread;
@@ -174,6 +174,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
         round = getValidRoundIndex(round, title.length);
         titleTV.setText(title[round]);
         Intent intent = new Intent();
+        cmdEnd = "\r\n";
 
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         switch (round) {
@@ -278,9 +279,9 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
                 break;
         }
         if (!cmdStart.contains("PAGE")) {
-            writeData = (cmdStart + "?").getBytes();
+            writeData = (cmdStart + "?"+cmdEnd).getBytes();
         } else {
-            writeData = cmdStart.getBytes();
+            writeData = (cmdStart + cmdEnd).getBytes();
         }
         mRecvThread.setWriteData(writeData);
 
@@ -355,7 +356,7 @@ public class SettingDetailsActivity extends AppCompatActivity implements LoginDi
 
     private void writeDataToPort(String cmd) {
         if (cmd != null) {
-            writeData = cmd.getBytes();
+            writeData = (cmd + cmdEnd).getBytes();
             Log.d(TAG, "writeDataToPort: writeData = " + new String(writeData));
             mPort.write(writeData, writeData.length);
         }
